@@ -151,7 +151,7 @@ fire_system() {
                 cd ..
                 sleep 5s
                 echo -e "\n================ 修改配置文件 ================\n"
-                rabbitmq_name=kubectl get pod -n fire-hydrant | grep rabbitmq | awk '{print $1}'
+                rabbitmq_name=`kubectl get pod -n fire-hydrant | grep rabbitmq | awk '{print $1}'`
                 sed -i 's/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672.*$/amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672\/'${rabbitmq_name}'/' \
                 ${WORK_DIR}'/devops/server/config.yml'
             ;;
