@@ -61,6 +61,18 @@ docker_image_push() {
 
 }
 
+docker_image_pull() {
+    docker login --username fire --password FireHydrant19.7**com docker.dev.shoogoome.com
+    docker pull ${IMAGE_ROOT_NAME}'redis-cluster:1.0'
+    docker pull ${IMAGE_ROOT_NAME}'mariadb:1.0'
+    docker pull ${IMAGE_ROOT_NAME}'phpmyadmin:1.0'
+    docker pull ${IMAGE_ROOT_NAME}'redis:1.0'
+    docker pull ${IMAGE_ROOT_NAME}'rabbitmq:1.0'
+    docker pull ${IMAGE_ROOT_NAME}'server:1.0'
+    docker pull ${IMAGE_ROOT_NAME}'redis-cluster-manage:1.0'
+    docker logout docker.dev.shoogoome.com
+}
+
 # 初始化本地环境变量
 init_local_export() {
     # mariadb环境变量
@@ -118,7 +130,7 @@ fire_system() {
             "up")
                 echo -e "\n================ 启动FireHydrant线上环境 ================\n"
                 cd devops
-                docker login --username fire --password FireHydrant19.7**com docker.dev.shoogoome.com
+                docker_image_pull
                 helm install \
                 --username fire --password ${SYSTEM_PASSWORD} \
                 --ca-file ${WORK_DIR}'/devops/firehydrant/cert/ca.crt' \
@@ -136,7 +148,6 @@ fire_system() {
                 --set FIRE_HYDRANT_SERVER_CONF_DIR=${FIRE_HYDRANT_SERVER_CONF_DIR} \
                 --set FIRE_HYDRANT_WEB_CONF_DIR=${FIRE_HYDRANT_WEB_CONF_DIR} \
                 firehydrant/firehydrant
-                # docker logout docker.dev.shoogoome.com
                 cd ..
             ;;
             "down")
