@@ -1,7 +1,7 @@
 allow_hosts: ['*']
 celery:
   ACCEPT_CONTENT: [application/json]
-  amqp://root:FireHydrant19.7**com@rabbitmq:5672/test
+  BROKER_URL: amqp://root:FireHydrant19.7**com@rabbitmq:5672/test
   RESULT_BACKEND: amqp
   RESULT_SERIALIZER: json
   TASK_RESULT_EXPIRES: 300
