@@ -204,7 +204,7 @@ case $1 in
         docker_image_pull
     ;;
     "init")
-        init_hostname 
+        init_hostname
         init_logs_dir
         helm repo add firehydrant https://docker.dev.shoogoome.com/chartrepo/firehydrant \
         --username fire --password ${SYSTEM_PASSWORD} \
