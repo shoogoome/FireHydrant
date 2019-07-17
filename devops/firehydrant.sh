@@ -154,10 +154,10 @@ fire_system() {
                 helm del --purge fire
             ;;
             "exec")
-                kubectl exec -it `kubectl get pod | grep $2 | awk '{print $1}' ` bash
+                kubectl exec -it `kubectl get pod -n fire-hydrant | grep $2 | awk '{print $1}' ` bash
             ;;
             "manage")
-                kubectl exec `kubectl get pod | grep server | awk '{print $1}' ` python3 /firehydrant/manage.py ${@}
+                kubectl exec `kubectl get pod -n fire-hydrant | grep server | awk '{print $1}' ` python3 /firehydrant/manage.py ${@:2}
             ;;
         esac
     fi
@@ -178,6 +178,9 @@ case $1 in
     "build")
         echo -e "\n================ 构建FireHydrant环境所需镜像 ================\n"
         docker_image_build
+    ;;
+    "manage")
+        fire_system manage ${@:2}
     ;;
     "restart")
         fire_system down
