@@ -130,7 +130,6 @@ fire_system() {
             "up")
                 echo -e "\n================ 启动FireHydrant线上环境 ================\n"
                 cd devops
-                docker_image_pull
                 helm install \
                 --username fire --password ${SYSTEM_PASSWORD} \
                 --ca-file ${WORK_DIR}'/devops/firehydrant/cert/ca.crt' \
@@ -154,15 +153,16 @@ fire_system() {
                 rabbitmq_name=`kubectl get pod -n fire-hydrant | grep rabbitmq | awk '{print $1}'`
                 sed -i 's/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672.*$/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672\/'${rabbitmq_name}'/' \
                 ${WORK_DIR}'/devops/server/config.yml'
+                kubectl delete -n fire-hydrant pod `kubectl get pod -n fire-hydrant | grep server | awk '{print $1}' `
             ;;
             "down")
                 helm del --purge fire
             ;;
             "exec")
-                kubectl exec -it `kubectl get pod -n fire-hydrant | grep $2 | awk '{print $1}' ` bash
+                kubectl exec -n fire-hydrant -it `kubectl get pod -n fire-hydrant | grep $2 | awk '{print $1}' ` bash
             ;;
             "manage")
-                kubectl exec `kubectl get pod -n fire-hydrant | grep server | awk '{print $1}' ` python3 /firehydrant/manage.py ${@:2}
+                kubectl exec -n fire-hydrant `kubectl get pod -n fire-hydrant | grep server | awk '{print $1}' ` python3 /firehydrant/manage.py ${@:2}
             ;;
         esac
     fi
