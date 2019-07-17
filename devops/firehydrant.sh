@@ -200,6 +200,9 @@ case $1 in
         --cert-file ${WORK_DIR}'/devops/firehydrant/cert/tls.crt' \
         ${WORK_DIR}'/devops/firehydrant' firehydrant
     ;;
+    "pull")
+        docker_image_pull
+    ;;
     "init")
         init_hostname
         init_logs_dir
