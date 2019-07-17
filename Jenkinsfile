@@ -10,7 +10,7 @@ pipeline {
         stage('update code and build') {
             steps {
                 sh 'chmod 700 ./deploy.sh'
-                sh './deploy.sh'
+                sh './deploy.sh ${BRANCH_NAME}'
             }
         }
     }
