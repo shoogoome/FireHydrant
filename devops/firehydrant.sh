@@ -136,7 +136,7 @@ fire_system() {
                 --set FIRE_HYDRANT_SERVER_CONF_DIR=${FIRE_HYDRANT_SERVER_CONF_DIR} \
                 --set FIRE_HYDRANT_WEB_CONF_DIR=${FIRE_HYDRANT_WEB_CONF_DIR} \
                 firehydrant/firehydrant
-                docker logout docker.dev.shoogoome.com
+                # docker logout docker.dev.shoogoome.com
                 cd ..
             ;;
             "down")
