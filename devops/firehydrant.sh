@@ -160,13 +160,15 @@ fire_system() {
                 --set FIRE_HYDRANT_SERVER_BACKUPS_DIR=${FIRE_HYDRANT_SERVER_BACKUPS_DIR} \
                 firehydrant/firehydrant
                 cd ..
-                echo -e "================ 修改配置文件 ================\n"
+                echo -e "==> 修改rabbitmq相关配置\n"
                 sleep 5s
                 rabbitmq_name=`kubectl get pod -n fire-hydrant | grep rabbitmq | awk '{print $1}'`
                 sed -i '' 's/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672.*$/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672\/'${rabbitmq_name}'/' \
                     ${WORK_DIR}'/devops/server/config.yml'
+                echo -e "==> 创建redis集群并修改配置文件\n"
                 sleep 10s
                 python3 ${WORK_DIR}'/devops/redis-cluster/cluster.py'
+                echo -e "==> 重启server服务\n"
                 kubectl delete -n fire-hydrant pod `kubectl get pod -n fire-hydrant | grep server | awk '{print $1}' `
             ;;
             "down")

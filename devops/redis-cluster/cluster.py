@@ -49,7 +49,6 @@ def cluster():
                 n = fp.readline()
                 code += ' {}:700{}'.format(n.split(' ')[-1].strip('\n'), n.split('-')[4][-1])
         code += " > " + work_dir + "/node.txt"
-    print(code)
     # return
     os.system(code)
     # 修改系统配置文件
