@@ -20,6 +20,9 @@ spec:
       - name: server-config
         hostPath:
           path: {{ .Values.FIRE_HYDRANT_SERVER_CONF_DIR }}
+      - name: server-backups
+        hostPath:
+          path: {{ .Values.FIRE_HYDRANT_SERVER_BACKUPS_DIR}}
       containers:
       - name: server
         image: docker.dev.shoogoome.com/firehydrant/server:1.0
@@ -33,6 +36,8 @@ spec:
           mountPath: /logs
         - name: server-config
           mountPath: /firehydrant/config.yml
+        - name: server-backups
+          mountPath: /backups
 ---
 apiVersion: v1
 kind: Service

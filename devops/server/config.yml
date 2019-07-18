@@ -1,7 +1,7 @@
 allow_hosts: ['*']
 celery:
   ACCEPT_CONTENT: [application/json]
-  BROKER_URL: amqp://root:FireHydrant19.7**com@rabbitmq:5672/firehydrant
+  BROKER_URL: amqp://root:FireHydrant19.7**com@rabbitmq:5672/fire-hydrant-rabbitmq-deloyment-7d95b75c67-wvqs7
   RESULT_BACKEND: amqp
   RESULT_SERIALIZER: json
   TASK_RESULT_EXPIRES: 300
@@ -14,7 +14,6 @@ databases:
 debug: true
 redis: {host: redis, password: FireHydrant19.7**com, port: 6379}
 redis-cluster:
-  masters1: {host: localhost, port: 7005}
-  masters2: {host: localhost, port: 7004}
-  masters3: {host: localhost, port: 7003}
-
+  masters1: {host: fire-hydrant-redis-cluster-service1, port: 7001}
+  masters2: {host: fire-hydrant-redis-cluster-service2, port: 7002}
+  masters3: {host: fire-hydrant-redis-cluster-service3, port: 7003}

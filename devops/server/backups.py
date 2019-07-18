@@ -4,7 +4,7 @@ import time
 
 def mysqldump():
 
-    path = '/root/backups'
+    path = '/backups'
     # 筛选一个星期以前的备份
     os.system('find {}  -ctime +7 -name "*.sql" -delete '.format(path))
     # 创建新备份

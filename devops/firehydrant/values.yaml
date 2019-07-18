@@ -9,4 +9,5 @@
                 FIRE_HYDRANT_SERVER_LOG_DIR: /Users/lzl/Documents/project/FireHydrant/logs/server
                 FIRE_HYDRANT_SERVER_CONF_DIR: /Users/lzl/Documents/project/FireHydrant/devops/server/config.yml
                 FIRE_HYDRANT_WEB_CONF_DIR: /Users/lzl/Documents/project/FireHydrant/devops/web/firehydrant.online.conf
-                
+                FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR: /Users/lzl/Documents/project/FireHydrant/redis-cluster
+                FIRE_HYDRANT_SERVER_BACKUPS_DIR: /Users/lzl/Documents/project/FireHydrant/backups

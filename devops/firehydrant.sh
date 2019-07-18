@@ -61,6 +61,7 @@ docker_image_push() {
 
 }
 
+# 拉取镜像
 docker_image_pull() {
     docker login --username fire --password FireHydrant19.7**com docker.dev.shoogoome.com
     docker pull ${IMAGE_ROOT_NAME}'redis-cluster:1.0'
@@ -90,6 +91,7 @@ init_local_export() {
     export FIRE_HYDRANT_SERVER_WORK_DIR=${WORK_DIR}'/FireHydrant'
     export FIRE_HYDRANT_SERVER_LOG_DIR=${WORK_DIR}'/logs/server'
     export FIRE_HYDRANT_SERVER_CONF_DIR=${WORK_DIR}'/devops/server/config.yml'
+    export FIRE_HYDRANT_SERVER_BACKUPS_DIR=${WORK_DIR}'/backups'
     # redis-cluster环境变量
     export FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR=${WORK_DIR}'/redis-cluster'
     # web nginx 配置文件目录
@@ -128,7 +130,15 @@ fire_system() {
     else
         case $1 in
             "up")
+                if [ ! -z "`kubectl get namespace | grep fire-hydrant`" ]; then
+                    echo -e "================ 环境已经启动或尚未关闭 ================\n"
+                    exit 1
+                fi
                 echo -e "\n================ 启动FireHydrant线上环境 ================\n"
+                rm -rf ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}
+                for i in `seq 7001 7006`; do
+                    mkdir -p ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}/${i}/data
+                done
                 cd devops
                 helm install \
                 --username fire --password ${SYSTEM_PASSWORD} \
@@ -146,13 +156,17 @@ fire_system() {
                 --set FIRE_HYDRANT_SERVER_LOG_DIR=${FIRE_HYDRANT_SERVER_LOG_DIR} \
                 --set FIRE_HYDRANT_SERVER_CONF_DIR=${FIRE_HYDRANT_SERVER_CONF_DIR} \
                 --set FIRE_HYDRANT_WEB_CONF_DIR=${FIRE_HYDRANT_WEB_CONF_DIR} \
+                --set FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR=${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR} \
+                --set FIRE_HYDRANT_SERVER_BACKUPS_DIR=${FIRE_HYDRANT_SERVER_BACKUPS_DIR} \
                 firehydrant/firehydrant
                 cd ..
+                echo -e "================ 修改配置文件 ================\n"
                 sleep 5s
-                echo -e "\n================ 修改配置文件 ================\n"
                 rabbitmq_name=`kubectl get pod -n fire-hydrant | grep rabbitmq | awk '{print $1}'`
-                sed -i 's/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672.*$/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672\/'${rabbitmq_name}'/' \
-                ${WORK_DIR}'/devops/server/config.yml'
+                sed -i '' 's/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672.*$/BROKER_URL: amqp:\/\/root:FireHydrant19\.7\*\*com@rabbitmq:5672\/'${rabbitmq_name}'/' \
+                    ${WORK_DIR}'/devops/server/config.yml'
+                sleep 10s
+                python3 ${WORK_DIR}'/devops/redis-cluster/cluster.py'
                 kubectl delete -n fire-hydrant pod `kubectl get pod -n fire-hydrant | grep server | awk '{print $1}' `
             ;;
             "down")
@@ -220,5 +234,7 @@ case $1 in
         --key-file ${WORK_DIR}'/devops/firehydrant/cert/tls.key' \
         --cert-file ${WORK_DIR}'/devops/firehydrant/cert/tls.crt'
         helm repo update
+        cd devops
+        chmod 700 ./cluster.sh
     ;;
 esac
