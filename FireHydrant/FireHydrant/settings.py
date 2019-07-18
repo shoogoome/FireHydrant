@@ -17,7 +17,10 @@ from kombu import Queue, Exchange
 from twisted.internet import asyncioreactor
 
 # 获取配置文件路径
-conf_dir = os.getcwd() + '/config.yml'
+if os.getcwd() == '/':
+    conf_dir = '/firehydrant/config.yml'
+else:
+    conf_dir = os.getcwd() + '/config.yml'
 # 读取配置文件
 fp = open(conf_dir, 'r')
 __fire_config = yaml.load(fp.read())
