@@ -10,5 +10,6 @@ __pycache__
 /rabbitmq
 /redis
 /redis-cluster
-
+/backups
+/devops
 
