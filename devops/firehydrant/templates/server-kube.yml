@@ -1,0 +1,53 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: fire-hydrant-server-deployment
+  namespace: fire-hydrant
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fire-hydrant-server
+    spec:
+      volumes:
+      - name: server-data
+        hostPath:
+          path: {{ .Values.FIRE_HYDRANT_SERVER_WORK_DIR }}
+      - name: server-log
+        hostPath:
+          path: {{ .Values.FIRE_HYDRANT_SERVER_LOG_DIR }}
+      - name: server-config
+        hostPath:
+          path: {{ .Values.FIRE_HYDRANT_SERVER_CONF_DIR }}
+      - name: server-backups
+        hostPath:
+          path: {{ .Values.FIRE_HYDRANT_SERVER_BACKUPS_DIR}}
+      containers:
+      - name: server
+        image: docker.dev.shoogoome.com/firehydrant/server:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: server-data
+          mountPath: /firehydrant
+        - name: server-log
+          mountPath: /logs
+        - name: server-config
+          mountPath: /firehydrant/config.yml
+        - name: server-backups
+          mountPath: /backups
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fire-hydrant-server-service
+  namespace: fire-hydrant
+spec:
+  selector:
+    app: fire-hydrant-server
+  ports:
+    - port: 80
+      targetPort: 80
+

@@ -1,0 +1,78 @@
+version: "3.2"
+services:
+
+  redis1:
+    image: docker.dev.shoogoome.com/firehydrant/redis-cluster:1.0
+    networks:
+      redis-net:
+    volumes:
+      - ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}/7001/data:/data
+    environment:
+      - REDIS_PORT=7001
+    ports:
+      - "7001:7001"
+      - "17001:17001"
+
+  redis2:
+    image: docker.dev.shoogoome.com/firehydrant/redis-cluster:1.0
+    networks:
+      redis-net:
+    volumes:
+      - ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}/7002/data:/data
+    environment:
+      - REDIS_PORT=7002
+    ports:
+      - "7002:7002"
+      - "17002:17002"
+
+  redis3:
+    image: docker.dev.shoogoome.com/firehydrant/redis-cluster:1.0
+    networks:
+      redis-net:
+    volumes:
+      - ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}/7003/data:/data
+    environment:
+      - REDIS_PORT=7003
+    ports:
+      - "7003:7003"
+      - "17003:17003"
+
+  redis4:
+    image: docker.dev.shoogoome.com/firehydrant/redis-cluster:1.0
+    networks:
+      redis-net:
+    volumes:
+      - ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}/7004/data:/data
+    environment:
+      - REDIS_PORT=7004
+    ports:
+      - "7004:7004"
+      - "17004:17004"
+
+  redis5:
+    image: docker.dev.shoogoome.com/firehydrant/redis-cluster:1.0
+    networks:
+      redis-net:
+    volumes:
+      - ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}/7005/data:/data
+    environment:
+      - REDIS_PORT=7005
+    ports:
+      - "7005:7005"
+      - "17005:17005"
+
+  redis6:
+    image: docker.dev.shoogoome.com/firehydrant/redis-cluster:1.0
+    networks:
+      redis-net:
+    volumes:
+      - ${FIRE_HYDRANT_REDIS_CLUSTER_WORK_DIR}/7006/data:/data
+    environment:
+      - REDIS_PORT=7006
+    ports:
+      - "7006:7006"
+      - "17006:17006"
+
+networks:
+  redis-net:
+    attachable: true

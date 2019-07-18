@@ -1,0 +1,19 @@
+allow_hosts: ['*']
+celery:
+  ACCEPT_CONTENT: [application/json]
+  BROKER_URL: amqp://root:FireHydrant19.7**com@rabbitmq:5672/fire-hydrant-rabbitmq-deloyment-7d95b75c67-ccbsg
+  RESULT_BACKEND: amqp
+  RESULT_SERIALIZER: json
+  TASK_RESULT_EXPIRES: 300
+  TASK_SERIALIZER: json
+  TIMEZONE: Asia/Shanghai
+databases:
+  server: {CHARSET: utf8mb4, COLLATION: utf8mb4_general_ci, CONN_MAX_AGE: 600, ENGINE: django.db.backends.mysql,
+    HOST: mysqldb, NAME: firehydrant, PASSWORD: FireHydrant19.7**com, PORT: 3306,
+    USER: root}
+debug: true
+redis: {host: redis, password: FireHydrant19.7**com, port: 6379}
+redis-cluster:
+  masters1: {host: fire-hydrant-redis-cluster-service1, port: 7001}
+  masters2: {host: fire-hydrant-redis-cluster-service2, port: 7002}
+  masters3: {host: fire-hydrant-redis-cluster-service3, port: 7003}

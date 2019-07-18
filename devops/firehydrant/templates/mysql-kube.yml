@@ -1,0 +1,55 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: fire-hydrant-mysql-deployment
+  namespace: fire-hydrant
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fire-hydrant-mysql
+    spec:
+      volumes:
+      - name: mysql-data
+        hostPath:
+          path: {{ .Values.FIRE_HYDRANT_MYSQL_WORK_DIR }}
+
+      containers:
+      - name: fire-hydrant-mysql
+        image: docker.dev.shoogoome.com/firehydrant/mariadb:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{ quote .Values.FIRE_HYDRANT_MYSQL_ROOT_PASSWORD }}
+      - name: pma
+        image: docker.dev.shoogoome.com/firehydrant/phpmyadmin:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: PMA_HOST
+          value: "127.0.0.1"
+        - name: PMA_PORT
+          value: "3306"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fire-hydrant-mysql-service
+  namespace: fire-hydrant
+spec:
+  selector:
+    app: fire-hydrant-mysql
+  ports:
+    - port: 3307
+      name: mysql
+      targetPort: 3306
+    - port: 80
+      name: pma
+      targetPort: 80
