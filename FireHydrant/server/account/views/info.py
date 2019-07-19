@@ -73,6 +73,7 @@ class AccountInfoView(FireHydrantView):
             account.nickname = params.str('nickname', desc='昵称')
             account.sex = params.int('sex', desc='性别')
             account.motto = params.str('motto', desc='一句话签名')
+            account.phone = params.str('phone', desc='联系电话')
 
         if params.has('new_password'):
             new_password = params.str('new_password', desc='新密码')
@@ -82,12 +83,10 @@ class AccountInfoView(FireHydrantView):
             account.password = signatures.build_password_signature(new_password, signatures.gen_salt())
         # 卡权限
         if params.has('role'):
-            ...
+            account.role = params.int('role', desc='权限')
+        account.save()
 
-
-
-
-
+        return SuccessResult(id=account.id)
 
     def delete(self, request, aid):
         """
@@ -96,13 +95,8 @@ class AccountInfoView(FireHydrantView):
         :param aid:
         :return:
         """
-        ...
+        logic = AccountLogic(self.auth, aid)
+        logic.account.delete()
 
-
-
-
-
-
-
-
+        return SuccessResult(id=aid)
 
