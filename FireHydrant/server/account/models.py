@@ -29,6 +29,9 @@ class Account(models.Model):
     # 用户性别
     sex = models.PositiveSmallIntegerField(**AccountSexEnum.get_models_params())
 
+    # 密码
+    password = models.CharField(max_length=255)
+
     # 用户昵称
     nickname = models.CharField(max_length=50, default="")
 
