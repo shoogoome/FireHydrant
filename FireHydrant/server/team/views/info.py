@@ -10,6 +10,7 @@ from common.exceptions.team.info import TeamInfoExcept
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from ..logics.team import TeamLogic
+from common.constants.length_limitation import *
 from ..models import Team, AccountTeam
 
 
@@ -27,16 +28,17 @@ class TeamInfoView(FireHydrantView):
         if len(AccountTeam.objects.filter_cache(account=self.auth.get_account())) > 0:
             raise TeamInfoExcept.already_in_team()
         # 队伍名称不得重复
-        nickname = params.str('nickname', desc='队伍名称')
-        if Team.objects.filter(nicknam=nickname).exists():
+        nickname = params.str('nickname', desc='队伍名称', max_length=MAX_TEAM_NICKNAME_LENGTH)
+        if Team.objects.filter(nickname=nickname).exists():
             raise TeamInfoExcept.nickname_is_exists()
 
         with transaction.atomic():
             team = Team.objects.create(
                 nickname=nickname,
                 leader=self.auth.get_account(),
-                slogan=params.str('slogan', desc='口号', default='', require=False),
-                password=params.str('password', desc='密码'),
+                slogan=params.str('slogan', desc='口号', default='', require=False, max_length=MAX_SLOGAN_LENGTH),
+                password=params.str('password', desc='密码', min_length=MIN_TEAM_PASSWORD, max_length=MAX_TEAM_PASSWORD),
+                public=params.bool('public', desc='是否开放组队', default=False, require=False)
             )
             AccountTeam.objects.create(
                 team=team,
@@ -72,13 +74,13 @@ class TeamInfoView(FireHydrantView):
         # TODO: 卡队伍 卡队长
         team = logic.team
         with params.diff(team):
-            team.slogan = params.str('slogan', desc='口号')
-            team.password = params.str('password', desc='入队密码')
+            team.slogan = params.str('slogan', desc='口号', max_length=MAX_SLOGAN_LENGTH)
+            team.password = params.str('password', desc='入队密码', min_length=MIN_TEAM_PASSWORD, max_length=MAX_TEAM_PASSWORD)
             team.public = params.bool('public', desc='是否公开队伍')
 
         if params.has('nickname'):
-            nickname = params.str('nickname', desc='队伍名称')
-            if len(Team.objects.filter_cache(nickname=nickname)) > 0:
+            nickname = params.str('nickname', desc='队伍名称', max_length=MAX_TEAM_NICKNAME_LENGTH)
+            if Team.objects.filter(nickname=nickname).exclude(id=tid).exists():
                 raise TeamInfoExcept.nickname_is_exists()
             team.nickname = nickname
         if params.has('leader'):
