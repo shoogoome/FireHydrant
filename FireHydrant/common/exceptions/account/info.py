@@ -3,6 +3,8 @@ from common.exceptions.base import FireHydrantExceptBase
 
 class AccountInfoExcept(FireHydrantExceptBase):
 
+    MAJOR_HTTP_CODE = 551.1
+
     @classmethod
     def username_is_exists(cls):
         return cls("用户名已存在")
