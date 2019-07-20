@@ -10,6 +10,6 @@ class TeamMaximumNumberEnum(EnumBase):
 
     __default__ = ONE
     __desc__ = {
-        'ONE': '一级',
-        'TWO': '二级'
+        'ONE': '一级 10人',
+        'TWO': '二级 30人'
     }
