@@ -1,4 +1,4 @@
-from ..models import Team
+from ..models import Team, AccountTeam
 from common.exceptions.team.info import TeamInfoExcept
 from common.utils.helper.m_t_d import model_to_dict
 
@@ -21,6 +21,7 @@ class TeamLogic(object):
             self.team = tid
         else:
             self.team = self.get_team_model(tid)
+        self.account = self.get_account_model()
 
     def get_team_model(self, tid):
         """
@@ -36,6 +37,18 @@ class TeamLogic(object):
             raise TeamInfoExcept.team_is_not_exists()
         return team
 
+    def get_account_model(self):
+        """
+        获取队伍账号
+        :return:
+        """
+        if self.team is None:
+            return None
+        account = AccountTeam.objects.filter(team=self.team, account=self.auth.get_account())
+        if account.exists():
+            return account[0]
+        return None
+
     def get_team_info(self):
         """
         获取队伍信息
@@ -44,3 +57,4 @@ class TeamLogic(object):
         if self.team is None:
             return dict()
         return model_to_dict(self.team, self.NORMAL_FIELD)
+

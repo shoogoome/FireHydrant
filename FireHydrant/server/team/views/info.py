@@ -1,19 +1,17 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # coding: utf-8
+
+from django.db import transaction
 
 from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
-from common.utils.helper.params import ParamsParser
-from ..models import Team, AccountTeam
-from django.db import transaction
-from common.exceptions.account.info import AccountInfoExcept
-from common.utils.helper.result import SuccessResult
-from common.utils.helper.m_t_d import model_to_dict
-from common.utils.hash import signatures
-from common.decorate.administrators import administrators
-from common.exceptions.team.info import TeamInfoExcept
 from common.enum.team.role import TeamRoleEnum
+from common.exceptions.team.info import TeamInfoExcept
+from common.utils.helper.params import ParamsParser
+from common.utils.helper.result import SuccessResult
 from ..logics.team import TeamLogic
+from ..models import Team, AccountTeam
+
 
 class TeamInfoView(FireHydrantView):
 
@@ -48,6 +46,7 @@ class TeamInfoView(FireHydrantView):
 
         return SuccessResult(id=team.id)
 
+    @check_login
     def get(self, request, tid):
         """
         获取队伍信息
@@ -59,6 +58,7 @@ class TeamInfoView(FireHydrantView):
 
         return SuccessResult(logic.get_team_info())
 
+    @check_login
     def put(self, request, tid):
         """
         修改队伍信息
@@ -66,13 +66,50 @@ class TeamInfoView(FireHydrantView):
         :param tid:
         :return:
         """
-        ...
+        logic = TeamLogic(self.auth, tid)
+        params = ParamsParser(request.JSON)
 
+        # TODO: 卡队伍 卡队长
+        team = logic.team
+        with params.diff(team):
+            team.slogan = params.str('slogan', desc='口号')
+            team.password = params.str('password', desc='入队密码')
+            team.public = params.bool('public', desc='是否公开队伍')
 
+        if params.has('nickname'):
+            nickname = params.str('nickname', desc='队伍名称')
+            if len(Team.objects.filter_cache(nickname=nickname)) > 0:
+                raise TeamInfoExcept.nickname_is_exists()
+            team.nickname = nickname
+        if params.has('leader'):
+            leader = AccountTeam.objects.get_once(pk=params.int('leader', desc='队长id'))
+            if leader is None or leader.team != logic.team:
+                raise TeamInfoExcept.leader_is_not_exists()
+            # 队长修改时需改变角色 管理员不用
+            if logic.account is not None:
+                logic.account.role = int(TeamRoleEnum.MEMBER)
+                logic.account.save()
+            team.leader = leader
 
+        team.save()
+        return SuccessResult(id=tid)
 
+    @check_login
+    def delete(self, request, tid):
+        """
+        解散队伍或退出队伍
+        :param request:
+        :param tid:
+        :return:
+        """
+        logic = TeamLogic(self.auth, tid)
+        # 成员则退出队伍
+        if logic.account is not None and logic.account.role != int(TeamRoleEnum.LEADER):
+            logic.account.delete()
+            logic.team.full = False
+            logic.team.save()
+        # 否则解散队伍
+        else:
+            logic.team.delete()
 
-
-
-
-
+        return SuccessResult(id=tid)

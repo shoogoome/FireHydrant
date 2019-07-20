@@ -16,3 +16,7 @@ class TeamInfoExcept(FireHydrantExceptBase):
     @classmethod
     def nickname_is_exists(cls):
         return cls("队伍名已存在")
+
+    @classmethod
+    def leader_is_not_exists(cls):
+        return cls("新队长不在当前队伍")
