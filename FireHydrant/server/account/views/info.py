@@ -68,9 +68,12 @@ class AccountInfoView(FireHydrantView):
             logic = AccountLogic(self.auth, aid)
 
         account = logic.account
+        nickname = params.str('nickname', desc='昵称')
+        if len(Account.objects.filter_cache(nickname=nickname)) > 0:
+            raise AccountInfoExcept.nickname_is_exists()
 
         with params.diff(account):
-            account.nickname = params.str('nickname', desc='昵称')
+            account.nickname = nickname
             account.sex = params.int('sex', desc='性别')
             account.motto = params.str('motto', desc='一句话签名')
             account.phone = params.str('phone', desc='联系电话')
