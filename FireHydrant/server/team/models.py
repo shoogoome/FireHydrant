@@ -85,7 +85,6 @@ class AccountTeam(models.Model):
             self.id, self.team.nickname, self.account.nickname, self.free
         )
 
-
 receiver(post_save, sender=Team)(delete_model_single_object_cache)
 receiver(post_delete, sender=Team)(delete_model_single_object_cache)
 receiver(post_save, sender=AccountTeam)(delete_model_single_object_cache)
