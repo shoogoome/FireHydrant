@@ -10,6 +10,7 @@ from common.exceptions.account.info import AccountInfoExcept
 from common.utils.helper.result import SuccessResult
 from common.utils.helper.m_t_d import model_to_dict
 from ..logics.info import AccountLogic
+from common.constants.length_limitation import *
 from common.utils.hash import signatures
 
 
@@ -23,8 +24,8 @@ class AccountLoginView(FireHydrantView):
         """
         # TODO: 后续加上人机验证
         params = ParamsParser(request.JSON)
-        password = params.str('password', desc='密码')
-        username = params.str('username', desc='用户名')
+        password = params.str('password', desc='密码', min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)
+        username = params.str('username', desc='用户名', max_length=MAX_USERNAME_LENGTH)
 
         accounts = Account.objects.filter_cache(username=username)
         # 因为得到的是list类型所以直接使用len即可，不会造成多次数据库io操作

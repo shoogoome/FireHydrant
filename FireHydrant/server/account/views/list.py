@@ -12,6 +12,7 @@ from common.utils.helper.m_t_d import model_to_dict
 from ..logics.info import AccountLogic
 from django.db.models import Q
 from common.utils.helper.pagination import slicer
+from common.constants.length_limitation import *
 
 
 class AccountListView(FireHydrantView):
@@ -30,7 +31,7 @@ class AccountListView(FireHydrantView):
         if params.has('role'):
             accounts = accounts.filter(role=params.int('role', desc='角色'))
         if params.has('key'):
-            key = params.str('key', desc='关键字 过滤用户名和昵称')
+            key = params.str('key', desc='关键字 过滤用户名和昵称', max_length=MAX_USERNAME_LENGTH)
             accounts = accounts.filter(
                 Q(username__contains=key) |
                 Q(nickname__contains=key)
