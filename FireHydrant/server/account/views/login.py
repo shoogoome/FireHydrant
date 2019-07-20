@@ -1,0 +1,38 @@
+#-*- coding: utf-8 -*-
+# coding: utf-8
+
+from common.core.auth.check_login import check_login
+from common.core.http.view import FireHydrantView
+from common.utils.helper.params import ParamsParser
+from ..models import Account
+from django.db import transaction
+from common.exceptions.account.info import AccountInfoExcept
+from common.utils.helper.result import SuccessResult
+from common.utils.helper.m_t_d import model_to_dict
+from ..logics.info import AccountLogic
+from common.utils.hash import signatures
+
+
+class AccountLoginView(FireHydrantView):
+
+    def post(self, request):
+        """
+        登录
+        :param request:
+        :return:
+        """
+        # TODO: 后续加上人机验证
+        params = ParamsParser(request.JSON)
+        password = params.str('password', desc='密码')
+        username = params.str('username', desc='用户名')
+
+        accounts = Account.objects.filter_cache(username=username)
+        # 因为得到的是list类型所以直接使用len即可，不会造成多次数据库io操作
+        if len(accounts) == 0 or not signatures.compare_password(password, accounts[0].password):
+            raise AccountInfoExcept.login_error()
+
+        self.auth.set_account(accounts[0])
+        self.auth.set_session()
+        return SuccessResult(id=accounts[0].id)
+
+    

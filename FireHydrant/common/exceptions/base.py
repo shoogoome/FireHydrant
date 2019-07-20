@@ -3,6 +3,7 @@ import json
 
 class FireHydrantExceptBase(BaseException):
 
+    MAJOR_HTTP_CODE = 550
 
     def __init__(self, key=''):
         """
@@ -20,8 +21,9 @@ class FireHydrantExceptBase(BaseException):
         """
         return HttpResponse(
             content=json.dumps({
-                "error": self.key
+                "error": self.key,
+                "code": self.MAJOR_HTTP_CODE
             }),
-            status=500,
+            status=self.MAJOR_HTTP_CODE,
             content_type='application/json'
         )

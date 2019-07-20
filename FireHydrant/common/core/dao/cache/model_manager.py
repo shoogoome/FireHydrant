@@ -50,15 +50,15 @@ class FireHydrantModelManager(Manager):
         data = [self.get_once(obj['id']) for obj in objs]
         return data
 
-    def get_many(self, ids):
+    def get_many(self, pks):
         """
         get_once延伸
-        :param ids:
+        :param pks:
         :return:
         """
         resule = []
-        if isinstance(ids, list):
-            for lid in ids:
+        if isinstance(pks, list):
+            for lid in pks:
                 try:
                     info = self.get_once(lid)
                     if info is not None:

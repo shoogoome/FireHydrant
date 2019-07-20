@@ -3,6 +3,8 @@ from common.exceptions.base import FireHydrantExceptBase
 
 class ParamsExcept(FireHydrantExceptBase):
 
+    MAJOR_HTTP_CODE = 550.1
+
     @classmethod
     def parameter_none_error(cls, key):
         return cls("{0}参数不得为空".format(key))
