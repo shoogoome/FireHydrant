@@ -29,3 +29,6 @@ class AccountInfoExcept(FireHydrantExceptBase):
     def no_permission(cls):
         return cls("无该权限")
 
+    @classmethod
+    def nickname_is_exists(cls):
+        return cls("昵称已存在")
