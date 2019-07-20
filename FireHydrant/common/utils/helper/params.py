@@ -115,13 +115,15 @@ class ParamsParser(object):
 
         return value
 
-    def str(self, key, desc='', require=True, default=''):
+    def str(self, key, desc='', require=True, default='', max_length=None, min_length=None):
         """
         解析str
         :param key:
         :param desc:
         :param require:
         :param default:
+        :param max_length:
+        :param min_length:
         :return:
         """
         value = self.__get_value(key, desc, require, str, default)
@@ -132,6 +134,10 @@ class ParamsParser(object):
             except:
                 raise ParamsExcept.parameter_str_error()
 
+        if isinstance(max_length, int) and len(value) > max_length:
+            raise ParamsExcept.exceed_max_length(desc, max_length)
+        if isinstance(min_length, int) and len(value) < min_length:
+            raise ParamsExcept.is_not_allow_less(desc, min_length)
         return value
 
     def bool(self, key, desc='', require=True, default=False):
