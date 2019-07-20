@@ -1,0 +1,25 @@
+
+# ==== 账户 ====
+
+# 用户名长度
+MAX_USERNAME_LENGTH = 200
+# 账户密码长度
+MIN_PASSWORD_LENGTH = 6
+MAX_PASSWORD_LENGTH = 30
+# 账户昵称长度
+MAX_ACCOUNT_NICKNAME_LENGTH = 50
+# 一句话签名长度
+MAX_MOTTO_LENGTH = 200
+# 联系电话长度
+PHONE_LENGTH = 11
+
+
+# ==== 组队 ====
+
+# 队伍名长度
+MAX_TEAM_NICKNAME_LENGTH = 50
+# 队伍密码长度
+MIN_TEAM_PASSWORD = 6
+MAX_TEAM_PASSWORD = 30
+# 口号长度
+MAX_SLOGAN_LENGTH = 200
