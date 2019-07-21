@@ -115,3 +115,5 @@ class TeamInfoView(FireHydrantView):
             logic.team.delete()
 
         return SuccessResult(id=tid)
+
+
