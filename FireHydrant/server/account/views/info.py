@@ -27,7 +27,6 @@ class AccountInfoView(FireHydrantView):
         :param aid:
         :return:
         """
-
         return SuccessResult(a=request.session.get('FIRE_SESSION_ID'),b=request.COOKIES.get('FIRE_AUTH_SIGN'))
         # logic = AccountLogic(self.auth, self.auth.get_account() if self.fetch_me else aid)
         #
