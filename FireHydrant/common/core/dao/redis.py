@@ -3,7 +3,7 @@
 import redis
 from django.conf import settings
 from rediscluster import StrictRedisCluster
-from LittlePigHoHo.settings import config_redis_cluster
+from FireHydrant.settings import config_redis_cluster
 import json
 import threading
 
