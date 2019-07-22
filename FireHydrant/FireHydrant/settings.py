@@ -195,7 +195,7 @@ USE_L10N = True
 USE_TZ = True
 
 # CORS
-ALLOWED_HOSTS = ['127.0.0.1', '120.78.197.235', 'api.fh.shoogoome.com']
+ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8080',
