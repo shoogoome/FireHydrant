@@ -5,6 +5,7 @@ import uuid
 import time
 import hmac
 import hashlib
+import base64
 
 """
 一个密码生成验证模块
@@ -22,6 +23,14 @@ def session_signature(msg):
     md5.update(str(msg).encode('utf-8'))
     return md5.hexdigest()
 
+def cookie_signature(msg):
+    """
+    cookie
+    :param msg:
+    :return:
+    """
+    payload_encoded = base64.b64encode(msg.encode("utf-8")).decode()
+    return '{}.{}'.format(payload_encoded, base64.b64encode(str(time.time()).encode("utf-8")).decode())
 
 def gen_salt():
     """

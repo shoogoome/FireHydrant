@@ -22,8 +22,6 @@ class AccountLoginView(FireHydrantView):
         :param request:
         :return:
         """
-
-
         # TODO: 后续加上人机验证
         params = ParamsParser(request.JSON)
         password = params.str('password', desc='密码', min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)

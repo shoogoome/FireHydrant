@@ -1,7 +1,7 @@
 from server.account.models import Account
 from common.constants.params import *
-from common.utils.hash.signatures import session_signature
-
+from common.utils.hash.signatures import session_signature, cookie_signature
+import base64
 
 class Authorization(object):
 
@@ -137,11 +137,15 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
         :return:
         """
         user_token = self.request.COOKIES.get(FIREAUTHSIGN, '')
+        payload = user_token.split('.')
+        if len(payload) != 2:
+            return False
+        encode_id = base64.b64decode(payload[0]).decode()
         # 如果未能从cookie中获取信息，直接返回
         if user_token.strip() == '':
             return False
 
-        self.set_login_status(user_token)
+        self.set_login_status(encode_id)
 
 
     def set_session(self):
@@ -154,7 +158,7 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
 
         self.request.session[FIREAUTHSESSION] = self._account.id
         # 产生登陆签名
-        sign = session_signature(self._account.id)
+        sign = cookie_signature(self._account.id)
 
         self.view.set_cookie(
             key=FIREAUTHSIGN,
