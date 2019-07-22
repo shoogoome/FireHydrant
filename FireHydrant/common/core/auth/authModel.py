@@ -2,6 +2,7 @@ from server.account.models import Account
 from common.constants.params import *
 from common.utils.hash.signatures import session_signature, cookie_signature
 import base64
+from .redis_cookie import RedisSessionFactory
 
 class Authorization(object):
 
@@ -119,6 +120,7 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
         self.request = request
         self.view = view
         self.load_from_session()
+        self.redis = RedisSessionFactory()
 
     def load_from_session(self):
         """
@@ -137,15 +139,11 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
         :return:
         """
         user_token = self.request.COOKIES.get(FIREAUTHSIGN, '')
-        payload = user_token.split('.')
-        if len(payload) != 2:
-            return False
-        encode_id = base64.b64decode(payload[0]).decode()
-        # 如果未能从cookie中获取信息，直接返回
-        if user_token.strip() == '':
-            return False
+        value = self.redis.get(user_token)
 
-        self.set_login_status(encode_id)
+        if value is None:
+            return False
+        self.set_login_status(value)
 
 
     def set_session(self):
@@ -164,6 +162,7 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
             key=FIREAUTHSIGN,
             value=sign,
         )
+        self.redis.set(sign, self._account.id)
 
         return True
 

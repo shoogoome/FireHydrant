@@ -19,7 +19,7 @@ class AccountInfoView(FireHydrantView):
 
     fetch_me = False
 
-    # @check_login
+    @check_login
     def get(self, request, aid=''):
         """
         获取账户信息
