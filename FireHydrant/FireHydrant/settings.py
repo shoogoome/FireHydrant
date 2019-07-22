@@ -14,7 +14,7 @@ import os
 import yaml
 import pymysql
 from kombu import Queue, Exchange
-from twisted.internet import asyncioreactor
+
 
 # 获取配置文件路径
 if os.getcwd() == '/':
@@ -146,6 +146,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'corsheaders',
+
     'server.account',
     'server.team',
     'server.task',
@@ -154,6 +156,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
