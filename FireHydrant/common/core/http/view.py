@@ -115,7 +115,7 @@ class FireHydrantViewBase(View):
                 response.set_cookie(**c)
         # 允许跨域
         response["Access-Control-Allow-Origin"] = "http://localhost:8000"
-        response['Access-Control-Allow-Credentials'] = True
+        response['Access-Control-Allow-Credentials'] = 'true'
         response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, PUT, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "*"

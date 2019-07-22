@@ -194,7 +194,7 @@ USE_L10N = True
 USE_TZ = True
 
 # CORS
-ALLOWED_HOSTS = ['http://localhost:8080', 'http://localhost:8000', '127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = True
