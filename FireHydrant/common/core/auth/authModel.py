@@ -128,7 +128,20 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
         # 读取用户id
         account_id = self.request.session.get(FIREAUTHSESSION, '')
         # 挂起登陆信息
-        self.set_login_status(account_id)
+        if not self.set_login_status(account_id):
+            self.load_from_cookie()
+
+    def load_from_cookie(self):
+        """
+        从Cookie里读取登录信息
+        :return:
+        """
+        user_token = self.request.COOKIES.get(FIREAUTHSIGN, '')
+        # 如果未能从cookie中获取信息，直接返回
+        if user_token.strip() == '':
+            return False
+
+        self.set_login_status(user_token)
 
 
     def set_session(self):
