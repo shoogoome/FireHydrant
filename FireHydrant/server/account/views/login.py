@@ -22,6 +22,7 @@ class AccountLoginView(FireHydrantView):
         :param request:
         :return:
         """
+
         
         # TODO: 后续加上人机验证
         params = ParamsParser(request.JSON)
