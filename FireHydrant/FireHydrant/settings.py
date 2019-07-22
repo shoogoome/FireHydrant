@@ -79,6 +79,7 @@ DATABASES = {
 # ##################
 __config_redis = __fire_config.get('redis', {})
 config_redis_cluster = __fire_config.get('redis-cluster', {})
+REDIS_CONFIG_PASSWORD = ''
 
 # ##################
 #      Cache
