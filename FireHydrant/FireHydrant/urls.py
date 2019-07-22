@@ -21,8 +21,10 @@ from django.conf import settings
 from server.account.urls import urlpatterns as account_urlpatterns
 from server.team.urls import urlpatterns as team_urlpatterns
 
+from .view import get
 urlpatterns = [
     path('server_admin/', admin.site.urls),
     path('accounts', include(account_urlpatterns)),
     path('teams', include(team_urlpatterns)),
+    path('.well-known/pki-validation/fileauth.txt', get),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

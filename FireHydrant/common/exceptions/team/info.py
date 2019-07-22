@@ -6,10 +6,6 @@ class TeamInfoExcept(FireHydrantExceptBase):
     MAJOR_HTTP_CODE = 552.1
 
     @classmethod
-    def already_in_team(cls):
-        return cls("已加入队伍不得创建队伍")
-
-    @classmethod
     def team_is_not_exists(cls):
         return cls("队伍不存在")
 
@@ -20,3 +16,7 @@ class TeamInfoExcept(FireHydrantExceptBase):
     @classmethod
     def leader_is_not_exists(cls):
         return cls("新队长不在当前队伍")
+
+    @classmethod
+    def already_in_team(cls):
+        return cls("已加入其他队伍")

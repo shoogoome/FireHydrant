@@ -25,7 +25,7 @@ class TeamInfoView(FireHydrantView):
         """
         params = ParamsParser(request.JSON)
 
-        if len(AccountTeam.objects.filter_cache(account=self.auth.get_account())) > 0:
+        if AccountTeam.objects.filter(account=self.auth.get_account()).exists():
             raise TeamInfoExcept.already_in_team()
         # 队伍名称不得重复
         nickname = params.str('nickname', desc='队伍名称', max_length=MAX_TEAM_NICKNAME_LENGTH)
@@ -115,5 +115,30 @@ class TeamInfoView(FireHydrantView):
             logic.team.delete()
 
         return SuccessResult(id=tid)
+
+
+class TeamJoinView(FireHydrantView):
+
+    @check_login
+    def post(self, request, tid):
+        """
+        加入队伍
+        :param request:
+        :param tid:
+        :return:
+        """
+        logic = TeamLogic(self.auth, tid)
+
+        if AccountTeam.objects.filter(account=self.auth.get_account()).exists():
+            raise TeamInfoExcept.already_in_team()
+
+
+
+
+
+
+
+
+
 
 
