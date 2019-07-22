@@ -190,7 +190,7 @@ USE_L10N = True
 USE_TZ = True
 
 # CORS
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['api.fh.shoogoome.com']
 
 
 # Static files (CSS, JavaScript, Images)
