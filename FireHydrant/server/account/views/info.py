@@ -19,7 +19,7 @@ class AccountInfoView(FireHydrantView):
 
     fetch_me = False
 
-    @check_login
+    # @check_login
     def get(self, request, aid=''):
         """
         获取账户信息
@@ -27,6 +27,7 @@ class AccountInfoView(FireHydrantView):
         :param aid:
         :return:
         """
+        return SuccessResult(id=request.session.get('FIRE_SESSION_ID'))
         logic = AccountLogic(self.auth, self.auth.get_account() if self.fetch_me else aid)
 
         return SuccessResult(logic.get_account_info())
