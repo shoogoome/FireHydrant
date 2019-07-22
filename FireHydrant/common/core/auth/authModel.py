@@ -119,8 +119,8 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
         super(FireHydrantAuthAuthorization, self).__init__(request=request, view=view)
         self.request = request
         self.view = view
-        self.load_from_session()
         self.redis = RedisSessionFactory()
+        self.load_from_session()
 
     def load_from_session(self):
         """
