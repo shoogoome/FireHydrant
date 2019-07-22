@@ -1,8 +1,8 @@
 
 # 登陆session
-FIREAUTHSESSION = 'Fire_session_id'
+FIREAUTHSESSION = 'FIRE_SESSION_ID'
 # 登陆信号
-FIREAUTHSIGN = 'Fire_auth_sign'
+FIREAUTHSIGN = 'FIRE_AUTH_SIGN'
 # session数据库
 SESSION_DATABASES = 0
 # session时长
