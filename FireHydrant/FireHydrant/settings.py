@@ -14,6 +14,7 @@ import os
 import yaml
 import pymysql
 from kombu import Queue, Exchange
+import corsheaders
 
 # 获取配置文件路径
 if os.getcwd() == '/':
@@ -115,6 +116,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'corsheaders',
+
     'server.account',
     'server.team',
     'server.task',
@@ -123,6 +126,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
@@ -190,7 +194,35 @@ USE_L10N = True
 USE_TZ = True
 
 # CORS
-ALLOWED_HOSTS = ['api.fh.shoogoome.com', '120.78.197.235']
+ALLOWED_HOSTS = ['127.0.0.1', '120.78.197.235']
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
+    'http://localhost:8000'
+)
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
 
 
 # Static files (CSS, JavaScript, Images)
