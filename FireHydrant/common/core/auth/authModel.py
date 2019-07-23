@@ -170,14 +170,7 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
 
         self.request.session[FIREAUTHSESSION] = self._account.id
         # 产生登陆签名
-        sign = cookie_signature(self._account.id)
-
-        self.view.set_cookie(
-            key=FIREAUTHSIGN,
-            value=sign,
-        )
-        self.redis.set(sign, self._account.id)
-
+        self.set_cookie(self._account.id)
         return True
 
     def set_cookie(self, aid):
@@ -197,9 +190,3 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
             key=FIREAUTHSIGN,
             value='{}.{}'.format(payload_encode, token)
         )
-
-
-
-
-
-
