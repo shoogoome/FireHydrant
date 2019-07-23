@@ -116,7 +116,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # CORS
     'corsheaders',
 
     'server.account',
@@ -127,6 +127,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # CORS
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -194,7 +195,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-# CORS
+# ##################
+#      CORS
+# ##################
 ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_WHITELIST = (
