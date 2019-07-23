@@ -12,6 +12,7 @@ import base64
 """
 
 KEY = "ACCOUNT_PASSWORD"
+SALT = "IFNEWOAIGRB"
 
 def session_signature(msg):
     """
@@ -29,9 +30,13 @@ def cookie_signature(msg):
     :param msg:
     :return:
     """
-    payload_encoded = base64.b64encode(str(msg).encode("utf-8")).decode()
-    return '{}.{}'.format(payload_encoded, base64.b64encode(str(time.time()).encode("utf-8")).decode())
-
+    key = "%s@%s" % (KEY, SALT)
+    h = hmac.new(
+        key.encode('utf-8'),
+        str(msg).encode('utf-8'),
+        hashlib.sha256
+    )
+    return h.hexdigest()
 def gen_salt():
     """
     盐生成器
