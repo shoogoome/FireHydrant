@@ -5,14 +5,12 @@ import uuid
 import time
 import hmac
 import hashlib
-import base64
+from FireHydrant.settings import HMAC_SALT, ACCOUNT_PASSWORD_SALT
 
 """
 一个密码生成验证模块
 """
 
-KEY = "ACCOUNT_PASSWORD"
-SALT = "IFNEWOAIGRB"
 
 def session_signature(msg):
     """
@@ -30,7 +28,7 @@ def cookie_signature(msg):
     :param msg:
     :return:
     """
-    key = "%s@%s" % (KEY, SALT)
+    key = "%s@%s" % (ACCOUNT_PASSWORD_SALT, HMAC_SALT)
     h = hmac.new(
         key.encode('utf-8'),
         str(msg).encode('utf-8'),
@@ -47,13 +45,13 @@ def gen_salt():
         uuid.uuid4()
     )
     h = hmac.new(
-        KEY.encode('utf-8'),
+        ACCOUNT_PASSWORD_SALT.encode('utf-8'),
         msg.encode('utf-8'),
         hashlib.md5
     )
     return h.hexdigest().upper()
 
-def password_signature(pwd, salt=KEY):
+def password_signature(pwd, salt=ACCOUNT_PASSWORD_SALT):
     """
     密文生成器
     :param pwd:
@@ -83,7 +81,7 @@ def __parse_password_hmac(pwd):
         salt = struct[1]
         return p, salt
     else:
-        return pwd, KEY
+        return pwd, ACCOUNT_PASSWORD_SALT
 
 def compare_password(source, target):
     """

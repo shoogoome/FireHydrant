@@ -39,6 +39,18 @@ SECRET_KEY = 'o_3t^bx-ajyntcrw)cwti)^c6-wf2qa8t*durk89ukdds#mq(h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+
+# ##################
+#      Secerts
+# ##################
+
+__config_secerts = __fire_config.get('secerts', {})
+server_secerts = __config_secerts.get('server', {})
+HMAC_SALT = server_secerts.get('HMAC_SALT', '')
+ACCOUNT_PASSWORD_SALT = server_secerts.get('ACCOUNT_PASSWORD_SALT', '')
+
+
 # ##################
 #      Celery
 # ##################
