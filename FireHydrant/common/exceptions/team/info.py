@@ -20,3 +20,11 @@ class TeamInfoExcept(FireHydrantExceptBase):
     @classmethod
     def already_in_team(cls):
         return cls("已加入其他队伍")
+
+    @classmethod
+    def password_error(cls):
+        return cls("密码错误")
+
+    @classmethod
+    def team_is_full(cls):
+        return cls("队伍已满员")

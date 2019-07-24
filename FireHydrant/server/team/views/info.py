@@ -127,18 +127,27 @@ class TeamJoinView(FireHydrantView):
         :param tid:
         :return:
         """
-        logic = TeamLogic(self.auth, tid)
-
         if AccountTeam.objects.filter(account=self.auth.get_account()).exists():
             raise TeamInfoExcept.already_in_team()
 
+        logic = TeamLogic(self.auth, tid)
+        params = ParamsParser(request.JSON)
+        # 检查入队密码
+        password = params.str('password', desc='入队密码', default='', require=False)
+        if not logic.team.public and password != logic.team.password:
+            raise TeamInfoExcept.password_error()
+        # 检查队伍人员是否满员
+        if logic.team.full:
+            raise TeamInfoExcept.team_is_full()
 
+        with transaction.atomic():
+            account = AccountTeam.objects.create(
+                team=logic.team,
+                account=self.auth.get_account(),
+            )
+        if AccountTeam.objects.filter(team=logic.team).count() >= logic.team.maximum_number:
+            logic.team.full = True
+            logic.team.save()
 
-
-
-
-
-
-
-
+        return SuccessResult(id=account.id)
 
