@@ -28,3 +28,7 @@ class TeamInfoExcept(FireHydrantExceptBase):
     @classmethod
     def team_is_full(cls):
         return cls("队伍已满员")
+
+    @classmethod
+    def role_error(cls):
+        return cls("角色不存在")
