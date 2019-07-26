@@ -8,6 +8,7 @@ from common.exceptions.team.info import TeamInfoExcept
 from common.utils.helper.pagination import slicer
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
+from common.enum.account.role import AccountRoleEnum
 from ..logics.team import TeamLogic
 from ..models import AccountTeam
 
@@ -93,4 +94,28 @@ class TeamManageView(FireHydrantView):
         :param tid:
         :return:
         """
-        ...
+        logic = TeamLogic(self.auth, tid)
+        params = ParamsParser(request.JSON)
+
+        ids = params.list('ids', desc='成员id列表')
+        role = params.int('role', desc='角色enum')
+        # 过滤错误role
+        if not AccountRoleEnum.has_value(role):
+            raise TeamInfoExcept.role_error()
+
+        status = dict()
+        accounts = AccountTeam.objects.get_many(pks=ids)
+        for account in accounts:
+            if account.team == logic.team:
+                account.role = role
+                account.save()
+                status[str(account.id)] = 1
+            else:
+                status[str(account.id)] = 0
+        return SuccessResult(status=status)
+
+
+
+
+
+
