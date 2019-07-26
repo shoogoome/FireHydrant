@@ -3,6 +3,7 @@
 
 from django.db import transaction
 
+from common.constants.length_limitation import *
 from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
 from common.enum.team.role import TeamRoleEnum
@@ -10,7 +11,6 @@ from common.exceptions.team.info import TeamInfoExcept
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from ..logics.team import TeamLogic
-from common.constants.length_limitation import *
 from ..models import Team, AccountTeam
 
 
@@ -75,7 +75,8 @@ class TeamInfoView(FireHydrantView):
         team = logic.team
         with params.diff(team):
             team.slogan = params.str('slogan', desc='口号', max_length=MAX_SLOGAN_LENGTH)
-            team.password = params.str('password', desc='入队密码', min_length=MIN_TEAM_PASSWORD, max_length=MAX_TEAM_PASSWORD)
+            team.password = params.str('password', desc='入队密码', min_length=MIN_TEAM_PASSWORD,
+                                       max_length=MAX_TEAM_PASSWORD)
             team.public = params.bool('public', desc='是否公开队伍')
 
         if params.has('nickname'):
@@ -115,39 +116,3 @@ class TeamInfoView(FireHydrantView):
             logic.team.delete()
 
         return SuccessResult(id=tid)
-
-
-class TeamJoinView(FireHydrantView):
-
-    @check_login
-    def post(self, request, tid):
-        """
-        加入队伍
-        :param request:
-        :param tid:
-        :return:
-        """
-        if AccountTeam.objects.filter(account=self.auth.get_account()).exists():
-            raise TeamInfoExcept.already_in_team()
-
-        logic = TeamLogic(self.auth, tid)
-        params = ParamsParser(request.JSON)
-        # 检查入队密码
-        password = params.str('password', desc='入队密码', default='', require=False)
-        if not logic.team.public and password != logic.team.password:
-            raise TeamInfoExcept.password_error()
-        # 检查队伍人员是否满员
-        if logic.team.full:
-            raise TeamInfoExcept.team_is_full()
-
-        with transaction.atomic():
-            account = AccountTeam.objects.create(
-                team=logic.team,
-                account=self.auth.get_account(),
-            )
-        if AccountTeam.objects.filter(team=logic.team).count() >= logic.team.maximum_number:
-            logic.team.full = True
-            logic.team.save()
-
-        return SuccessResult(id=account.id)
-
