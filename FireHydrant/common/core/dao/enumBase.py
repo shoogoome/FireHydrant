@@ -20,6 +20,19 @@ class EnumBase(Enum):
             raise AttributeError("Enum Error!")
 
     @classmethod
+    def has_value(cls, value):
+        """
+        是否存在某个枚举值
+        :param value: 枚举值
+        :type value: int
+        :return:
+        """
+        for name, item in cls.__members__.items():
+            if item.value == value:
+                return True
+        return False
+
+    @classmethod
     def get_choices(cls, with_desc=True):
         """
         Enum转换DjangoModel的choose选项需要的数据结构
