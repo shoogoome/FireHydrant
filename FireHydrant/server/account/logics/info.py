@@ -1,7 +1,7 @@
 from ..models import Account
 from common.exceptions.account.info import AccountInfoExcept
 from common.utils.helper.m_t_d import model_to_dict
-
+from server.team.models import AccountTeam
 
 class AccountLogic(object):
 
@@ -44,5 +44,17 @@ class AccountLogic(object):
         """
         if self.account is None:
             return dict()
-        return model_to_dict(self.account, self.NORMAL_FIELD)
+        info = model_to_dict(self.account, self.NORMAL_FIELD)
+        account_team = AccountTeam.objects.filter(account=self.account)
+        if account_team.exists():
+            team = account_team[0].team
+            info['team'] = {
+                'nickname': team.nickname,
+                'id': team.id,
+                'role': account_team[0].role,
+                'create_time': account_team[0].create_time
+            }
+        else:
+            info['team'] = None
+        return info
 
