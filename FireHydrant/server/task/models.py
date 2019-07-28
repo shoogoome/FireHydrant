@@ -7,6 +7,7 @@ from common.core.dao.cache.factory import delete_model_single_object_cache
 from common.core.dao.cache.model_manager import FireHydrantModelManager
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+from server.task.logics.factory import ClassificationRedisClusterFactory
 
 class Task(models.Model):
     class Meta:
@@ -110,9 +111,20 @@ class TaskReport(models.Model):
     def __str__(self):
         return "[{}] {}".format(self.id, self.task.title)
 
+
+def update_cache(instance, **kwargs):
+    # 清除数据库缓存
+    delete_model_single_object_cache(instance, **kwargs)
+    # 分类变动则删除缓存
+    redis = ClassificationRedisClusterFactory()
+    if redis.exists(str(instance.id)):
+        redis.delete(str(instance.id))
+    if redis.exists('all'):
+        redis.delete('all')
+
 receiver(post_save, sender=Task)(delete_model_single_object_cache)
 receiver(post_delete, sender=Task)(delete_model_single_object_cache)
-receiver(post_save, sender=TaskClassification)(delete_model_single_object_cache)
-receiver(post_delete, sender=TaskClassification)(delete_model_single_object_cache)
+receiver(post_save, sender=TaskClassification)(update_cache)
+receiver(post_delete, sender=TaskClassification)(update_cache)
 receiver(post_save, sender=TaskReport)(delete_model_single_object_cache)
 receiver(post_delete, sender=TaskReport)(delete_model_single_object_cache)
