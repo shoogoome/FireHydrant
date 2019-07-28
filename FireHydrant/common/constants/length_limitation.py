@@ -13,7 +13,6 @@ MAX_MOTTO_LENGTH = 200
 # 联系电话长度
 PHONE_LENGTH = 11
 
-
 # ==== 组队 ====
 
 # 队伍名长度
@@ -23,3 +22,9 @@ MIN_TEAM_PASSWORD = 6
 MAX_TEAM_PASSWORD = 30
 # 口号长度
 MAX_SLOGAN_LENGTH = 200
+
+# ==== 任务 ====
+
+# 任务分类长度
+MAX_CLASSIFICATION_LENGTH = 100
+MAX_DESCRIPETION_LENGTH = 200
