@@ -52,6 +52,7 @@ class TeamManageView(FireHydrantView):
         """
         获取队伍成员列表
         :param request:
+        :param tid:
         :return:
         """
         logic = TeamLogic(self.auth, tid)
@@ -113,9 +114,5 @@ class TeamManageView(FireHydrantView):
             else:
                 status[str(account.id)] = 0
         return SuccessResult(status=status)
-
-
-
-
 
 
