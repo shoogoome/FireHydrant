@@ -20,9 +20,11 @@ from django.conf import settings
 
 from server.account.urls import urlpatterns as account_urlpatterns
 from server.team.urls import urlpatterns as team_urlpatterns
+from server.task.urls import urlpatterns as task_urlpatterns
 
 urlpatterns = [
     path('server_admin/', admin.site.urls),
     path('accounts', include(account_urlpatterns)),
     path('teams', include(team_urlpatterns)),
+    path('tasks', include(task_urlpatterns)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
