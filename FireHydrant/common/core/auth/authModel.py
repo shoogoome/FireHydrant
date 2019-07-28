@@ -173,13 +173,13 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
         self.set_cookie(self._account.id)
         return True
 
-    def set_cookie(self, aid):
+    def set_cookie(self, aid, expire=COOKIE_EFFECTIVE_TIME):
         """
-        设置cookie
+
         :return:
         """
         payload = {
-            "expire_at": int(time.time() + COOKIE_EFFECTIVE_TIME),
+            "expire_at": int(time.time() + expire),
             "account_id": aid
         }
         payload_str = json.dumps(payload)
