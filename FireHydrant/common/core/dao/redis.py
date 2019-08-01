@@ -74,7 +74,8 @@ class RedisClusterFactory(object):
         _name = self._build_name(name)
         _value = json.dumps(value)
         self.redis_cluster.set(_name, _value)
-        self.redis_cluster.expire(_name, self.expire)
+        if self.expire >= 0:
+            self.redis_cluster.expire(_name, self.expire)
 
     def get_json(self, name):
         """
@@ -83,6 +84,8 @@ class RedisClusterFactory(object):
         :return:
         """
         value = self.redis_cluster.get(self._build_name(name))
+        if value is None or not isinstance(value, str):
+            return None
         return json.loads(value)
 
     def get(self, name):
