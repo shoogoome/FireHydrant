@@ -36,11 +36,19 @@ class Task(models.Model):
     # 任务分类
     classification = models.ForeignKey('task.TaskClassification', on_delete=models.SET_NULL, null=True)
 
+    # 配置
+    config = models.TextField(default='{}')
+
+    # 发布最终确认时间
+    publish_end_time = models.FloatField(default=0.0)
+
+    # 开发时长
+    development_time = models.FloatField(default=0.0)
+
     # 委托金
     commission = models.FloatField(default=0.0)
 
-    # 配置
-    config = models.TextField(default='{}')
+    # ======== 委托信息 ========
 
     # 受托方队长
     leader = models.ForeignKey('account.Account', blank=True, on_delete=models.SET_NULL, null=True, related_name='task_leader')
@@ -155,11 +163,12 @@ def update_cache(instance, **kwargs):
     # 清除数据库缓存
     delete_model_single_object_cache(instance, **kwargs)
     # 分类变动则删除缓存
-    redis = ClassificationRedisClusterFactory()
-    if redis.exists(str(instance.id)):
-        redis.delete(str(instance.id))
-    if redis.exists('all'):
-        redis.delete('all')
+    if not kwargs.get('create', False):
+        redis = ClassificationRedisClusterFactory()
+        if redis.exists(str(instance.id)):
+            redis.delete(str(instance.id))
+        if redis.exists('all'):
+            redis.delete('all')
 
 receiver(post_save, sender=Task)(delete_model_single_object_cache)
 receiver(post_delete, sender=Task)(delete_model_single_object_cache)
