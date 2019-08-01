@@ -24,7 +24,7 @@ class TaskClassificationInfoView(FireHydrantView):
         """
         params = ParamsParser(request.JSON)
 
-        if params.int('parent'):
+        if params.has('parent'):
             parent = TaskClassification.objects.get_once(pk=params.int('parent', desc='父节点id'))
             if parent is None:
                 raise TaskClassificationExcept.classification_is_not_exists()
@@ -36,7 +36,7 @@ class TaskClassificationInfoView(FireHydrantView):
                                        max_length=MAX_DESCRIPETION_LENGTH),
             )
 
-        if params.int('parent'):
+        if params.has('parent'):
             classification.parent = parent
             classification.save()
 
@@ -63,10 +63,19 @@ class TaskClassificationInfoView(FireHydrantView):
         params = ParamsParser(request.JSON)
         logic = TaskClassificationLogic(self.auth, cid)
 
+        # 环状警告
+        # if params.has('parent'):
+        #     parent = TaskClassification.objects.get_once(pk=params.int('parent', desc='父节点id'))
+        #     if parent is None:
+        #         raise TaskClassificationExcept.parent_is_not_exists()
+
         classification = logic.classification
         with params.diff(classification):
             classification.name = params.str('name', desc='名称', max_length=MAX_CLASSIFICATION_LENGTH)
             classification.description = params.str('description', desc='简介', max_length=MAX_DESCRIPETION_LENGTH)
+
+        # if params.has('parent'):
+        #     classification.parent = parent
         classification.save()
 
         return SuccessResult(id=cid)

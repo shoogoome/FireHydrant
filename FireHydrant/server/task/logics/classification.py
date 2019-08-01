@@ -53,7 +53,7 @@ class TaskClassificationLogic(object):
             'description': c.description
         } for c in TaskClassification.objects.filter(parent_id=info.get('id', -1))]
 
-        self.redis.set_json(set(self.classification.id), info)
+        self.redis.set_json(str(self.classification.id), info)
         return info
 
     @staticmethod
@@ -84,15 +84,16 @@ class TaskClassificationLogic(object):
         data = list()
         for root in children_classifications:
             try:
-                data.append({
+                info = {
                     'id': root.id,
                     'name': root.name,
                     'description': root.description
-                })
+                }
                 root_children_classifications = classifications.filter(parent=root)
                 children = TaskClassificationLogic.recursion_get_info(root_children_classifications, classifications)
                 if len(children) > 0:
-                    data['children'] = children
+                    info['children'] = children
+                data.append(info)
             except:
                 pass
         return data
