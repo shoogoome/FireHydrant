@@ -166,6 +166,8 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
         :return:
         """
         if self._account is None:
+            self.request.session[FIREAUTHSESSION] = ""
+            self.set_cookie("")
             return False
 
         self.request.session[FIREAUTHSESSION] = self._account.id
