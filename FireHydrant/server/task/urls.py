@@ -10,4 +10,7 @@ classification_urlpatterns = [
 
 urlpatterns = [
     path('/classifications', include(classification_urlpatterns)),
+    path('', TaskInfoView.as_view(method=['POST'])),
+    path('/<int:tid>', TaskInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
+    path('/list', TaskListView.as_view(method=['GET'])),
 ]
