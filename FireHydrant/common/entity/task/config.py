@@ -7,16 +7,13 @@ class TaskConfigEntity(EntityBase):
     def __init__(self, **kwargs):
 
         # 发布时间
-        self.publish_start_time = PropType.float(default=0)
+        self.publish_start_time = PropType.float(default=0.0)
 
         # 最迟确认时间
-        self.publish_end_time = PropType.float(default=0)
+        self.publish_end_time = PropType.float(default=0.0)
 
-        # 执行阶段
-        self.implement = PropType.dict(default={
-            "staged": 0,
-            "stage": TaskImplementEntity().dump()
-        })
+        # 开发时长
+        self.development_time = PropType.float(default=0.0)
 
         # 解析参数
         super(TaskConfigEntity, self).__init__(**kwargs)
