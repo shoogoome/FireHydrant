@@ -8,7 +8,7 @@ class TaskLogic(object):
     NORMAL_FIELD = [
         'author', 'author__id', 'author__nickname', 'title', 'content',
         'task_type', 'stage', 'classification', 'commission', 'config',
-        'create_time', 'update_time',
+        'create_time', 'update_time', 'resource_links'
     ]
 
     def __init__(self, auth, tid=''):
@@ -43,5 +43,8 @@ class TaskLogic(object):
         获取任务信息
         :return:
         """
-        return model_to_dict(self.task, self.NORMAL_FIELD)
+        info = model_to_dict(self.task, self.NORMAL_FIELD)
+        if 'resource_links' in info and 'hash' in info['resource_links']:
+            del info['resource_links']['hash']
+        return info
 
