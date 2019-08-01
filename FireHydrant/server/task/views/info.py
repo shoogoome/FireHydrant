@@ -3,17 +3,17 @@
 
 from django.db import transaction
 
-from common.constants.length_limitation import *
+from common.constants.params import TASK_PUBLIC_WAIT_TIME
 from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
+from common.enum.task.type import TaskTypeEnum
+from common.exceptions.task.classification import TaskClassificationExcept
 from common.exceptions.task.task import TaskInfoExcept
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from ..logics.task import TaskLogic
-from ..models import Task, TaskClassification
-from common.enum.task.type import TaskTypeEnum
-from common.exceptions.task.classification import TaskClassificationExcept
-from common.enum.task.stage import TaskStageEnum
+from ..models import Task, TaskClassification, TaskApply
+
 
 class TaskInfoView(FireHydrantView):
 
@@ -26,7 +26,9 @@ class TaskInfoView(FireHydrantView):
         """
         params = ParamsParser(request.JSON)
 
+        publish_end_time = params.float('publish_end_time', desc='任务配置')
         task_type = params.int('task_type', desc='任务分类')
+
         if not TaskTypeEnum.has_value(task_type):
             raise TaskInfoExcept.task_type_is_not_exists()
 
@@ -40,11 +42,18 @@ class TaskInfoView(FireHydrantView):
                 author=self.auth.get_account(),
                 title=params.str('title', desc='标题'),
                 content=params.str('content', desc='正文'),
-                commission=params.float('commission', desc='委托金'),
                 task_type=task_type,
+                commission=params.float('commission', desc='委托金'),
+                development_time=params.float('development_time', desc='开发时长'),
             )
         if params.has('classification'):
             task.classification = classification
+        # 设定的过期时间超过30天 或者不规范 则强制30天
+        if publish_end_time > (TASK_PUBLIC_WAIT_TIME + task.create_time) or publish_end_time < task.create_time:
+            task.publish_end_time = TASK_PUBLIC_WAIT_TIME + task.create_time
+        else:
+            task.publish_end_time = publish_end_time
+
         task.save()
         return SuccessResult(id=task.id)
 
@@ -60,7 +69,7 @@ class TaskInfoView(FireHydrantView):
 
         return SuccessResult(logic.get_task_info())
 
-
+    @check_login
     def put(self, request, tid):
         """
         修改任务信息
@@ -72,9 +81,9 @@ class TaskInfoView(FireHydrantView):
         logic = TaskLogic(self.auth, tid)
 
         task = logic.task
-        # TODO 有人申请接任务则不允许在修改信息
-        # if task.stage != int(TaskStageEnum.RELEASE):
-        #     raise TaskInfoExcept.is_not_in_release()
+        # 有人申请接任务则不允许再修改信息
+        if TaskApply.objects.filter(task=task).exists():
+            raise TaskInfoExcept.task_conduct()
 
         if params.has('task_type'):
             task_type = params.int('task_type', desc='任务分类')
@@ -83,20 +92,29 @@ class TaskInfoView(FireHydrantView):
             task.task_type = task_type
         if params.has('classification'):
             classification = TaskClassification.objects.get_once(pk=params.int('classification', desc='任务类型id'))
-            if classification is not None:
-                task.classification = classification
-                task.save()
+            if classification is None:
+                raise TaskClassificationExcept.classification_is_not_exists()
+            task.classification = classification
+            task.save()
 
         with params.diff(task):
             task.title = params.str('title', desc='标题')
-            task.content = params.str('content',desc='正文')
+            task.content = params.str('content', desc='正文')
+            task.commission = params.float('commission', desc='委托金')
+            task.development_time = params.float('development_time', desc='开发时长')
 
+        if params.has('publish_end_time'):
+            publish_end_time = params.float('publish_end_time', desc='发布最终确认时间')
+            # 设定的过期时间超过30天则强制30天
+            if publish_end_time > (TASK_PUBLIC_WAIT_TIME + task.create_time):
+                task.publish_end_time = TASK_PUBLIC_WAIT_TIME + task.create_time
+            else:
+                task.publish_end_time = publish_end_time
+        task.save()
 
+        return SuccessResult(id=tid)
 
-
-
-
-
+    @check_login
     def delete(self, request, tid):
         """
         删除任务
@@ -104,12 +122,7 @@ class TaskInfoView(FireHydrantView):
         :param tid:
         :return:
         """
-        ...
+        logic = TaskLogic(self.auth, tid)
 
-
-
-
-
-
-
-
+        logic.task.delete()
+        return SuccessResult(id=tid)
