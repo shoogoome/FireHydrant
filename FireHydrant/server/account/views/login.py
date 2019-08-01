@@ -36,4 +36,23 @@ class AccountLoginView(FireHydrantView):
         self.auth.set_session()
         return SuccessResult(id=accounts[0].id)
 
+    def get(self, request):
+        """
+        检查是否登录
+        :param request:
+        :return:
+        """
+        if self.auth.is_login():
+            return SuccessResult(id=self.auth.get_account().id)
+        return SuccessResult(id=None)
+
+
+
+
+
+
+
+
+
+
     
