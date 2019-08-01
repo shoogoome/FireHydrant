@@ -40,7 +40,7 @@ class Task(models.Model):
     commission = models.FloatField(default=0.0)
 
     # 配置
-    config = models.TextField(default=TaskConfigEntity().dumps())
+    config = models.TextField(default='{}')
 
     # 受托方队长
     leader = models.ForeignKey('account.Account', blank=True, on_delete=models.SET_NULL, null=True, related_name='task_leader')
