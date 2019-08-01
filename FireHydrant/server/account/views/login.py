@@ -58,8 +58,7 @@ class AccountLogoutView(FireHydrantView):
         status = 'OK'
 
         self.auth.set_account(None)
-        self.auth.write_to_session()
-        self.auth.write_to_cookie()
+        self.auth.set_session()
 
         return SuccessResult(status=status)
 
