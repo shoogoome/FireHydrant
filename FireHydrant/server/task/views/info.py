@@ -12,6 +12,8 @@ from common.utils.helper.result import SuccessResult
 from ..logics.task import TaskLogic
 from ..models import Task, TaskClassification
 from common.enum.task.type import TaskTypeEnum
+from common.exceptions.task.classification import TaskClassificationExcept
+from common.enum.task.stage import TaskStageEnum
 
 class TaskInfoView(FireHydrantView):
 
@@ -27,6 +29,12 @@ class TaskInfoView(FireHydrantView):
         task_type = params.int('task_type', desc='任务分类')
         if not TaskTypeEnum.has_value(task_type):
             raise TaskInfoExcept.task_type_is_not_exists()
+
+        if params.has('classification'):
+            classification = TaskClassification.objects.get_once(pk=params.int('classification', desc='任务类型id'))
+            if classification is None:
+                raise TaskClassificationExcept.classification_is_not_exists()
+
         with transaction.atomic():
             task = Task.objects.create(
                 author=self.auth.get_account(),
@@ -36,11 +44,8 @@ class TaskInfoView(FireHydrantView):
                 task_type=task_type,
             )
         if params.has('classification'):
-            classification = TaskClassification.objects.get_once(pk=params.int('classification', desc='任务类型id'))
-            if classification is not None:
-                task.classification = classification
-                task.save()
-
+            task.classification = classification
+        task.save()
         return SuccessResult(id=task.id)
 
     @check_login
@@ -53,7 +58,7 @@ class TaskInfoView(FireHydrantView):
         """
         logic = TaskLogic(self.auth, tid)
 
-        return
+        return SuccessResult(logic.get_task_info())
 
 
     def put(self, request, tid):
@@ -63,8 +68,34 @@ class TaskInfoView(FireHydrantView):
         :param tid:
         :return:
         """
+        params = ParamsParser(request.JSON)
+        logic = TaskLogic(self.auth, tid)
 
-        ...
+        task = logic.task
+        # TODO 有人申请接任务则不允许在修改信息
+        # if task.stage != int(TaskStageEnum.RELEASE):
+        #     raise TaskInfoExcept.is_not_in_release()
+
+        if params.has('task_type'):
+            task_type = params.int('task_type', desc='任务分类')
+            if not TaskTypeEnum.has_value(task_type):
+                raise TaskInfoExcept.task_type_is_not_exists()
+            task.task_type = task_type
+        if params.has('classification'):
+            classification = TaskClassification.objects.get_once(pk=params.int('classification', desc='任务类型id'))
+            if classification is not None:
+                task.classification = classification
+                task.save()
+
+        with params.diff(task):
+            task.title = params.str('title', desc='标题')
+            task.content = params.str('content',desc='正文')
+
+
+
+
+
+
 
     def delete(self, request, tid):
         """

@@ -69,5 +69,43 @@ class Account(models.Model):
             self.id, self.nickname, str(self.role)
         )
 
+
+class AccountExhibition(models.Model):
+
+    class Meta:
+        verbose_name = "用户作品展示"
+        verbose_name_plural = "用户作品展示表"
+        app_label = 'account'
+
+    #  关联用户
+    account = models.ForeignKey('account.Account', on_delete=models.CASCADE)
+
+    # 标题
+    title = models.CharField(max_length=255)
+
+    # 正文
+    content = models.TextField(default='')
+
+    # 是否展示
+    show = models.BooleanField(default=True)
+
+    # 资源文件关联
+    resource = models.ManyToManyField('resources.ResourcesMeta', null=True, blank=True, related_name='account_exhibition_resources')
+
+    # 创建时间
+    create_time = TimeStampField(auto_now_add=True)
+
+    # 最后更新时间
+    update_time = TimeStampField(auto_now=True)
+
+    # 重构管理器
+    objects = FireHydrantModelManager()
+
+    def __str__(self):
+        return "[{}] account: {} , title: {}".format(self.id, self.account.nickname, self.title)
+
+
 receiver(post_save, sender=Account)(delete_model_single_object_cache)
 receiver(post_delete, sender=Account)(delete_model_single_object_cache)
+receiver(post_save, sender=AccountExhibition)(delete_model_single_object_cache)
+receiver(post_delete, sender=AccountExhibition)(delete_model_single_object_cache)

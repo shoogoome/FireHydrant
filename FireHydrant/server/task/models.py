@@ -16,7 +16,7 @@ class Task(models.Model):
         app_label = 'task'
 
     # 发起人
-    author = models.ForeignKey('account.Account', on_delete=models.CASCADE)
+    author = models.ForeignKey('account.Account', on_delete=models.CASCADE, related_name='task_author')
 
     # 标题
     title = models.CharField(max_length=255)
@@ -24,8 +24,8 @@ class Task(models.Model):
     # 任务内容
     content = models.TextField(default="")
 
-    # 附属资源链接
-    resource_links = models.TextField(default='', null=True, blank=True)
+    # 附属资源
+    resource = models.ManyToManyField('resources.ResourcesMeta', null=True, blank=True, related_name='task_resources')
 
     # 任务类型（默认个人任务）
     task_type = models.IntegerField(default=TaskTypeEnum.PERSONAL)
@@ -41,6 +41,12 @@ class Task(models.Model):
 
     # 配置
     config = models.TextField(default=TaskConfigEntity().dumps())
+
+    # 受托方队长
+    leader = models.ForeignKey('account.Account', blank=True, on_delete=models.SET_NULL, null=True, related_name='task_leader')
+
+    # 受托人
+    workers = models.ManyToManyField('account.Account', blank=True, null=True, related_name='task_workers')
 
     # 创建时间
     create_time = TimeStampField(auto_now_add=True)
@@ -80,6 +86,39 @@ class TaskClassification(models.Model):
         )
 
 
+class TaskApply(models.Model):
+
+    class Meta:
+        verbose_name = "任务申请"
+        verbose_name_plural = "任务申请表"
+        app_label = 'task'
+
+    # 关联关联
+    task = models.ForeignKey('task.Task', on_delete=models.CASCADE)
+
+    # 提交者
+    author = models.ForeignKey('account.Account', on_delete=models.CASCADE)
+
+    # 正文
+    content = models.TextField(default='')
+
+    # 成就展示
+    exhibition = models.ForeignKey('account.AccountExhibition', on_delete=models.SET_NULL, null=True, blank=True)
+
+    # 重构管理器
+    objects = FireHydrantModelManager()
+
+    # 创建时间
+    create_time = TimeStampField(auto_now_add=True)
+
+    # 最后更新时间
+    update_time = TimeStampField(auto_now=True)
+
+    def __str__(self):
+        return "[{}] author: {}, task: {}".format(self.id, self.author.nickname, self.task.title)
+
+
+
 class TaskReport(models.Model):
 
     class Meta:
@@ -90,17 +129,14 @@ class TaskReport(models.Model):
     # 关联关联
     task = models.ForeignKey('task.Task', on_delete=models.CASCADE)
 
-    # 队长
-    leader = models.ForeignKey('account.Account', blank=True, on_delete=models.SET_NULL, null=True)
-
-    # 受托人
-    workers = models.ManyToManyField('account.Account', blank=True, related_name='task_workers')
-
-    # 附属资源链接
-    resource_links = models.TextField(default='[]', null=True, blank=True)
+    # 附属资源
+    resource = models.ManyToManyField('resources.ResourcesMeta', null=True, blank=True, related_name='task_report_resources')
 
     # 总结
     summary = models.TextField(default="", blank=True)
+
+    # 阶段
+    index = models.IntegerField(default=0)
 
     # 创建时间
     create_time = TimeStampField(auto_now_add=True)
@@ -131,3 +167,5 @@ receiver(post_save, sender=TaskClassification)(update_cache)
 receiver(post_delete, sender=TaskClassification)(update_cache)
 receiver(post_save, sender=TaskReport)(delete_model_single_object_cache)
 receiver(post_delete, sender=TaskReport)(delete_model_single_object_cache)
+receiver(post_save, sender=TaskApply)(delete_model_single_object_cache)
+receiver(post_delete, sender=TaskApply)(delete_model_single_object_cache)

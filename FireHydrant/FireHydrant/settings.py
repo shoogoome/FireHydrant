@@ -135,7 +135,8 @@ INSTALLED_APPS = [
     'server.team',
     'server.task',
     'server.pay',
-    'server.ranking'
+    'server.ranking',
+    'server.resources',
 ]
 
 MIDDLEWARE = [
