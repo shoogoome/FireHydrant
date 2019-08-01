@@ -14,7 +14,7 @@ class TaskInfoExcept(FireHydrantExceptBase):
         return cls("分类不存在")
 
     @classmethod
-    def is_not_in_release(cls):
-        return cls("任务不在发布期不允许修改基础信息")
+    def task_conduct(cls):
+        return cls("任务进行期间不得修改基础信息")
 
 
