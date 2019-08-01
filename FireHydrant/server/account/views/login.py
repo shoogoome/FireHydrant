@@ -47,7 +47,21 @@ class AccountLoginView(FireHydrantView):
         return SuccessResult(id=None)
 
 
+class AccountLogoutView(FireHydrantView):
 
+    def post(self, request):
+        """
+        登出
+        :param request:
+        :return:
+        """
+        status = 'OK'
+
+        self.auth.set_account(None)
+        self.auth.write_to_session()
+        self.auth.write_to_cookie()
+
+        return SuccessResult(status=status)
 
 
 
