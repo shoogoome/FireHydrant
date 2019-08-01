@@ -96,6 +96,9 @@ class TaskReport(models.Model):
     # 受托人
     workers = models.ManyToManyField('account.Account', blank=True, related_name='task_workers')
 
+    # 附属资源链接
+    resource_links = models.TextField(default='[]', null=True, blank=True)
+
     # 总结
     summary = models.TextField(default="", blank=True)
 
