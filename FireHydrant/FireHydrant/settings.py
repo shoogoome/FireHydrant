@@ -76,6 +76,14 @@ FIRE_CELERY_ROUTES = {
 
 
 # ##################
+#      LiuMa
+# ##################
+
+_config_liuma = __fire_config.get('liuma', {})
+LIUMA_SYSTEM_TOKEN = _config_liuma.get('system_token', '')
+
+
+# ##################
 #      DataBase
 # ##################
 
