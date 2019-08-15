@@ -17,4 +17,10 @@ class TaskInfoExcept(FireHydrantExceptBase):
     def task_conduct(cls):
         return cls("任务进行期间不得修改基础信息")
 
+    @classmethod
+    def no_permission(cls):
+        return cls("无权限执行此操作")
+
+
+
 
