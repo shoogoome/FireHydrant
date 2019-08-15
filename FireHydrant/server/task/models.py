@@ -111,7 +111,7 @@ class TaskApply(models.Model):
     content = models.TextField(default='')
 
     # 成就展示
-    exhibition = models.ForeignKey('account.AccountExhibition', on_delete=models.SET_NULL, null=True, blank=True)
+    exhibition = models.ManyToManyField('account.AccountExhibition', null=True, blank=True, related_name='task_account_exhibition')
 
     # 重构管理器
     objects = FireHydrantModelManager()
