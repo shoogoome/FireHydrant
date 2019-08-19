@@ -33,4 +33,17 @@ class ResourceLogic(object):
 
         return meta
 
+    def get_download_token(self):
+        """
+        获取下载token
+        :return:
+        """
+        return self.client.get_download_token(self.meta.hash)
+
+    def get_upload_token(self):
+        """
+        获取上传token
+        :return:
+        """
+        return self.client.get_upload_token(self.meta.hash)
 
