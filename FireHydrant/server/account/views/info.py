@@ -13,7 +13,7 @@ from common.utils.hash import signatures
 from common.decorate.administrators import administrators
 from ..logics.info import AccountLogic
 from common.constants.length_limitation import *
-
+from server.resources.models import ResourcesMeta
 
 class AccountInfoView(FireHydrantView):
 
@@ -69,16 +69,16 @@ class AccountInfoView(FireHydrantView):
             logic = AccountLogic(self.auth, aid)
 
         account = logic.account
-        nickname = params.str('nickname', desc='昵称', max_length=MAX_ACCOUNT_NICKNAME_LENGTH)
-        if Account.objects.filter(nickname=nickname).exclude(id=aid).exists():
-            raise AccountInfoExcept.nickname_is_exists()
+        if params.has('nickname'):
+            nickname = params.str('nickname', desc='昵称', max_length=MAX_ACCOUNT_NICKNAME_LENGTH)
+            if Account.objects.filter(nickname=nickname).exclude(id=aid).exists():
+                raise AccountInfoExcept.nickname_is_exists()
+            account.nickname = nickname
 
         with params.diff(account):
-            account.nickname = nickname
             account.sex = params.int('sex', desc='性别')
             account.motto = params.str('motto', desc='一句话签名', max_length=MAX_MOTTO_LENGTH)
-            account.phone = params.str('phone', desc='联系电话', min_length=PHONE_LENGTH, max_length=PHONE_LENGTH)
-            account.avator = params.str('avator', desc='头像hash')
+            account.phone = params.str('phone', desc='联系电话')
 
         if params.has('new_password'):
             new_password = params.str('new_password', desc='新密码', min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)
@@ -86,12 +86,28 @@ class AccountInfoView(FireHydrantView):
             if not signatures.compare_password(old_password, account.password):
                 raise AccountInfoExcept.old_password_error()
             account.password = signatures.build_password_signature(new_password, signatures.gen_salt())
+        # 头像保存
+        if params.has('avator'):
+            avator = params.str('avator', desc='头像数据')
+            meta = ResourcesMeta.objects.filter(hash=avator)
+            if meta.exists():
+                account.avator = meta[0].id
+            else:
+                with transaction.atomic():
+                    meta = ResourcesMeta.objects.create(
+                        hash=avator,
+                        name='{}头像'.format(account.id),
+                        size=0,
+                        mime='',
+                    )
+                account.avator = meta.id
+
         # 卡权限
         if params.has('role'):
             account.role = params.int('role', desc='权限')
         account.save()
 
-        return SuccessResult(id=account.id)
+        return SuccessResult(id=account.id, avator=account.avator)
 
     def delete(self, request, aid):
         """
