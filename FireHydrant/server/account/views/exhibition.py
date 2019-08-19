@@ -16,14 +16,16 @@ from server.account.models import AccountExhibition
 from server.resources.logic.info import ResourceLogic
 from server.resources.models import ResourcesMeta
 from ..logics.exhibition import ExhibitionLogic
+from common.enum.account.role import AccountRoleEnum
 
 class AccountExhibitionView(FireHydrantView):
 
     @check_login
-    def post(self, request):
+    def post(self, request, aid):
         """
         创建个人作品展示
         :param request:
+        :param aid:
         :return:
         """
         params = ParamsParser(request.JSON)
@@ -50,10 +52,11 @@ class AccountExhibitionView(FireHydrantView):
         return SuccessResult(info)
 
     @check_login
-    def get(self, request, eid):
+    def get(self, request, aid, eid):
         """
         查看用户作品展示详情
         :param request:
+        :param aid:
         :param eid:
         :return:
         """
@@ -62,10 +65,11 @@ class AccountExhibitionView(FireHydrantView):
         return SuccessResult(logic.get_exhibition_info())
 
     @check_login
-    def put(self, request, eid):
+    def put(self, request, aid, eid):
         """
         修改用户作品信息
         :param request:
+        :param aid:
         :param eid:
         :return:
         """
@@ -90,10 +94,11 @@ class AccountExhibitionView(FireHydrantView):
         return SuccessResult(info)
 
     @check_login
-    def delete(self, request, eid):
+    def delete(self, request, aid, eid):
         """
         删除作品
         :param request:
+        :param aid:
         :param eid:
         :return:
         """
@@ -102,7 +107,7 @@ class AccountExhibitionView(FireHydrantView):
         logic.exhibition.delete()
         return SuccessResult(id=eid)
 
-    @check_login
+
     def upload_resource(self, resources: list):
         """
         上传作品资源文件
@@ -133,4 +138,30 @@ class AccountExhibitionView(FireHydrantView):
                 pass
 
         return meta_list, resource_token
+
+
+class AccountExhibitionListView(FireHydrantView):
+
+    @check_login
+    def get(self, request, aid):
+        """
+        获取用户作品列表
+        :param request:
+        :param aid:
+        :return:
+        """
+        exhibitions = AccountExhibition.objects.filter(
+            account_id=aid
+        ).values('id', 'create_time', 'update_time', 'title')
+        # 对于普通角色他人用户屏蔽不展示的作品
+        if self.auth.get_account().role != int(AccountRoleEnum.ADMIN) and \
+                aid != self.auth.get_account().id:
+            exhibitions = exhibitions.filter(show=True)
+
+        return SuccessResult(list(exhibitions) if exhibitions.exists() else list())
+
+
+
+
+
 
