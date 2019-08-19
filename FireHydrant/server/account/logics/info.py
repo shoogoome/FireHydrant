@@ -2,6 +2,7 @@ from ..models import Account
 from common.exceptions.account.info import AccountInfoExcept
 from common.utils.helper.m_t_d import model_to_dict
 from server.team.models import AccountTeam
+from server.resources.logic.info import ResourceLogic
 
 class AccountLogic(object):
 
@@ -56,5 +57,11 @@ class AccountLogic(object):
             }
         else:
             info['team'] = None
+        # 获取头像资源下载token
+        try:
+            logic = ResourceLogic(self.auth, int(info['avator']))
+            info['avator'] = logic.get_download_token()
+        except:
+            pass
         return info
 

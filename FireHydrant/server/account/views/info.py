@@ -14,6 +14,7 @@ from common.decorate.administrators import administrators
 from ..logics.info import AccountLogic
 from common.constants.length_limitation import *
 from server.resources.models import ResourcesMeta
+from server.resources.logic.info import ResourceLogic
 
 class AccountInfoView(FireHydrantView):
 
@@ -87,6 +88,7 @@ class AccountInfoView(FireHydrantView):
                 raise AccountInfoExcept.old_password_error()
             account.password = signatures.build_password_signature(new_password, signatures.gen_salt())
         # 头像保存
+        token = ''
         if params.has('avator'):
             avator = params.str('avator', desc='头像数据')
             meta = ResourcesMeta.objects.filter(hash=avator)
@@ -101,13 +103,15 @@ class AccountInfoView(FireHydrantView):
                         mime='',
                     )
                 account.avator = meta.id
-
+            # 获取上传token
+            resource_logic = ResourceLogic(self.auth, meta.id)
+            token = resource_logic.get_upload_token()
         # 卡权限
         if params.has('role'):
             account.role = params.int('role', desc='权限')
         account.save()
 
-        return SuccessResult(id=account.id, avator=account.avator)
+        return SuccessResult(id=account.id, avator=token)
 
     def delete(self, request, aid):
         """
