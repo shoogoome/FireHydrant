@@ -1,3 +1,5 @@
+# -*- coding: utf-8
+# coding: utf-8
 from FireHydrant.settings import LIUMA_SYSTEM_TOKEN
 import requests
 from common.exceptions.resources.liuma import LiumaInfoExcept
@@ -40,14 +42,13 @@ class LiumaClient(object):
         :return:
         """
         response = requests.get('{}?hash={}'.format(url, fhash), headers=self.headers)
-        print(response.text)
-        if response.status_code != 200:
-            raise LiumaInfoExcept.get_download_token_fail()
 
+        if response.status_code != 200:
+            raise LiumaInfoExcept.get_token_fail()
         try:
             return response.json()['data']['token']
         except:
-            raise LiumaInfoExcept.get_download_token_fail()
+            raise LiumaInfoExcept.get_token_fail()
 
 
 
