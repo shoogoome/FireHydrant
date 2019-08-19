@@ -4,7 +4,7 @@ from .client import LiumaClient
 
 class ResourceLogic(object):
 
-    def __init__(self, auth, mid):
+    def __init__(self, auth, mid=''):
         """
         INIT
         :param auth:
@@ -38,6 +38,8 @@ class ResourceLogic(object):
         获取下载token
         :return:
         """
+        if self.meta is None:
+            return ""
         return self.client.get_download_token(self.meta.hash)
 
     def get_upload_token(self):
@@ -45,5 +47,7 @@ class ResourceLogic(object):
         获取上传token
         :return:
         """
+        if self.meta is None:
+            return ""
         return self.client.get_upload_token(self.meta.hash)
 
