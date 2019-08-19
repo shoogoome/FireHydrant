@@ -9,4 +9,8 @@ urlpatterns = [
     path('/logout', AccountLogoutView.as_view(method=['POST'])),
     path('/list', AccountListView.as_view(method=['GET'])),
     path('/_mget', AccountInfoView.as_view(method=['POST'])),
+    # Exhibition
+    path('/<int:aid>/exhibitions', AccountExhibitionView.as_view(method=['POST'])),
+    path('/<int:aid>/exhibitions/<int:eid>', AccountExhibitionView.as_view(method=['GET', 'PUT', 'DELETE'])),
+    path('/<int:aid>/exhibitions/list', AccountExhibitionListView.as_view(method=['GET'])),
 ]
