@@ -78,6 +78,7 @@ class AccountInfoView(FireHydrantView):
             account.sex = params.int('sex', desc='性别')
             account.motto = params.str('motto', desc='一句话签名', max_length=MAX_MOTTO_LENGTH)
             account.phone = params.str('phone', desc='联系电话', min_length=PHONE_LENGTH, max_length=PHONE_LENGTH)
+            account.avator = params.str('avator', desc='头像hash')
 
         if params.has('new_password'):
             new_password = params.str('new_password', desc='新密码', min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)
