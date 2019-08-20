@@ -1,22 +1,18 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # coding: utf-8
+
+from django.db import transaction
 
 from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
+from common.enum.account.role import AccountRoleEnum
 from common.utils.helper.params import ParamsParser
-from ..models import Account
-from django.db import transaction
-from common.exceptions.account.info import AccountInfoExcept
 from common.utils.helper.result import SuccessResult
-from common.utils.helper.m_t_d import model_to_dict
-from ..logics.info import AccountLogic
-from common.constants.length_limitation import *
-from common.utils.hash import signatures
 from server.account.models import AccountExhibition
 from server.resources.logic.info import ResourceLogic
 from server.resources.models import ResourcesMeta
 from ..logics.exhibition import ExhibitionLogic
-from common.enum.account.role import AccountRoleEnum
+
 
 class AccountExhibitionView(FireHydrantView):
 
@@ -107,7 +103,6 @@ class AccountExhibitionView(FireHydrantView):
         logic.exhibition.delete()
         return SuccessResult(id=eid)
 
-
     def upload_resource(self, resources: list):
         """
         上传作品资源文件
@@ -120,7 +115,9 @@ class AccountExhibitionView(FireHydrantView):
         for resource in resources:
             # 存在即秒传
             re_params = ParamsParser(resource)
-            if ResourcesMeta.objects.filter(hash=re_params.str('hash', desc='文件hash')).exists():
+            metas = ResourcesMeta.objects.filter(hash=re_params.str('hash', desc='文件hash'))
+            if metas.exists():
+                meta_list.append(metas[0])
                 continue
             try:
 
@@ -159,9 +156,3 @@ class AccountExhibitionListView(FireHydrantView):
             exhibitions = exhibitions.filter(show=True)
 
         return SuccessResult(list(exhibitions) if exhibitions.exists() else list())
-
-
-
-
-
-

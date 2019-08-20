@@ -7,7 +7,8 @@ from server.resources.logic.info import ResourceLogic
 class ExhibitionLogic(object):
 
     NORMAL_FILED = [
-        'account', 'title', 'content', 'show', 'resource', 'create_time', 'update_time'
+        'account', 'account__id', 'title', 'content', 'show', 'resource',
+        'resource__id', 'create_time', 'update_time'
     ]
 
     def __init__(self, auth, eid):
@@ -49,13 +50,15 @@ class ExhibitionLogic(object):
         logic = ResourceLogic(self.auth)
         data = model_to_dict(self.exhibition, self.NORMAL_FILED)
 
+        # raise Exception(data)
         info = list()
-        for rid in data['resource']:
+        for re in data['resource']:
+            rid = re['id']
             try:
                 meta = ResourcesMeta.objects.get_once(pk=rid)
                 if meta is None:
-                    return
-                logic.mete = meta
+                    continue
+                logic.meta = meta
                 info.append({
                     'name': meta.name,
                     'size': meta.size,
