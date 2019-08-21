@@ -6,21 +6,56 @@ from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from common.core.auth.check_login import check_login
 from ..logic.info import ResourceLogic
-
+from django.db import transaction
+from ..models import ResourcesMeta
+from common.constants.mime import MIME_TYPE
+from common.exceptions.resources.info import ResourceInfoExcept
 
 class ResourcesInfoView(FireHydrantView):
-    is_upload = False
 
     @check_login
-    def get(self, request, mid):
+    def get(self, request):
         """
-        获取令牌
+        获取上传令牌 1-资源已存在 秒传，0-获取上传token
         :param request:
-        :param mid:
         :return:
         """
-        logic = ResourceLogic(self.auth, mid)
+        params = ParamsParser(request.GET)
 
-        if self.is_upload:
-            return SuccessResult(token=logic.client.get_upload_token(logic.meta.hash))
-        return SuccessResult(token=logic.client.get_download_token(logic.meta.hash))
+        fhash = params.str('hash', desc='文件hash值')
+        if ResourcesMeta.objects.filter(hash=fhash).exists():
+            return SuccessResult(token='', state=1)
+
+        return SuccessResult(token=ResourceLogic.get_upload_token(fhash), state=0)
+
+    @check_login
+    def post(self, request):
+        """
+        完成上传
+        :param request:
+        :return:
+        """
+        params = ParamsParser(request.JSON)
+
+        token = params.str('token', desc='token')
+        name = params.str('name', desc='文件名称')
+        fhash = params.str('hash', desc='文件hash')
+        meta = ResourcesMeta.objects.filter(hash=fhash)
+        if meta.exists():
+            meta = meta[0]
+        else:
+            with transaction.atomic():
+                meta = ResourcesMeta.objects.create(
+                    name=name,
+                    mime=MIME_TYPE.get(name.strip('.')[-1], 'text/plain'),
+                    size=params.int('size', desc='文件大小'),
+                    hash=fhash
+                )
+        logic = ResourceLogic(self.auth, meta)
+        ok, v_token = logic.upload_finish(token, name)
+        if not ok:
+            raise ResourceInfoExcept.upload_fail()
+
+        return SuccessResult(token=v_token)
+
+
