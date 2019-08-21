@@ -70,11 +70,3 @@ class ExhibitionLogic(object):
         data['resource'] = info
         return data
 
-
-
-
-
-
-
-
-

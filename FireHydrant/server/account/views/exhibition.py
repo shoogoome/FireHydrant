@@ -26,10 +26,6 @@ class AccountExhibitionView(FireHydrantView):
         """
         params = ParamsParser(request.JSON)
 
-        # 创建作品资源
-        if params.has('resources'):
-            meta_list, resource_token = self.upload_resource(params.list('resources', desc='资源信息'))
-
         with transaction.atomic():
             exhibition = AccountExhibition.objects.create(
                 account=self.auth.get_account(),
@@ -37,15 +33,16 @@ class AccountExhibitionView(FireHydrantView):
                 content=params.str('content', desc='正文'),
                 show=params.bool('show', desc='是否展示', default=True, require=False)
             )
-        info = {
-            'id': exhibition.id
-        }
         # 关联资源元数据
         if params.has('resources'):
-            exhibition.resource.set(meta_list)
-            info['token'] = resource_token
-
-        return SuccessResult(info)
+            meta_list = {ResourceLogic.decode_token(token) for token in params.list('resources', desc='资源信息')}
+            try:
+                meta_list.remove(None)
+            except:
+                pass
+            exhibition.resource.set(list(meta_list))
+            exhibition.save()
+        return SuccessResult(id=exhibition.id)
 
     @check_login
     def get(self, request, aid, eid):
@@ -79,15 +76,17 @@ class AccountExhibitionView(FireHydrantView):
             exhibition.content = params.str('content', desc='正文')
             exhibition.show = params.bool('show', desc='是否展示')
 
-        info = {
-            'id': eid
-        }
-        if params.has('resource'):
-            meta_list, resource_token = self.upload_resource(params.list('resource', desc='资源文件信息'))
-            exhibition.resource.set(meta_list)
-            info['token'] = resource_token
+        # 关联资源元数据
+        if params.has('resources'):
+            meta_list = {ResourceLogic.decode_token(token) for token in params.list('resources', desc='资源信息')}
+            try:
+                meta_list.remove(None)
+            except:
+                pass
+            exhibition.resource.set(list(meta_list))
+            exhibition.save()
 
-        return SuccessResult(info)
+        return SuccessResult(id=eid)
 
     @check_login
     def delete(self, request, aid, eid):
@@ -102,40 +101,6 @@ class AccountExhibitionView(FireHydrantView):
 
         logic.exhibition.delete()
         return SuccessResult(id=eid)
-
-    def upload_resource(self, resources: list):
-        """
-        上传作品资源文件
-        :return:
-        """
-        # 创建资源元数据记录
-        re_logic = ResourceLogic(self.auth)
-        resource_token = dict()
-        meta_list = list()
-        for resource in resources:
-            # 存在即秒传
-            re_params = ParamsParser(resource)
-            metas = ResourcesMeta.objects.filter(hash=re_params.str('hash', desc='文件hash'))
-            if metas.exists():
-                meta_list.append(metas[0])
-                continue
-            try:
-
-                with transaction.atomic():
-                    meta = ResourcesMeta.objects.create(
-                        name=re_params.str('name', desc='文件名称'),
-                        size=re_params.float('size', desc='文件大小'),
-                        hash=re_params.str('hash', desc='文件hash'),
-                    )
-                meta_list.append(meta)
-                # 填入上传token信息
-                re_logic.meta = meta
-                resource_token[re_params.str('hash', desc='文件hash')] = re_logic.get_upload_token()
-            except:
-                pass
-
-        return meta_list, resource_token
-
 
 class AccountExhibitionListView(FireHydrantView):
 
