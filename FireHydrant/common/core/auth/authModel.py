@@ -177,7 +177,7 @@ class FireHydrantAuthAuthorization(FireHydrantAuthorization):
 
     def set_cookie(self, aid, expire=COOKIE_EFFECTIVE_TIME):
         """
-
+        设置cookie
         :return:
         """
         payload = {
