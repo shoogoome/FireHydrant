@@ -32,3 +32,7 @@ class AccountInfoExcept(FireHydrantExceptBase):
     @classmethod
     def nickname_is_exists(cls):
         return cls("昵称已存在")
+
+    @classmethod
+    def avator_save_fail(cls):
+        return cls("头像保存失败")

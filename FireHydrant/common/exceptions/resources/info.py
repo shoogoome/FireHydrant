@@ -9,5 +9,9 @@ class ResourceInfoExcept(FireHydrantExceptBase):
     def meta_is_not_exists(cls):
         return cls("资源元数据不存在")
 
+    @classmethod
+    def upload_fail(cls):
+        return cls("上传失败")
+
 
 
