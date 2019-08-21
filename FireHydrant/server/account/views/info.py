@@ -80,6 +80,7 @@ class AccountInfoView(FireHydrantView):
             account.sex = params.int('sex', desc='性别')
             account.motto = params.str('motto', desc='一句话签名', max_length=MAX_MOTTO_LENGTH)
             account.phone = params.str('phone', desc='联系电话')
+        account.save()
 
         if params.has('new_password'):
             new_password = params.str('new_password', desc='新密码', min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)
@@ -87,31 +88,22 @@ class AccountInfoView(FireHydrantView):
             if not signatures.compare_password(old_password, account.password):
                 raise AccountInfoExcept.old_password_error()
             account.password = signatures.build_password_signature(new_password, signatures.gen_salt())
+        account.save()
+
         # 头像保存
-        token = ''
         if params.has('avator'):
             avator = params.str('avator', desc='头像数据')
-            meta = ResourcesMeta.objects.filter(hash=avator)
-            if meta.exists():
-                account.avator = meta[0].id
-            else:
-                with transaction.atomic():
-                    meta = ResourcesMeta.objects.create(
-                        hash=avator,
-                        name='{}头像'.format(account.id),
-                        size=0,
-                        mime='',
-                    )
-                account.avator = meta.id
-            # 获取上传token
-            resource_logic = ResourceLogic(self.auth, meta.id)
-            token = resource_logic.get_upload_token()
+            meta_id = ResourceLogic.decode_token(avator)
+            if meta_id is None:
+                raise AccountInfoExcept.avator_save_fail()
+            account.avator = meta_id
+
         # 卡权限
         if params.has('role'):
             account.role = params.int('role', desc='权限')
         account.save()
 
-        return SuccessResult(id=account.id, avator=token)
+        return SuccessResult(id=account.id)
 
     def delete(self, request, aid):
         """
