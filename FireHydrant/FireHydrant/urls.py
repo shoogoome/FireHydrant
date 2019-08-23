@@ -18,12 +18,14 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+from .views import home
 from server.account.urls import urlpatterns as account_urlpatterns
 from server.team.urls import urlpatterns as team_urlpatterns
 from server.task.urls import urlpatterns as task_urlpatterns
 from server.resources.urls import urlpatterns as resources_urlpatterns
 
 urlpatterns = [
+    path('', home),
     path('server_admin/', admin.site.urls),
     path('accounts', include(account_urlpatterns)),
     path('teams', include(team_urlpatterns)),
