@@ -5,7 +5,7 @@ from django.db import models
 """
 任务榜:
 
-分日榜，月榜，季榜，年榜, 总榜
+分月榜，季榜，年榜, 总榜
 
 分任务数
 
@@ -24,7 +24,7 @@ from django.db import models
 
 财富榜:
 
-分日榜，月榜，季榜，年榜，总榜
+分月榜，季榜，年榜，总榜
 
 分金额进出数量
 
