@@ -23,16 +23,17 @@ class ResourcesInfoView(FireHydrantView):
         params = ParamsParser(request.GET)
 
         fhash = params.str('hash', desc='文件hash值')
-        meta = ResourcesMeta.objects.filter(hash=fhash)
+        meta = ResourcesMeta.objects.filter(hash='f65a9bd2931268c3dd0eeb0183fe79d03f94deead11158229b98db8807a888a1')
         # 资源存在，尝试构建资源凭证
         # 成功返回凭证，失败返回上传凭证
+        nhash = ResourceLogic.get_upload_token(fhash)
         if meta.exists():
             logic = ResourceLogic(self.auth, meta[0])
-            ok, v_token = logic.upload_finish(ResourceLogic.get_upload_token(fhash), '')
+            ok, v_token = logic.upload_finish(nhash, '')
             if ok:
                 return SuccessResult(token=v_token, state=1)
 
-        return SuccessResult(token=ResourceLogic.get_upload_token(fhash), state=0)
+        return SuccessResult(token=nhash, state=0)
 
     @check_login
     def post(self, request):
@@ -53,7 +54,7 @@ class ResourcesInfoView(FireHydrantView):
             with transaction.atomic():
                 meta = ResourcesMeta.objects.create(
                     name=name,
-                    mime=MIME_TYPE.get(name.strip('.')[-1], 'text/plain'),
+                    mime=MIME_TYPE.get(name.split('.')[-1], 'text/plain'),
                     size=params.int('size', desc='文件大小'),
                     hash=fhash
                 )

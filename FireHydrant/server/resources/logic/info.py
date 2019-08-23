@@ -80,8 +80,8 @@ class ResourceLogic(object):
 
             return True, '{}.{}'.format(payload_encode, token)
         # 否则删除当前元数据记录
-        else:
-            self.meta.delete()
+        # else:
+        #     self.meta.delete()
         return False, ""
 
     @staticmethod
