@@ -8,9 +8,16 @@ classification_urlpatterns = [
     path('/list', TaskClassificationListView.as_view(method=['GET'])),
 ]
 
+apply_urlpatterns = [
+    path('', TaskApplyInfoView.as_view(method=['POST'])),
+    path('/<int:aid>', TaskApplyInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
+    path('/list', TaskApplyListView.as_view(method=['GET'])),
+]
+
 urlpatterns = [
-    path('/classifications', include(classification_urlpatterns)),
     path('', TaskInfoView.as_view(method=['POST'])),
-    path('/<int:tid>', TaskInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
     path('/list', TaskListView.as_view(method=['GET'])),
+    path('/<int:tid>', TaskInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
+    path('/classifications', include(classification_urlpatterns)),
+    path('/<int:tid>/applies', include(apply_urlpatterns)),
 ]
