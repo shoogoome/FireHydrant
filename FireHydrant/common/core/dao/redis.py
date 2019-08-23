@@ -5,7 +5,6 @@ from django.conf import settings
 from rediscluster import StrictRedisCluster
 from FireHydrant.settings import config_redis_cluster
 import json
-import pickle
 import threading
 
 redis_pool = {}
@@ -73,7 +72,7 @@ class RedisClusterFactory(object):
         :return:
         """
         _name = self._build_name(name)
-        _value = pickle.dumps(value)
+        _value = json.dumps(value)
         self.redis_cluster.set(_name, _value)
         if self.expire >= 0:
             self.redis_cluster.expire(_name, self.expire)
@@ -86,8 +85,9 @@ class RedisClusterFactory(object):
         """
         value = self.redis_cluster.get(self._build_name(name))
         if value is None or not isinstance(value, str):
+            raise Exception(123)
             return None
-        return pickle.loads(value)
+        return json.loads(value)
 
     def get(self, name):
         """
