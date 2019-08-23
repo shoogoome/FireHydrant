@@ -13,6 +13,7 @@ from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from ..logics.task import TaskLogic
 from ..models import Task, TaskClassification, TaskApply
+from server.resources.logic.info import ResourceLogic
 
 
 class TaskInfoView(FireHydrantView):
@@ -53,6 +54,15 @@ class TaskInfoView(FireHydrantView):
             task.publish_end_time = TASK_PUBLIC_WAIT_TIME + task.create_time
         else:
             task.publish_end_time = publish_end_time
+
+        # 关联资源元数据
+        if params.has('resources'):
+            meta_list = {ResourceLogic.decode_token(token) for token in params.list('resources', desc='资源信息')}
+            try:
+                meta_list.remove(None)
+            except:
+                pass
+            task.resource.set(list(meta_list))
 
         task.save()
         return SuccessResult(id=task.id)
@@ -110,6 +120,14 @@ class TaskInfoView(FireHydrantView):
                 task.publish_end_time = TASK_PUBLIC_WAIT_TIME + task.create_time
             else:
                 task.publish_end_time = publish_end_time
+        # 关联资源元数据
+        if params.has('resources'):
+            meta_list = {ResourceLogic.decode_token(token) for token in params.list('resources', desc='资源信息')}
+            try:
+                meta_list.remove(None)
+            except:
+                pass
+            task.resource.set(list(meta_list))
         task.save()
 
         return SuccessResult(id=tid)

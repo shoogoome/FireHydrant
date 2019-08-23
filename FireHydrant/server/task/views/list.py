@@ -39,7 +39,6 @@ class TaskListView(FireHydrantView):
             tasks = tasks.filter(title__contains=params.str('title', desc='标题'))
 
         tasks, pagination = slicer(tasks, limit=limit, page=page)()()
-
         return SuccessResult(tasks=tasks, pagination=pagination)
 
     def post(self, request):
