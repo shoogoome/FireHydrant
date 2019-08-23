@@ -20,6 +20,15 @@ class EnumBase(Enum):
             raise AttributeError("Enum Error!")
 
     @classmethod
+    def get_enums_list(cls, _filter=lambda x: True):
+        """
+        获取enums列表(默认为全部)
+        :param _filter: 过滤函数
+        :return:
+        """
+        return list(filter(_filter, cls.__members__.values()))
+
+    @classmethod
     def has_value(cls, value):
         """
         是否存在某个枚举值
