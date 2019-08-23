@@ -8,7 +8,7 @@ class TaskApplyLogic(object):
     NORMAL_FIELD = [
         'task', 'task__id', 'task__title', 'author', 'author__id',
         'content', 'exhibition', 'exhibition__id', 'create_time',
-        'update_time'
+        'update_time', 'author__nickname', 'exhibition__title'
     ]
 
     def __init__(self, auth, aid):

@@ -87,7 +87,7 @@ class TaskApplyInfoView(FireHydrantView):
             apply.exhibition.set(ex_ids)
 
         with params.diff(apply):
-            apply.content = params.str('content', desc='正文')
+            apply.conte0nt = params.str('content', desc='正文')
         apply.save()
 
         return SuccessResult(id=aid)
@@ -129,7 +129,7 @@ class TaskApplyListView(FireHydrantView):
 
         applies = TaskApply.objects.filter(task=logic.task).values(
             'id', 'create_time', 'update_time', 'author', 'author__nickname'
-        )
+        ).order_by('create_time')
 
         @slicer(applies, limit=limit, page=page)
         def get_apply_list(obj):
