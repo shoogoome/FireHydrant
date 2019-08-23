@@ -49,8 +49,8 @@ class TaskApplyInfoView(FireHydrantView):
         if params.has('exhibition'):
             # 成就选择异常 （一般是恶意请求，所以直接报无权限）
             exhibitions = AccountExhibition.objects.filter(account=self.auth.get_account()).values('id')
-            ex_ids = params.list('exhibition')
-            if not set(ex_ids).issubset(exhibitions):
+            ex_ids = params.list('exhibition', desc='成就id列表')
+            if not set(ex_ids).issubset([i['id'] for i in exhibitions]):
                 raise TaskInfoExcept.no_permission()
 
         with transaction.atomic():
@@ -82,7 +82,7 @@ class TaskApplyInfoView(FireHydrantView):
             # 成就选择异常 （一般是恶意请求，所以直接报无权限）
             exhibitions = AccountExhibition.objects.filter(account=self.auth.get_account()).values('id')
             ex_ids = params.list('exhibition')
-            if not set(ex_ids).issubset(exhibitions):
+            if not set(ex_ids).issubset([i["id"] for i in exhibitions]):
                 raise TaskInfoExcept.no_permission()
             apply.exhibition.set(ex_ids)
 
@@ -105,7 +105,8 @@ class TaskApplyInfoView(FireHydrantView):
         if logic.apply.author != self.auth.get_account() and \
                 self.auth.get_account().role != int(AccountRoleEnum.ADMIN):
             raise TaskInfoExcept.no_permission()
-
+        logic.apply.delete()
+        return SuccessResult(id=aid)
 
 class TaskApplyListView(FireHydrantView):
 
@@ -130,5 +131,13 @@ class TaskApplyListView(FireHydrantView):
             'id', 'create_time', 'update_time', 'author', 'author__nickname'
         )
 
-        apply_list, pagination = slicer(applies, limit=limit, page=page)()()
+        @slicer(applies, limit=limit, page=page)
+        def get_apply_list(obj):
+            obj['author'] = {
+                'id': obj['author'],
+                'nickname': obj['author__nickname']
+            }
+            del obj['author__nickname']
+            return obj
+        apply_list, pagination = get_apply_list()
         return SuccessResult(applies=apply_list, pagination=pagination)
