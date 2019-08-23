@@ -1,23 +1,19 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # coding: utf-8
 
+from common.constants.length_limitation import *
 from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
-from common.utils.helper.params import ParamsParser
-from ..models import Account
-from django.db import transaction
 from common.exceptions.account.info import AccountInfoExcept
-from common.utils.helper.result import SuccessResult
-from common.utils.helper.m_t_d import model_to_dict
 from common.utils.hash import signatures
-from common.decorate.administrators import administrators
-from ..logics.info import AccountLogic
-from common.constants.length_limitation import *
-from server.resources.models import ResourcesMeta
+from common.utils.helper.params import ParamsParser
+from common.utils.helper.result import SuccessResult
 from server.resources.logic.info import ResourceLogic
+from ..logics.info import AccountLogic
+from ..models import Account
+
 
 class AccountInfoView(FireHydrantView):
-
     fetch_me = False
 
     @check_login
@@ -83,8 +79,10 @@ class AccountInfoView(FireHydrantView):
         account.save()
 
         if params.has('new_password'):
-            new_password = params.str('new_password', desc='新密码', min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)
-            old_password = params.str('old_password', desc='旧密码', min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH)
+            new_password = params.str('new_password', desc='新密码', min_length=MIN_PASSWORD_LENGTH,
+                                      max_length=MAX_PASSWORD_LENGTH)
+            old_password = params.str('old_password', desc='旧密码', min_length=MIN_PASSWORD_LENGTH,
+                                      max_length=MAX_PASSWORD_LENGTH)
             if not signatures.compare_password(old_password, account.password):
                 raise AccountInfoExcept.old_password_error()
             account.password = signatures.build_password_signature(new_password, signatures.gen_salt())
@@ -116,4 +114,3 @@ class AccountInfoView(FireHydrantView):
         logic.account.delete()
 
         return SuccessResult(id=aid)
-
