@@ -1,13 +1,14 @@
 from django.db import models
-from common.core.dao.time_stamp import TimeStampField
-from common.entity.task.config import TaskConfigEntity
-from common.enum.task.stage import TaskStageEnum
-from common.enum.task.type import TaskTypeEnum
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
 from common.core.dao.cache.factory import delete_model_single_object_cache
 from common.core.dao.cache.model_manager import FireHydrantModelManager
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
-from server.task.logics.factory import ClassificationRedisClusterFactory
+from common.core.dao.time_stamp import TimeStampField
+from common.enum.task.stage import TaskStageEnum
+from common.enum.task.type import TaskTypeEnum
+from .logics.signals import handle_classification_post_save_delete, handle_task_post_delete, handle_task_post_save
+
 
 class Task(models.Model):
     class Meta:
@@ -51,7 +52,8 @@ class Task(models.Model):
     # ======== 委托信息 ========
 
     # 受托方队长
-    leader = models.ForeignKey('account.Account', blank=True, on_delete=models.SET_NULL, null=True, related_name='task_leader')
+    leader = models.ForeignKey('account.Account', blank=True, on_delete=models.SET_NULL, null=True,
+                               related_name='task_leader')
 
     # 受托人
     workers = models.ManyToManyField('account.Account', blank=True, null=True, related_name='task_workers')
@@ -70,7 +72,6 @@ class Task(models.Model):
 
 
 class TaskClassification(models.Model):
-
     class Meta:
         verbose_name = "任务分类"
         verbose_name_plural = "任务分类表"
@@ -95,7 +96,6 @@ class TaskClassification(models.Model):
 
 
 class TaskApply(models.Model):
-
     class Meta:
         verbose_name = "任务申请"
         verbose_name_plural = "任务申请表"
@@ -111,7 +111,8 @@ class TaskApply(models.Model):
     content = models.TextField(default='')
 
     # 成就展示
-    exhibition = models.ManyToManyField('account.AccountExhibition', null=True, blank=True, related_name='task_account_exhibition')
+    exhibition = models.ManyToManyField('account.AccountExhibition', null=True, blank=True,
+                                        related_name='task_account_exhibition')
 
     # 重构管理器
     objects = FireHydrantModelManager()
@@ -126,9 +127,7 @@ class TaskApply(models.Model):
         return "[{}] author: {}, task: {}".format(self.id, self.author.nickname, self.task.title)
 
 
-
 class TaskReport(models.Model):
-
     class Meta:
         verbose_name = "任务进度汇报"
         verbose_name_plural = "任务进度汇报表"
@@ -138,7 +137,8 @@ class TaskReport(models.Model):
     task = models.ForeignKey('task.Task', on_delete=models.CASCADE)
 
     # 附属资源
-    resource = models.ManyToManyField('resources.ResourcesMeta', null=True, blank=True, related_name='task_report_resources')
+    resource = models.ManyToManyField('resources.ResourcesMeta', null=True, blank=True,
+                                      related_name='task_report_resources')
 
     # 总结
     summary = models.TextField(default="", blank=True)
@@ -159,21 +159,10 @@ class TaskReport(models.Model):
         return "[{}] {}".format(self.id, self.task.title)
 
 
-def update_cache(instance, **kwargs):
-    # 清除数据库缓存
-    delete_model_single_object_cache(instance, **kwargs)
-    # 分类变动则删除缓存
-    if not kwargs.get('create', False):
-        redis = ClassificationRedisClusterFactory()
-        if redis.exists(str(instance.id)):
-            redis.delete(str(instance.id))
-        if redis.exists('all'):
-            redis.delete('all')
-
-receiver(post_save, sender=Task)(delete_model_single_object_cache)
-receiver(post_delete, sender=Task)(delete_model_single_object_cache)
-receiver(post_save, sender=TaskClassification)(update_cache)
-receiver(post_delete, sender=TaskClassification)(update_cache)
+receiver(post_save, sender=Task)(handle_task_post_save)
+receiver(post_delete, sender=Task)(handle_task_post_delete)
+receiver(post_save, sender=TaskClassification)(handle_classification_post_save_delete)
+receiver(post_delete, sender=TaskClassification)(handle_classification_post_save_delete)
 receiver(post_save, sender=TaskReport)(delete_model_single_object_cache)
 receiver(post_delete, sender=TaskReport)(delete_model_single_object_cache)
 receiver(post_save, sender=TaskApply)(delete_model_single_object_cache)
