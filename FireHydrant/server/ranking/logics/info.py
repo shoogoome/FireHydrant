@@ -28,9 +28,9 @@ class RankingLogic(object):
                 raise RankingInfoExcept.task_type_error()
 
         with connection.cursor() as cursor:
-            cursor.execute("SELECT task.author_id, SUM(task.commission) as money, account.nickname "
-                           "FROM `task_task` as task, `account_account` as account "
-                           "WHERE account.id = task.author_id and stage = 4 and task_type = %s "
+            cursor.execute("SELECT task.author_id, SUM(task.commission) AS money, account.nickname "
+                           "FROM `task_task` AS task, `account_account` AS account "
+                           "WHERE account.id = task.author_id AND stage = 4 AND task_type = %s "
                            "GROUP BY author_id "
                            "ORDER BY money DESC", [task_type])
             row = cursor.fetchall()
