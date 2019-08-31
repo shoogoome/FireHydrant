@@ -22,11 +22,11 @@ class ResourcesInfoView(FireHydrantView):
         """
         params = ParamsParser(request.GET)
 
-        fhash = params.str('hash', desc='文件hash值')
-        meta = ResourcesMeta.objects.filter(hash='f65a9bd2931268c3dd0eeb0183fe79d03f94deead11158229b98db8807a888a1')
+        file_hash = params.str('hash', desc='文件hash值')
+        meta = ResourcesMeta.objects.filter(hash=file_hash)
         # 资源存在，尝试构建资源凭证
         # 成功返回凭证，失败返回上传凭证
-        nhash = ResourceLogic.get_upload_token(fhash)
+        nhash = ResourceLogic.get_upload_token(file_hash)
         if meta.exists():
             logic = ResourceLogic(self.auth, meta[0])
             ok, v_token = logic.upload_finish(nhash, '')
