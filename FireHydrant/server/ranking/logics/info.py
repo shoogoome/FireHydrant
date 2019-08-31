@@ -32,7 +32,7 @@ class RankingLogic(object):
                            "FROM `task_task` AS task, `account_account` AS account "
                            "WHERE account.id = task.author_id AND stage = 4 AND task_type = %s "
                            "GROUP BY author_id "
-                           "ORDER BY money DESC", [task_type])
+                           "ORDER BY money DESC LIMIT 50", [task_type])
             row = cursor.fetchall()
 
         data = [{
@@ -43,3 +43,5 @@ class RankingLogic(object):
 
         redis.set_json(key, data)
         return data
+
+
