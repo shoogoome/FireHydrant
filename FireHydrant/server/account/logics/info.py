@@ -60,7 +60,7 @@ class AccountLogic(object):
         # 获取头像资源下载token
         try:
             logic = ResourceLogic(self.auth, int(info['avator']))
-            info['avator'] = logic.get_download_token()
+            info['avator'] = ResourceLogic.get_download_token(logic.meta.hash)
         except:
             pass
         return info
