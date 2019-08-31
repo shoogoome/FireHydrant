@@ -108,7 +108,7 @@ class TaskApplyInfoView(FireHydrantView):
         logic.apply.delete()
         return SuccessResult(id=aid)
 
-class TaskApplyListView(FireHydrantView):
+class TaskApplyManageView(FireHydrantView):
 
     @check_login
     def get(self, request, tid):
@@ -141,3 +141,16 @@ class TaskApplyListView(FireHydrantView):
             return obj
         apply_list, pagination = get_apply_list()
         return SuccessResult(applies=apply_list, pagination=pagination)
+
+    # @check_login
+    # def post(self, request, tid, aid):
+    #     """
+    #     指定申请单位完成任务
+    #     :param request:
+    #     :param tid:
+    #     :param aid:
+    #     :return:
+    #     """
+    #     logic = TaskApplyLogic(self.auth, aid)
+    #
+
