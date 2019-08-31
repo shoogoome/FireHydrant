@@ -37,14 +37,14 @@ class ResourceLogic(object):
 
         return meta
 
-    def get_download_token(self):
+    @staticmethod
+    def get_download_token(hash):
         """
         获取下载token
         :return:
         """
-        if self.meta is None:
-            return ""
-        return self.client.get_download_token(self.meta.hash)
+        client = LiumaClient()
+        return client.get_download_token(hash)
 
     @staticmethod
     def get_upload_token(hash):
@@ -91,6 +91,8 @@ class ResourceLogic(object):
         :param token:
         :return:
         """
+        if not token or not isinstance(token, str):
+            return None
         token_list = token.split('.')
         # 格式错误
         if len(token_list) != 2:
