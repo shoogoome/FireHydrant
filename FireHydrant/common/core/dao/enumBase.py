@@ -9,8 +9,8 @@ class EnumBase(Enum):
         获取默认enum值
         :return:
         """
-        if hasattr(cls, '__dafault__'):
-            return cls.__dafault__
+        if hasattr(cls, '__default__'):
+            return cls.__default__
 
         items = list(cls.__members__.items())
         if len(items) > 0:

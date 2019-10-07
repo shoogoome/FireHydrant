@@ -145,6 +145,7 @@ INSTALLED_APPS = [
     'server.pay',
     'server.ranking',
     'server.resources',
+    'server.practice',
 ]
 
 MIDDLEWARE = [
