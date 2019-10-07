@@ -75,7 +75,7 @@ class ParamsParser(object):
         :param key:
         :return:
         """
-        return self.query_set.get(key, None) is not None
+        return self.query_set.get(key, None) and True
 
     def int(self, key, desc='', require=True, default=0):
         """
