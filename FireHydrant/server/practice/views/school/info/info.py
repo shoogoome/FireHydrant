@@ -7,8 +7,8 @@ from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
-from ...logics.school import SchoolLogic
-from ...models import PracticeSchool
+from server.practice.logics.school import SchoolLogic
+from server.practice.models import PracticeSchool
 
 
 class PracticeSchoolInfoView(FireHydrantView):

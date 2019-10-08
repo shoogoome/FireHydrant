@@ -229,8 +229,8 @@ class PracticeAttendance(models.Model):
 class PracticeClassroom(models.Model):
 
     class Meta:
-        verbose_name = "爱阅读后台管理课程考勤"
-        verbose_name_plural = "爱阅读后台管理课程考勤表"
+        verbose_name = "爱阅读后台管理教室"
+        verbose_name_plural = "爱阅读后台管理教室表"
         app_label = 'practice'
 
     # 学校
@@ -256,11 +256,11 @@ class PracticeClassroom(models.Model):
             self.id, self.school.name, self.name
         )
 
-class PracitceClassroomUser(models.Model):
+class PracticeClassroomUser(models.Model):
 
     class Meta:
-        verbose_name = "爱阅读后台管理课程考勤"
-        verbose_name_plural = "爱阅读后台管理课程考勤表"
+        verbose_name = "爱阅读后台管理教室使用"
+        verbose_name_plural = "爱阅读后台管理教室使用表"
         app_label = 'practice'
 
     # 创建人
@@ -359,8 +359,8 @@ receiver(post_delete, sender=PracticeAttendance)(delete_model_single_object_cach
 receiver(post_save, sender=PracticeClassroom)(delete_model_single_object_cache)
 receiver(post_delete, sender=PracticeClassroom)(delete_model_single_object_cache)
 
-receiver(post_save, sender=PracitceClassroomUser)(delete_model_single_object_cache)
-receiver(post_delete, sender=PracitceClassroomUser)(delete_model_single_object_cache)
+receiver(post_save, sender=PracticeClassroomUser)(delete_model_single_object_cache)
+receiver(post_delete, sender=PracticeClassroomUser)(delete_model_single_object_cache)
 
 receiver(post_save, sender=PracticeEvaluateBase)(delete_model_single_object_cache)
 receiver(post_delete, sender=PracticeEvaluateBase)(delete_model_single_object_cache)
