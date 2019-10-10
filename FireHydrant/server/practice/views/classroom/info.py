@@ -25,7 +25,7 @@ class PracticeClassroomInfoView(FireHydrantView):
         :return:
         """
         logic = ClassroomLogic(self.auth, sid, cid)
-        return SuccessResult(logic.get_school_info())
+        return SuccessResult(logic.get_classroom_info())
 
     @check_login
     def post(self, request, sid):
@@ -37,7 +37,7 @@ class PracticeClassroomInfoView(FireHydrantView):
         """
         logic = SchoolLogic(self.auth, sid)
         params = ParamsParser(request.JSON)
-        classrooms = params.list('classroom', desc='教室信息')
+        classrooms = params.list('data', desc='教室信息')
 
         state = {}
         for classroom in classrooms:

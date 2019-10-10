@@ -87,6 +87,16 @@ class PracticeTag(models.Model):
     # 父节点
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
+    # 创建时间
+    create_time = TimeStampField(auto_now_add=True)
+
+    # 更新时间
+    update_time = TimeStampField(auto_now=True)
+
+    # 重构管理器
+    objects = FireHydrantModelManager()
+
+
     def __str__(self):
         return '[{}] 名称: {}'.format(
             self.id, self.name
@@ -142,7 +152,7 @@ class PracticeArrangement(models.Model):
         verbose_name_plural = "爱阅读后台管理课程排课表"
         app_label = 'practice'
 
-
+    # 课程
     course = models.ForeignKey('practice.PracticeCourse', on_delete=models.CASCADE)
 
     # 排课名称
@@ -208,8 +218,14 @@ class PracticeAttendance(models.Model):
     # 学生
     student = models.ForeignKey('practice.PracticeStudentUser', on_delete=models.CASCADE)
 
-    # 状态
-    state = models.PositiveSmallIntegerField(**AttendanceStateEnum.get_models_params())
+    # 请假
+    leaver = models.IntegerField(default=0)
+
+    # 缺勤
+    absent = models.IntegerField(default=0)
+
+    # 迟到
+    late = models.IntegerField(default=0)
 
     # 创建时间
     create_time = TimeStampField(auto_now_add=True)
@@ -293,10 +309,13 @@ class PracticeEvaluateBase(models.Model):
         verbose_name_plural = "爱阅读后台管理课程评价表"
         app_label = 'practice'
 
+    # 创建人
     author = models.ForeignKey('account.Account', on_delete=models.CASCADE)
 
+    # 评分
     star = models.PositiveSmallIntegerField(default=0)
 
+    # 评语
     message = models.TextField(default="")
 
     # 创建时间

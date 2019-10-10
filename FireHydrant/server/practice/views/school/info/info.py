@@ -9,7 +9,7 @@ from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from server.practice.logics.school import SchoolLogic
 from server.practice.models import PracticeSchool
-
+from common.exceptions.practice.school.info import PracticeSchoolInfoExcept
 
 class PracticeSchoolInfoView(FireHydrantView):
 
@@ -33,6 +33,10 @@ class PracticeSchoolInfoView(FireHydrantView):
         """
         params = ParamsParser(request.JSON)
 
+        name = params.str('name', desc='学校名称')
+        if PracticeSchool.objects.filter(name=name).exists():
+            raise PracticeSchoolInfoExcept.school_name_is_exists()
+
         with transaction.atomic():
             school = PracticeSchool.objects.create(
                 name=params.str('name', desc="学校名称"),
@@ -50,7 +54,7 @@ class PracticeSchoolInfoView(FireHydrantView):
         """
         logic = SchoolLogic(self.auth, sid)
         logic.school.delete()
-        return SuccessResult(sid)
+        return SuccessResult(id=sid)
 
     @check_login
     def put(self, request, sid):

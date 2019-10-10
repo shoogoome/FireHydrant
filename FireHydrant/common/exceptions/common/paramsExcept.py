@@ -34,6 +34,14 @@ class ParamsExcept(FireHydrantExceptBase):
         return cls("不得在diff模式下运行")
 
     @classmethod
+    def value_max_value(cls, desc, max_value):
+        return cls("{}不得大于最大数值:{}".format(desc, max_value))
+
+    @classmethod
+    def value_min_value(cls, desc, min_value):
+        return cls("{}不得大于最小数值:{}".format(desc, min_value))
+
+    @classmethod
     def exceed_max_length(cls, desc, length):
         return cls("{}不得超过最大限制长度: {}字符".format(desc, length))
 

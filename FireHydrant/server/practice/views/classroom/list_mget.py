@@ -11,6 +11,7 @@ from ...logics.school import SchoolLogic
 from ...models import PracticeSchool
 from ...models import PracticeClassroom
 from ...logics.classroom import ClassroomLogic
+from common.utils.helper.pagination import slicer
 
 
 class PracticeClassroomListMgetView(FireHydrantView):
@@ -24,6 +25,9 @@ class PracticeClassroomListMgetView(FireHydrantView):
         :return:
         """
         params = ParamsParser(request.GET)
+        limit = params.int('limit', desc='每页最大渲染数', require=False, default=10)
+        page = params.int('page', desc='当前页数', require=False, default=1)
+
 
         classrooms = PracticeClassroom.objects.filter(school_id=sid).values('id', 'update_time')
         if params.has('name'):
@@ -31,10 +35,8 @@ class PracticeClassroomListMgetView(FireHydrantView):
         if params.has('size'):
             classrooms = classrooms.filter(size__gte=params.int('size', desc='教室大小'))
 
-        return SuccessResult([{
-            'id': classroom.get('id', ""),
-            'update_time': classroom.get('update_time', -1)
-        } for classroom in classrooms])
+        classrooms_list, pagination = slicer(classrooms, limit=limit, page=page)()()
+        return SuccessResult(classrooms=classrooms_list, pagination=pagination)
 
 
     @check_login
@@ -53,7 +55,7 @@ class PracticeClassroomListMgetView(FireHydrantView):
         classrooms = PracticeClassroom.objects.get_many(ids)
         for classroom in classrooms:
             try:
-                if classrooms.school != logic.school:
+                if classroom.school != logic.school:
                     continue
                 logic.classroom = classroom
                 data.append(logic.get_classroom_info())

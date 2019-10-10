@@ -9,6 +9,7 @@ from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from server.practice.logics.school import SchoolLogic
 from server.practice.models import PracticeSchool
+from common.utils.helper.pagination import slicer
 
 
 class PracticeSchoolListMgetView(FireHydrantView):
@@ -20,15 +21,15 @@ class PracticeSchoolListMgetView(FireHydrantView):
         :return:
         """
         params = ParamsParser(request.GET)
+        limit = params.int('limit', desc='每页最大渲染数', require=False, default=10)
+        page = params.int('page', desc='当前页数', require=False, default=1)
 
         schools = PracticeSchool.objects.values('id', 'update_time')
         if params.has('name'):
             schools = schools.filter(name__contains=params.str('name', desc='学校名称'))
 
-        return SuccessResult([{
-            'id': school.get('id', ""),
-            'update_time': schools.get('update_time', 0.0)
-        } for school in schools])
+        schools_list, pagination = slicer(schools, limit=limit, page=page)()()
+        return SuccessResult(attendances=schools_list, pagination=pagination)
 
 
     @check_login

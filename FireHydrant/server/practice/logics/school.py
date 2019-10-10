@@ -5,7 +5,7 @@ from common.utils.helper.m_t_d import model_to_dict
 class SchoolLogic(object):
 
     NORMAL_FIELDS = [
-        'name', 'description', 'create_time', 'update_time'
+        'name', 'description', 'create_time', 'update_time', 'id'
     ]
 
     def __init__(self, auth, sid):

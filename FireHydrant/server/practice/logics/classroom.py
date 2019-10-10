@@ -7,7 +7,7 @@ class ClassroomLogic(SchoolLogic):
 
     NORMAL_FIELDS = [
         'school', 'school__id', 'school__name',
-        'size', 'name', 'create_time', 'update_time'
+        'size', 'name', 'create_time', 'update_time', 'id'
     ]
 
     def __init__(self, auth, sid, cid=''):
@@ -45,5 +45,5 @@ class ClassroomLogic(SchoolLogic):
         """
         if not self.classroom:
             return {}
-        return model_to_dict(self.school, self.NORMAL_FIELDS)
+        return model_to_dict(self.classroom, self.NORMAL_FIELDS)
 

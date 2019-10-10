@@ -77,13 +77,15 @@ class ParamsParser(object):
         """
         return self.query_set.get(key, None) and True
 
-    def int(self, key, desc='', require=True, default=0):
+    def int(self, key, desc='', require=True, default=0, max_value=None, min_value=None):
         """
         解析int
         :param key:
         :param desc:
         :param require:
         :param default:
+        :param max_value:
+        :param min_value:
         :return:
         """
         value = self.__get_value(key, desc, require, int, default)
@@ -93,6 +95,10 @@ class ParamsParser(object):
                 value = int(value)
             except:
                 raise ParamsExcept.parameter_int_error()
+        if max_value and max_value < value:
+            raise ParamsExcept.value_max_value(desc, max)
+        if min_value and min_value > value:
+            raise ParamsExcept.value_min_value(desc, min)
 
         return value
 
