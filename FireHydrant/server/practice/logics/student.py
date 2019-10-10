@@ -18,8 +18,8 @@ from common.utils.hash import signatures
 class StudentUserLogic(SchoolLogic):
 
     NORMAL_FIELDS = [
-        'account', 'school', 'code', 'realname',
-        'create_time', 'update_time'
+        'account', 'account__id', 'school', 'school__id', 'code', 'realname',
+        'create_time', 'update_time', 'id'
     ]
 
     def __init__(self, auth, sid, stid=''):
@@ -65,7 +65,7 @@ class StudentUserLogic(SchoolLogic):
         :return:
         """
         code = params.str('code', desc='学号')
-        phone = params.int('phone', desc='手机')
+        phone = params.str('phone', desc='手机')
 
         # 学号存在或者，账号已绑定该学校则直接放回
         studentuser = PracticeStudentUser.objects.filter(school=self.school).filter(

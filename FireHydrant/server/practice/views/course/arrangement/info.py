@@ -70,14 +70,14 @@ class PracticeArrangementInfoView(FireHydrantView):
 
         arrangement = logic.arrangement
         with params.diff(arrangement):
-            arrangement.name = params.str('name', desc='名称'),
-            arrangement.day_of_week = params.int('day_of_week', desc='周几', max_value=7, min_value=0),
-            arrangement.start_week = params.int('start_week', desc='开始周', min_value=0),
-            arrangement.end_week = params.int('end_week', desc='结束周', min_value=0),
-            arrangement.odd_even = params.int('odd_even', desc='单双周'),
-            arrangement.start_section = params.int('start_section', min_value=0),
-            arrangement.end_section = params.int('end_section', desc='结束节', min_value=0),
-            arrangement.start_time = params.float('start_time', desc='开始时间'),
+            arrangement.name = params.str('name', desc='名称')
+            arrangement.day_of_week = params.int('day_of_week', desc='周几', max_value=7, min_value=0)
+            arrangement.start_week = params.int('start_week', desc='开始周', min_value=0)
+            arrangement.end_week = params.int('end_week', desc='结束周', min_value=0)
+            arrangement.odd_even = params.int('odd_even', desc='单双周')
+            arrangement.start_section = params.int('start_section', min_value=0)
+            arrangement.end_section = params.int('end_section', desc='结束节', min_value=0)
+            arrangement.start_time = params.float('start_time', desc='开始时间')
             arrangement.end_tim = params.float('end_time', desc='结束时间')
         arrangement.save()
         return SuccessResult(id=aid)

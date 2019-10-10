@@ -9,7 +9,11 @@ class ArrangementLogic(CourseLogic):
         'course', 'course__id', 'course__name',
         'name', 'day_of_week', 'start_week', 'end_week',
         'odd_even', 'start_section', 'end_section', 'start_time',
-        'end_time', 'create_time', 'update_time'
+        'end_time', 'create_time', 'update_time', 'id'
+    ]
+
+    STUDENT = [
+        'students', 'students__id', 'students__code', 'students__realname'
     ]
 
     def __init__(self, auth, sid, cid, aid=''):
@@ -48,3 +52,13 @@ class ArrangementLogic(CourseLogic):
         if self.arrangement is None:
             return {}
         return model_to_dict(self.arrangement, self.NORMAL_FIELDS)
+
+    def get_arrangement_student_info(self):
+        """
+        获取排课学生信息
+        :return:
+        """
+        if self.arrangement is None:
+            return []
+        return model_to_dict(self.arrangement, self.STUDENT)
+

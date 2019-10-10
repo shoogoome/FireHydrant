@@ -2,6 +2,7 @@ from ..models import PracticeClassroom
 from .school import SchoolLogic
 from common.exceptions.practice.classroom.info import PracticeClassroomInfoExcept
 from common.utils.helper.m_t_d import model_to_dict
+from ..models import PracticeClassroomUser
 
 class ClassroomLogic(SchoolLogic):
 
@@ -46,4 +47,45 @@ class ClassroomLogic(SchoolLogic):
         if not self.classroom:
             return {}
         return model_to_dict(self.classroom, self.NORMAL_FIELDS)
+
+    def get_classroom_user(self):
+        """
+        获取教室使用情况
+        :return:
+        """
+        if not self.classroom:
+            return []
+
+        user = PracticeClassroomUser.objects.select_related(
+            'account__account', 'practice__practicearrangement', 'practice__practiceclassroom'
+        ).filter(
+            classroom=self.classroom
+        ).values(
+            'author', 'author__nickname', 'arrangement', 'arrangement__name',
+            'classroom', 'classroom__name', 'create_time', 'update_time', 'id'
+        )
+
+        data = []
+        for i in user:
+            i['author'] = {
+                'id': i['author'],
+                'nickname': i['author__nickname']
+            }
+            i['arrangement'] = {
+                'id': i['arrangement'],
+                'name': i['arrangement__name']
+            }
+            i['classroom'] = {
+                'id': i['classroom'],
+                'name': i['classroom__name']
+            }
+            del i['arrangement__name']
+            del i['author__nickname']
+            del i['classroom__name']
+            try:
+                data.append(i)
+            except:
+                pass
+        return data
+
 

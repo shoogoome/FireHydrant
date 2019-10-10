@@ -25,6 +25,8 @@ classroom_urlpatterns = [
 
 student_urlpatterns = [
     path('', PracticeStudentInfoView.as_view(method=['POST'])),
+    path('/list', PracticeStudentListMgetView.as_view(method=['GET'])),
+    path('/_mget', PracticeStudentListMgetView.as_view(method=['POST'])),
     path('/<int:stid>', PracticeStudentInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
 ]
 
@@ -40,7 +42,7 @@ arrangement_urlpatterns = [
     path('/list', PracticeArrangementListMgetView.as_view(method=['GET'])),
     path('/_mget', PracticeArrangementListMgetView.as_view(method=['POST'])),
     path('/<int:aid>', PracticeArrangementInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
-    path('/<int:aid>/students', PracticeArrangementStudentInfoView.as_view(method=['POST', 'DELETE'])),
+    path('/<int:aid>/students', PracticeArrangementStudentInfoView.as_view(method=['GET', 'POST', 'DELETE'])),
 ]
 
 attendance_urlpatterns = [

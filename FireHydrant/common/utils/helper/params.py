@@ -94,7 +94,7 @@ class ParamsParser(object):
             try:
                 value = int(value)
             except:
-                raise ParamsExcept.parameter_int_error()
+                raise ParamsExcept.parameter_int_error(desc)
         if max_value and max_value < value:
             raise ParamsExcept.value_max_value(desc, max)
         if min_value and min_value > value:
@@ -117,7 +117,7 @@ class ParamsParser(object):
             try:
                 value = float(value)
             except:
-                raise ParamsExcept.parameter_float_error()
+                raise ParamsExcept.parameter_float_error(desc)
 
         return value
 
@@ -138,7 +138,7 @@ class ParamsParser(object):
             try:
                 value = str(value)
             except:
-                raise ParamsExcept.parameter_str_error()
+                raise ParamsExcept.parameter_str_error(desc)
 
         if isinstance(max_length, int) and len(value) > max_length:
             raise ParamsExcept.exceed_max_length(desc, max_length)
@@ -189,7 +189,7 @@ class ParamsParser(object):
             value = None
 
         if require and (value is None):
-            raise ParamsExcept.parameter_list_error()
+            raise ParamsExcept.parameter_list_error(desc)
 
         # 赋予默认值(在value为None或者不是一个列表的时候）
         if not require and (value is None or not isinstance(value, list)):
@@ -218,7 +218,7 @@ class ParamsParser(object):
                 return dict()
 
         if not isinstance(value, dict):
-            raise ParamsExcept.parameter_dict_error()
+            raise ParamsExcept.parameter_dict_error(desc)
 
         return value
 

@@ -36,13 +36,13 @@ class PracticeAttendanceInfoView(FireHydrantView):
         params = ParamsParser(request.JSON)
         data = params.list('data', default='考勤信息')
         logic = ArrangementLogic(self.auth, sid, cid, aid)
-        students = logic.arrangement.student.value('code', 'id')
+        students = logic.arrangement.students.all()
 
         status = {}
-        students_info = {student.get('code', ''): student.get('id', '') for student in students}
+        students_info = {student.code: student.id for student in students}
         for info in data:
-            with transaction.atomic():
-                try:
+            try:
+                with transaction.atomic():
                     PracticeAttendance.objects.create(
                         school_id=sid,
                         course_id=cid,
@@ -52,10 +52,9 @@ class PracticeAttendanceInfoView(FireHydrantView):
                         absent=info.get('absent', 0),
                         late=info.get('late', 0)
                     )
-                    status[info.get('code', '')] = True
-                except Exception as ex:
-                    transaction.rollback()
-                    status[info.get('code', '')] = False
+                status[info.get('code', '')] = True
+            except:
+                status[info.get('code', '')] = False
         return SuccessResult(status)
 
     @check_login

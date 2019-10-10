@@ -26,7 +26,7 @@ class PracticeAttendanceListMgetView(FireHydrantView):
         limit = params.int('limit', desc='每页最大渲染数', require=False, default=10)
         page = params.int('page', desc='当前页数', require=False, default=1)
 
-        attendances = PracticeAttendance.objects.filter(arrangement_id=aid).values('id', 'udpate_time')
+        attendances = PracticeAttendance.objects.filter(arrangement_id=aid).values('id', 'update_time')
 
         if params.has('leaver'):
             attendances = attendances.filter(leaver__gte=params.int('leaver', desc='请假次数'))

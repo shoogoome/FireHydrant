@@ -27,7 +27,7 @@ class PracticeStudentInfoView(FireHydrantView):
         :return:
         """
         logic = StudentUserLogic(self.auth, sid, stid)
-        return SuccessResult(logic.get_school_info())
+        return SuccessResult(logic.get_studentuser_info())
 
     @check_login
     def post(self, request, sid):

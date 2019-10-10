@@ -1,6 +1,7 @@
 from .school.info.info import PracticeSchoolInfoView
 from .school.info.list_mget import PracticeSchoolListMgetView
 from .school.student.info import PracticeStudentInfoView
+from .school.student.list_mget import PracticeStudentListMgetView
 from .course.info.info import PracticeCourseInfoView
 from .course.info.list_mget import PracticeCourseListMgetView
 from .course.arrangement.info import PracticeArrangementInfoView
@@ -18,7 +19,7 @@ __all__ = [
     # 学校
     'PracticeSchoolInfoView', 'PracticeSchoolListMgetView',
     # 学生
-    'PracticeStudentInfoView',
+    'PracticeStudentInfoView', 'PracticeStudentListMgetView',
     # 课程
     'PracticeCourseListMgetView', 'PracticeCourseInfoView',
     # 排课

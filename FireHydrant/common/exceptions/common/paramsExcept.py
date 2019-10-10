@@ -10,24 +10,24 @@ class ParamsExcept(FireHydrantExceptBase):
         return cls("{0}参数不得为空".format(key))
 
     @classmethod
-    def parameter_int_error(cls):
-        return cls("不是一个有效的int值")
+    def parameter_int_error(cls, desc):
+        return cls("{}不是一个有效的int值".format(desc))
 
     @classmethod
-    def parameter_float_error(cls):
-        return cls("不是一个有效的float值")
+    def parameter_float_error(cls, desc):
+        return cls("{}不是一个有效的float值".format(desc))
 
     @classmethod
-    def parameter_str_error(cls):
-        return cls("不是一个有效的str值")
+    def parameter_str_error(cls, desc):
+        return cls("{}不是一个有效的str值".format(desc))
 
     @classmethod
-    def parameter_list_error(cls):
-        return cls("不是一个有效的list值")
+    def parameter_list_error(cls, desc):
+        return cls("{}不是一个有效的list值".format(desc))
 
     @classmethod
-    def parameter_dict_error(cls):
-        return cls("不是一个有效的dict值")
+    def parameter_dict_error(cls, desc):
+        return cls("{}不是一个有效的dict值".format(desc))
 
     @classmethod
     def model_diff_error(cls):

@@ -6,7 +6,8 @@ from common.utils.helper.m_t_d import model_to_dict
 class AttendanceLogic(ArrangementLogic):
 
     NORMAL_FIELDS = [
-        'school', 'course', 'arrangement', 'student', 'leaver',
+        'school', 'school__id', 'course', 'course__id', 'arrangement',
+        'arrangement__id', 'student', 'student__id', 'leaver',
         'absent', 'late', 'create_time', 'update_time'
     ]
 

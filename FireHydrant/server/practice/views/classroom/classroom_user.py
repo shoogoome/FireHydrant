@@ -27,15 +27,7 @@ class PracticeClassroomUserInfoView(FireHydrantView):
         :return:
         """
         logic = ClassroomLogic(self.auth, sid, cid)
-        user = PracticeClassroomUser.objects.select_related(
-            'account__account', 'practice__practicearrangement', 'practice__practiceclassroom'
-        ).filter(
-            classroom=logic.classroom
-        ).values(
-            'author', 'author__name', 'arrangement', 'arrangement__name',
-            'classroom', 'classroom__name', 'create_time', 'update_time', 'id'
-        )
-        return SuccessResult([i for i in user])
+        return SuccessResult(logic.get_classroom_user())
 
     @check_login
     def post(self, request, sid, cid):
@@ -48,16 +40,15 @@ class PracticeClassroomUserInfoView(FireHydrantView):
         """
         logic = ClassroomLogic(self.auth, sid, cid)
         params = ParamsParser(request.JSON)
-        with transaction.atomic():
-            try:
+        try:
+            with transaction.atomic():
                 user = PracticeClassroomUser.objects.create(
                     author=self.auth.get_account(),
                     classroom=logic.classroom,
                     arrangement_id=params.int('arrangement', desc='排课id'),
                 )
-            except Exception as ex:
-                transaction.rollback()
-                raise PracticeClassroomUserExcept.classroomuser_create_fail()
+        except:
+            raise PracticeClassroomUserExcept.classroomuser_create_fail()
 
         return SuccessResult(id=user.id)
 

@@ -30,6 +30,19 @@ from ....logics.student import StudentUserLogic
 class PracticeArrangementStudentInfoView(FireHydrantView):
 
     @check_login
+    def get(self, request, sid, cid, aid):
+        """
+        获取排课学生信息
+        :param request:
+        :param sid:
+        :param cid:
+        :param aid:
+        :return:
+        """
+        logic = ArrangementLogic(self.auth, sid, cid, aid)
+        return SuccessResult(logic.get_arrangement_student_info())
+
+    @check_login
     def post(self, request, sid, cid, aid):
         """
         批量导入学生信息
@@ -72,7 +85,7 @@ class PracticeArrangementStudentInfoView(FireHydrantView):
 
         studentuser = PracticeStudentUser.objects.get_many(ids)
         for i in studentuser:
-            logic.arrangement.student.remove(i)
+            logic.arrangement.students.remove(i)
         logic.arrangement.save()
 
         return SuccessResult(id=aid)
