@@ -36,8 +36,8 @@ class PracticeArrangementInfoView(FireHydrantView):
             odd_even=params.int('odd_even', desc='单双周', require=False, default=int(OddEvenEnum.NONE)),
             start_section=params.int('start_section', desc='开始节', require=False, default=0, min_value=0),
             end_section=params.int('end_section', desc='结束节', require=False, default=0, min_value=0),
-            start_time=params.float('start_time', desc='开始时间'),
-            end_tim=params.float('end_time', desc='结束时间')
+            start_time=params.int('start_time', desc='开始时间', require=False, default=0),
+            end_time=params.int('end_time', desc='结束时间', require=False, default=0),
         )
         return SuccessResult(id=arrangement.id)
 

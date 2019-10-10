@@ -176,11 +176,11 @@ class PracticeArrangement(models.Model):
     # 结束节
     end_section = models.PositiveSmallIntegerField(default=0)
 
-    # 开始时间
-    start_time = TimeStampField(default=0)
+    # 开始时间(24小时)
+    start_time = models.PositiveIntegerField(default=0)
 
-    # 课程结束时间
-    end_time = TimeStampField(default=0)
+    # 结束时间(24小时)
+    end_time = models.PositiveIntegerField(default=0)
 
     # 学生信息(选课信息)
     students = models.ManyToManyField('practice.PracticeStudentUser', blank=True, related_name='course_arrangement_student')
