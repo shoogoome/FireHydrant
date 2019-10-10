@@ -60,7 +60,7 @@ class PracticeAttendanceInfoView(FireHydrantView):
     @check_login
     def get(self, request, sid, cid, aid, atid):
         """
-        查看排课考勤情况
+        查看考勤情况
         :param request:
         :param sid:
         :param cid:

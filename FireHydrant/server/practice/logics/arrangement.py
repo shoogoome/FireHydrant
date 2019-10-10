@@ -60,5 +60,5 @@ class ArrangementLogic(CourseLogic):
         """
         if self.arrangement is None:
             return []
-        return model_to_dict(self.arrangement, self.STUDENT)
+        return model_to_dict(self.arrangement, self.STUDENT)['students']
 
