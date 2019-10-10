@@ -29,7 +29,7 @@ class PracticeSchoolListMgetView(FireHydrantView):
             schools = schools.filter(name__contains=params.str('name', desc='学校名称'))
 
         schools_list, pagination = slicer(schools, limit=limit, page=page)()()
-        return SuccessResult(attendances=schools_list, pagination=pagination)
+        return SuccessResult(schools=schools_list, pagination=pagination)
 
 
     @check_login

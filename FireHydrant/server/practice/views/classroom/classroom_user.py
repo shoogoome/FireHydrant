@@ -5,15 +5,12 @@ from django.db import transaction
 
 from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
+from common.exceptions.practice.classroom.user import PracticeClassroomUserExcept
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
-from ...logics.school import SchoolLogic
-from ...models import PracticeSchool
 from ...logics.classroom import ClassroomLogic
-from ...logics.school import SchoolLogic
-from ...models import PracticeClassroom
 from ...models import PracticeClassroomUser
-from common.exceptions.practice.classroom.user import PracticeClassroomUserExcept
+
 
 class PracticeClassroomUserInfoView(FireHydrantView):
 
