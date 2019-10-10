@@ -53,7 +53,7 @@ class PracticeAttendanceInfoView(FireHydrantView):
                         late=info.get('late', 0)
                     )
                     status[info.get('code', '')] = True
-                except:
+                except Exception as ex:
                     transaction.rollback()
                     status[info.get('code', '')] = False
         return SuccessResult(status)

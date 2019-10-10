@@ -38,7 +38,7 @@ class PracticeCourseInfoView(FireHydrantView):
                     start_time=params.float('start_time', desc='开始时间', default=0, require=False),
                     end_time=params.float('end_time', desc='结束时间', default=0, require=False)
                 )
-            except:
+            except Exception as ex:
                 transaction.rollback()
                 raise PracticeCourseInfoExcept.course_create_fail()
         return SuccessResult(id=course.id)

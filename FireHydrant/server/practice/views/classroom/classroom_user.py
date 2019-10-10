@@ -55,7 +55,7 @@ class PracticeClassroomUserInfoView(FireHydrantView):
                     classroom=logic.classroom,
                     arrangement_id=params.int('arrangement', desc='排课id'),
                 )
-            except:
+            except Exception as ex:
                 transaction.rollback()
                 raise PracticeClassroomUserExcept.classroomuser_create_fail()
 

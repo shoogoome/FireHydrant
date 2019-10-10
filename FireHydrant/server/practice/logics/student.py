@@ -89,7 +89,7 @@ class StudentUserLogic(SchoolLogic):
                         role=int(AccountRoleEnum.USER),
                         phone=phone,
                     )
-                except:
+                except Exception as ex:
                     transaction.rollback()
                     raise PracticeStudentUserInfoExcept.create_studentuser_fail()
 
@@ -101,7 +101,7 @@ class StudentUserLogic(SchoolLogic):
                     code=code,
                     realname=params.str('realname', desc='真实名称'),
                 )
-            except:
+            except Exception as ex:
                 transaction.rollback()
                 raise PracticeStudentUserInfoExcept.create_studentuser_fail()
 

@@ -52,7 +52,7 @@ class PracticeClassroomInfoView(FireHydrantView):
                         size=params_classroom.int('size', desc='教室大小'),
                     )
                     state[name] = True
-                except:
+                except Exception as ex:
                     state[name] = False
         return SuccessResult(state)
 
