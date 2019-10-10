@@ -66,7 +66,7 @@ class PracticeTagView(FireHydrantView):
 
         tag = logic.tag
         if params.has('parent'):
-            # 判断是否非法操作
+            # 判断是否非法操作(是否环形)
             parent = PracticeTag.objects.get_once(params.int('parent', desc='父节点id'))
             if parent and TagLogic.is_not_annular(parent, tag.id):
                 tag.parent = parent
