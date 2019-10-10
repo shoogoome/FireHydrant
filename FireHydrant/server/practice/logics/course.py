@@ -7,9 +7,10 @@ class CourseLogic(SchoolLogic):
 
     NORMAL_FIELDS = [
         'school', 'school__id', 'school__name',
-        'author', 'author__id', 'author__name',
-        'tag', 'name', 'description', 'start_time',
-        'end_time', 'create_time', 'update_time'
+        'author', 'author__id', 'author__nickname',
+        'tag', 'tag__id', 'tag__name',
+        'name', 'description', 'start_time',
+        'end_time', 'create_time', 'update_time', 'id'
     ]
 
     def __init__(self, auth, sid, cid=''):

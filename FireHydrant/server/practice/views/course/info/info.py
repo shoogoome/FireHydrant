@@ -32,11 +32,11 @@ class PracticeCourseInfoView(FireHydrantView):
                 course = PracticeCourse.objects.create(
                     school=logic.school,
                     author=self.auth.get_account(),
-                    tag_id=params.int('tag', desc='tagid'),
+                    tag_id=params.int('tag', desc='tagid') if params.has('tag') else None,
                     name=params.str('name', desc='课程名称'),
                     description=params.str('description', desc='描述', default='', require=False),
-                    start_time=params.float('start_time', desc='开始时间', default=0, require=False),
-                    end_time=params.float('end_time', desc='结束时间', default=0, require=False)
+                    start_time=params.float('start_time', desc='开始时间', default=0.0, require=False),
+                    end_time=params.float('end_time', desc='结束时间', default=0.0, require=False)
                 )
             except Exception as ex:
                 transaction.rollback()
