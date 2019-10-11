@@ -30,7 +30,6 @@ class PracticeStudentToTeacherInfoView(FireHydrantView):
         :return:
         """
         logic = EvaluateStudentToTeacherLogic(self.auth, sid, cid, eid)
-
         return SuccessResult(logic.get_evaluate_info())
 
     def post(self, request, sid, cid):
