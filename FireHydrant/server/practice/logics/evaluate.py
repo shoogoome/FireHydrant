@@ -7,7 +7,7 @@ from django.db import connection
 
 BASE_FIELDS = [
     'author', 'author__id', 'star', 'message',
-    'create_time', 'update_time'
+    'create_time', 'update_time', 'id'
 ]
 
 class EvaluateBaseLogic(CourseLogic):

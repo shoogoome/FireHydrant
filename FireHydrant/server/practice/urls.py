@@ -39,6 +39,17 @@ course_urlpatterns = [
 
 evaluate_urlpatterns = [
     path('/sc', PracticeStudentToCourseInfoView.as_view(method=['POST'])),
+    path('/sc/list', PracticeStudentToCourseListMgetView.as_view(method=['GET'])),
+    path('/sc/_mget', PracticeStudentToCourseListMgetView.as_view(method=['POST'])),
+    path('/sc/<int:eid>', PracticeStudentToCourseInfoView.as_view(method=['GET', 'DELETE'])),
+    path('/st', PracticeStudentToTeacherInfoView.as_view(method=['POST'])),
+    path('/st/list', PracticeStudentToTeacherListMgetView.as_view(method=['GET'])),
+    path('/st/_mget', PracticeStudentToTeacherListMgetView.as_view(method=['POST'])),
+    path('/st/<int:eid>', PracticeStudentToTeacherInfoView.as_view(method=['GET', 'DELETE'])),
+    path('/ts', PracticeTeacherToStudentInfoView.as_view(method=['POST'])),
+    path('/ts/list', PracticeTeacherToStudentListMgetView.as_view(method=['GET'])),
+    path('/ts/_mget', PracticeTeacherToStudentListMgetView.as_view(method=['POST'])),
+    path('/ts/<int:eid>', PracticeTeacherToStudentInfoView.as_view(method=['GET', 'DELETE'])),
 ]
 
 arrangement_urlpatterns = [

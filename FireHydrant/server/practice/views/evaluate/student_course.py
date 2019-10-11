@@ -93,7 +93,7 @@ class PracticeStudentToCourseInfoView(FireHydrantView):
         return SuccessResult(id=eid)
 
 
-class PracticeStudentToCourseListMget(FireHydrantView):
+class PracticeStudentToCourseListMgetView(FireHydrantView):
 
     @check_login
     def get(self, request, sid, cid):
