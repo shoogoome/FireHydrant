@@ -112,7 +112,7 @@ class PracticeStudentToCourseListMgetView(FireHydrantView):
         if params.has('star'):
             evaluates = evaluates.filter(star=params.int('star', desc='星级'))
         if params.has('key'):
-            key = params.str('key', desc='关键字')
+            key = params.str('key', desc='关键字关键字（学生真实名称、学号）弱匹配')
             evaluates = evaluates.filter(
                 Q(author__realname__contains=key) |
                 Q(author__code__contains=key)
