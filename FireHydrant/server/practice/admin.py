@@ -13,5 +13,4 @@ admin.site.register(PracticeAttendance)
 admin.site.register(PracticeEvaluateStudentToCourse)
 admin.site.register(PracticeEvaluateTeacherToStudent)
 admin.site.register(PracticeEvaluateStudentToTeacher)
-admin.site.register(PracticeEvaluateBase)
 

@@ -37,6 +37,10 @@ course_urlpatterns = [
     path('/<int:cid>', PracticeCourseInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
 ]
 
+evaluate_urlpatterns = [
+    path('/sc', PracticeStudentToCourseInfoView.as_view(method=['POST'])),
+]
+
 arrangement_urlpatterns = [
     path('', PracticeArrangementInfoView.as_view(method=['POST'])),
     path('/list', PracticeArrangementListMgetView.as_view(method=['GET'])),
@@ -46,7 +50,7 @@ arrangement_urlpatterns = [
 ]
 
 attendance_urlpatterns = [
-    path('', PracticeAttendanceInfoView.as_view(method=['post'])),
+    path('', PracticeAttendanceInfoView.as_view(method=['POST'])),
     path('/list', PracticeAttendanceListMgetView.as_view(method=['GET'])),
     path('/_mget', PracticeAttendanceListMgetView.as_view(method=['POST'])),
     path('/<int:atid>', PracticeAttendanceInfoView.as_view(method=['GET', 'PUT', 'DELETE'])),
@@ -63,8 +67,10 @@ urlpatterns = [
     path('/schools/<int:sid>/students', include(student_urlpatterns)),
     # 课程
     path('/schools/<int:sid>/courses', include(course_urlpatterns)),
+    # 评价
+    path('/schools/<int:sid>/courses/<int:cid>/evaluate', include(evaluate_urlpatterns)),
     # 排课
     path('/schools/<int:sid>/courses/<int:cid>/arrangements', include(arrangement_urlpatterns)),
     # 考勤
-    path('/schools/<int:sid>/courses/<int:cid>/arrangements/<int:aid>/attendance', include(attendance_urlpatterns))
+    path('/schools/<int:sid>/courses/<int:cid>/arrangements/<int:aid>/attendance', include(attendance_urlpatterns)),
 ]

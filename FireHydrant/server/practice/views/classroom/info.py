@@ -43,17 +43,17 @@ class PracticeClassroomInfoView(FireHydrantView):
         for classroom in classrooms:
 
             params_classroom = ParamsParser(classroom)
-            with transaction.atomic():
-                name = params_classroom.str('name', desc='教室名称')
-                try:
+            name = params_classroom.str('name', desc='教室名称')
+            try:
+                with transaction.atomic():
                     PracticeClassroom.objects.create(
                         school=logic.school,
                         name=name,
                         size=params_classroom.int('size', desc='教室大小'),
                     )
-                    state[name] = True
-                except Exception as ex:
-                    state[name] = False
+                    state[name] = 1
+            except:
+                state[name] = 0
         return SuccessResult(state)
 
     @check_login

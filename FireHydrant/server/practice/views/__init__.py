@@ -14,6 +14,7 @@ from .tag.list_mget import PracticeTagListView
 from .classroom.info import PracticeClassroomInfoView
 from .classroom.list_mget import PracticeClassroomListMgetView
 from .classroom.classroom_user import PracticeClassroomUserInfoView
+from .evaluate.student_course import PracticeStudentToCourseInfoView
 
 __all__ = [
     # 学校
@@ -31,4 +32,6 @@ __all__ = [
     'PracticeTagView', 'PracticeTagListView',
     # 教室
     'PracticeClassroomInfoView', 'PracticeClassroomListMgetView', 'PracticeClassroomUserInfoView',
+    # 评价
+    'PracticeStudentToCourseInfoView',
 ]

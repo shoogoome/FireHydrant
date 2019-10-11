@@ -27,8 +27,8 @@ class PracticeCourseInfoView(FireHydrantView):
         params = ParamsParser(request.JSON)
         logic = SchoolLogic(self.auth, sid)
 
-        with transaction.atomic():
-            try:
+        try:
+            with transaction.atomic():
                 course = PracticeCourse.objects.create(
                     school=logic.school,
                     author=self.auth.get_account(),
@@ -38,9 +38,8 @@ class PracticeCourseInfoView(FireHydrantView):
                     start_time=params.float('start_time', desc='开始时间', default=0.0, require=False),
                     end_time=params.float('end_time', desc='结束时间', default=0.0, require=False)
                 )
-            except Exception as ex:
-                transaction.rollback()
-                raise PracticeCourseInfoExcept.course_create_fail()
+        except Exception as ex:
+            raise PracticeCourseInfoExcept.course_create_fail()
         return SuccessResult(id=course.id)
 
     @check_login

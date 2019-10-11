@@ -79,8 +79,8 @@ class StudentUserLogic(SchoolLogic):
         if account.exists():
             account = account[0]
         else:
-            with transaction.atomic():
-                try:
+            try:
+                with transaction.atomic():
                     account = Account.objects.create(
                         username='{}@{}'.format(phone, self.school.name),
                         sex=int(AccountSexEnum.UNKNOW),
@@ -89,20 +89,17 @@ class StudentUserLogic(SchoolLogic):
                         role=int(AccountRoleEnum.USER),
                         phone=phone,
                     )
-                except Exception as ex:
-                    transaction.rollback()
-                    raise PracticeStudentUserInfoExcept.create_studentuser_fail()
-
-        with transaction.atomic():
-            try:
+            except Exception as ex:
+                raise PracticeStudentUserInfoExcept.create_studentuser_fail()
+        try:
+            with transaction.atomic():
                 studentuser = PracticeStudentUser.objects.create(
                     account=account,
                     school=self.school,
                     code=code,
                     realname=params.str('realname', desc='真实名称'),
                 )
-            except Exception as ex:
-                transaction.rollback()
-                raise PracticeStudentUserInfoExcept.create_studentuser_fail()
+        except Exception as ex:
+            raise PracticeStudentUserInfoExcept.create_studentuser_fail()
 
         return studentuser

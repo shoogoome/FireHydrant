@@ -305,12 +305,7 @@ class PracticeClassroomUser(models.Model):
 class PracticeEvaluateBase(models.Model):
 
     class Meta:
-        verbose_name = "爱阅读后台管理课程评价"
-        verbose_name_plural = "爱阅读后台管理课程评价表"
-        app_label = 'practice'
-
-    # 创建人
-    author = models.ForeignKey('account.Account', on_delete=models.CASCADE)
+        abstract = True
 
     # 评分
     star = models.PositiveSmallIntegerField(default=0)
@@ -327,10 +322,6 @@ class PracticeEvaluateBase(models.Model):
     # 重构管理器
     objects = FireHydrantModelManager()
 
-    def __str__(self):
-        return '[{}] 创建人: {}'.format(
-            self.id, self.author_id
-        )
 
 class PracticeEvaluateStudentToCourse(PracticeEvaluateBase):
 
@@ -339,7 +330,16 @@ class PracticeEvaluateStudentToCourse(PracticeEvaluateBase):
         verbose_name_plural = "爱阅读后台管理课程学生评价课程表"
         app_label = 'practice'
 
+    # 创建人
+    author = models.ForeignKey('practice.PracticeStudentUser', on_delete=models.CASCADE)
+
+    # 课程
     course = models.ForeignKey('practice.PracticeCourse', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '[{}] 学生: {}, 课程: {}'.format(
+            self.id, self.author.realname, self.course.name
+        )
 
 class PracticeEvaluateStudentToTeacher(PracticeEvaluateBase):
     class Meta:
@@ -347,7 +347,16 @@ class PracticeEvaluateStudentToTeacher(PracticeEvaluateBase):
         verbose_name_plural = "爱阅读后台管理课程学生评价教师表"
         app_label = 'practice'
 
+    # 创建人
+    author = models.ForeignKey('practice.PracticeStudentUser', on_delete=models.CASCADE)
+
+    # 教师
     teacher = models.ForeignKey('account.Account', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '[{}] 学生: {}, 老师: {}'.format(
+            self.id, self.author.realname, self.teacher.nickname
+        )
 
 class PracticeEvaluateTeacherToStudent(PracticeEvaluateBase):
     class Meta:
@@ -355,7 +364,17 @@ class PracticeEvaluateTeacherToStudent(PracticeEvaluateBase):
         verbose_name_plural = "爱阅读后台管理课程教师评价学生表"
         app_label = 'practice'
 
+    # 创建人
+    author = models.ForeignKey('account.Account', on_delete=models.CASCADE)
+
+    # 学生
     student = models.ForeignKey('practice.PracticeStudentUser', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '[{}] 老师: {}, 学生: {}'.format(
+            self.id, self.author.nickname, self.student.realname
+        )
+
 
 receiver(post_save, sender=PracticeSchool)(delete_model_single_object_cache)
 receiver(post_delete, sender=PracticeSchool)(delete_model_single_object_cache)
