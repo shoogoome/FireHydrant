@@ -6,6 +6,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from common.enum.practice.oddeven import OddEvenEnum
 from common.enum.practice.attendance_state import AttendanceStateEnum
+from .logics.signals import handle_tag_post_save_delete
 
 # Create your models here.
 
@@ -382,8 +383,8 @@ receiver(post_delete, sender=PracticeSchool)(delete_model_single_object_cache)
 receiver(post_save, sender=PracticeStudentUser)(delete_model_single_object_cache)
 receiver(post_delete, sender=PracticeStudentUser)(delete_model_single_object_cache)
 
-receiver(post_save, sender=PracticeTag)(delete_model_single_object_cache)
-receiver(post_delete, sender=PracticeTag)(delete_model_single_object_cache)
+receiver(post_save, sender=PracticeTag)(handle_tag_post_save_delete)
+receiver(post_delete, sender=PracticeTag)(handle_tag_post_save_delete)
 
 receiver(post_save, sender=PracticeCourse)(delete_model_single_object_cache)
 receiver(post_delete, sender=PracticeCourse)(delete_model_single_object_cache)

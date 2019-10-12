@@ -8,6 +8,7 @@ from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from ...models import PracticeTag
 from django.db.models import QuerySet
+from ...logics.factory import TagRedisClusterFactory
 
 class PracticeTagListView(FireHydrantView):
 
@@ -18,26 +19,26 @@ class PracticeTagListView(FireHydrantView):
         :param request:
         :return:
         """
-        # TODO: 加入缓存
-        # 尝试获取缓存数据
-        # redis = WeJudgeCacheFactory(["education", "lesson", "list"])
-        # data = redis.get_cache(str(cid))
-        # if data:
-        #     try:
-        #         return SuccessResult(json.loads(data))
-        #     except:
-        #         pass
+        data = self.get_data()
+        return SuccessResult(data)
+
+    def get_data(self):
+        """
+        获取tag信息
+        :return:
+        """
+        # 尝试获取缓存
+        cache = TagRedisClusterFactory()
+        if cache.exists("all"):
+            return cache.get_json("all")
 
         all_tag = PracticeTag.objects.all()
         parent_lesson = all_tag.filter(parent__isnull=True).order_by('create_time')
 
         data = PracticeTagListView.get_tree_info(all_tag, parent_lesson, [])
-        # 存储至缓存 1个月时间（因为在开始上课之后，正常来说课堂列表不发生变化）
-        # try:
-        #     redis.set_cache(str(cid), json.dumps(data), expired=2592000)
-        # except:
-        #     pass
-        return SuccessResult(data)
+        # 缓存数据
+        cache.set_json("all", data)
+        return data
 
     @staticmethod
     def get_tree_info(all_tag: QuerySet, tags: QuerySet, data: list) -> list:

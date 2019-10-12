@@ -34,7 +34,6 @@ class RedisClusterConnection(object):
         return RedisClusterConnection._instance
 
 
-
 def get_redis_conn(db=1):
     """
     建立Redis连接
@@ -77,6 +76,7 @@ class RedisClusterFactory(object):
         if self.expire >= 0:
             self.redis_cluster.expire(_name, self.expire)
 
+
     def get_json(self, name):
         """
         获取json缓存
@@ -85,9 +85,9 @@ class RedisClusterFactory(object):
         """
         value = self.redis_cluster.get(self._build_name(name))
         if value is None or not isinstance(value, str):
-            raise Exception(123)
             return None
         return json.loads(value)
+
 
     def get(self, name):
         """

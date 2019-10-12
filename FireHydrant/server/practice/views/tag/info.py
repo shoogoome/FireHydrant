@@ -24,10 +24,6 @@ class PracticeTagView(FireHydrantView):
         """
         params = ParamsParser(request.JSON)
 
-        name = params.str('name', desc='名称')
-        if PracticeTag.objects.filter(name=name).exists():
-            raise PracticeTagInfoExcept.tag_name_is_exists()
-
         if params.has('parent'):
             parent = PracticeTag.objects.get_once(params.int('parent', desc='父节点id'))
             if not parent:

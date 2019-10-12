@@ -2,21 +2,17 @@
 # coding: utf-8
 
 from django.db import transaction
+from django.db.models import Q
 
 from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
+from common.utils.helper.pagination import slicer
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
-from ...logics.school import SchoolLogic
-from ...models import PracticeSchool
-from ...logics.classroom import ClassroomLogic
-from ...logics.school import SchoolLogic
-from ...models import PracticeClassroom
 from ...logics.course import CourseLogic
-from django.db.models import Q
-from common.utils.helper.pagination import slicer
 from ...logics.evaluate import EvaluateTeacherToStudentLogic
 from ...models import PracticeEvaluateTeacherToStudent
+
 
 class PracticeTeacherToStudentInfoView(FireHydrantView):
 
@@ -110,7 +106,8 @@ class PracticeTeacherToStudentListMgetView(FireHydrantView):
         limit = params.int('limit', desc='每页最大渲染数', require=False, default=10)
         page = params.int('page', desc='当前页数', require=False, default=1)
 
-        evaluates = PracticeEvaluateTeacherToStudent.objects.filter(author=logic.course.author).values('id', 'update_time')
+        evaluates = PracticeEvaluateTeacherToStudent.objects.filter(author=logic.course.author).values('id',
+                                                                                                       'update_time')
         if params.has('star'):
             evaluates = evaluates.filter(star=params.int('star', desc='星级'))
         if params.has('key'):
@@ -146,5 +143,3 @@ class PracticeTeacherToStudentListMgetView(FireHydrantView):
                 pass
 
         return SuccessResult(data)
-
-
