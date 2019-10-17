@@ -238,9 +238,9 @@ class PracticeAttendance(models.Model):
     objects = FireHydrantModelManager()
 
     def __str__(self):
-        return '[{}] 学校: {}, 课程: {}, 排课: {}, 学生: {}, 状态: {}'.format(
+        return '[{}] 学校: {}, 课程: {}, 排课: {}, 学生: {}'.format(
             self.id, self.school_id, self.course_id,
-            self.arrangement_id, self.student_id, self.state
+            self.arrangement_id, self.student_id
         )
 
 class PracticeClassroom(models.Model):
