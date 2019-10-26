@@ -7,7 +7,7 @@ class AttendanceLogic(ArrangementLogic):
 
     NORMAL_FIELDS = [
         'school', 'school__id', 'course', 'course__id', 'arrangement',
-        'arrangement__id', 'student', 'student__id', 'student__name', 'leaver',
+        'arrangement__id', 'student', 'student__id', 'student__realname', 'leaver',
         'absent', 'late', 'create_time', 'update_time'
     ]
 
