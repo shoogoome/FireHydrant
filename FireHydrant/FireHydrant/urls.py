@@ -25,6 +25,7 @@ from server.task.urls import urlpatterns as task_urlpatterns
 from server.resources.urls import urlpatterns as resources_urlpatterns
 from server.ranking.urls import urlpatterns as ranking_urlpatterns
 from server.practice.urls import urlpatterns as practice_urlpatterns
+from server.faceU.urls import urlpatterns as faceU_urlpatterns
 
 urlpatterns = [
     path('', home),
@@ -35,4 +36,5 @@ urlpatterns = [
     path('resources', include(resources_urlpatterns)),
     path('ranking', include(ranking_urlpatterns)),
     path('practice', include(practice_urlpatterns)),
+    path('face_u', include(faceU_urlpatterns)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

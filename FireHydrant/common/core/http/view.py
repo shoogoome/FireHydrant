@@ -183,8 +183,8 @@ class FireHydrantView(FireHydrantViewBase):
     def __init__(self, request, **kwargs):
         super(FireHydrantView, self).__init__(request, **kwargs)
 
+        # 客户端模式
         if self.request.META.get('HTTP_FIRE_AUTH_MODEL') == "client":
-            # 客户端登陆
             self.auth = FireHydrantClientAuthorization(request, self)
         # 浏览器登陆
         else:

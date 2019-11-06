@@ -36,3 +36,7 @@ class AccountInfoExcept(FireHydrantExceptBase):
     @classmethod
     def avator_save_fail(cls):
         return cls("头像保存失败")
+
+    @classmethod
+    def token_error(cls, errmsg="get token error"):
+        return cls(errmsg)

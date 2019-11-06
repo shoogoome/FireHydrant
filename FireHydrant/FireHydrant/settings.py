@@ -146,6 +146,7 @@ INSTALLED_APPS = [
     'server.ranking',
     'server.resources',
     'server.practice',
+    'server.faceU',
 ]
 
 MIDDLEWARE = [
