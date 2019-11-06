@@ -84,7 +84,7 @@ class FaceUAccountLogin(FireHydrantView):
         response = requests.get(url)
         token = json.loads(response.text)
 
-        if token.get('errcode', 0) != 0:
+        if token.get('errcode', 0):
             raise AccountInfoExcept.token_error(token.get('errmsg', '未知错误'))
 
         return token.get('openid', ''), token.get('session_key', '')

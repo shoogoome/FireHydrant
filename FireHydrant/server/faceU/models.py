@@ -73,9 +73,99 @@ class FaceUAccount(models.Model):
             self.id, self.nickname, str(self.role)
         )
 
+class FaceUFacialMakeup(models.Model):
+
+    class Meta:
+        verbose_name = "脸你脸谱映射"
+        verbose_name_plural = "脸你脸谱表"
+        app_label = 'faceU'
+
+    # 脸谱uuid
+    face_uuid = models.CharField(max_length=255)
+
+    # 名称
+    name = models.CharField(max_length=125)
+
+    # 用户自定义标识
+    code = models.CharField(max_length=125, null=True, blank=True)
+
+    # 身份证
+    id_code = models.CharField(max_length=30, null=True, blank=True)
+
+    # 性别
+    sex = models.PositiveSmallIntegerField(**AccountSexEnum.get_models_params(), null=True, blank=True)
+
+    # 创建时间
+    create_time = TimeStampField(auto_now_add=True)
+
+    # 最后更新时间
+    update_time = TimeStampField(auto_now=True)
 
 
+    # 重构管理器
+    objects = FireHydrantModelManager()
+
+class FaceUGroups(models.Model):
+
+    class Meta:
+        verbose_name = "脸你分组"
+        verbose_name_plural = "脸你分组表"
+        app_label = 'faceU'
+
+    # 归属用户
+    author = models.ForeignKey('faceU.FaceUAccount', null=True, blank=True, on_delete=models.SET_NULL)
+
+    # 标题
+    title = models.CharField(max_length=255)
+
+    # 描述
+    description = models.CharField(max_length=255)
+
+    # 成员
+    member = models.ManyToManyField('faceU.FaceUFacialMakeup',
+                                    blank=True,
+                                    related_name='faceugroups_member')
+
+    # 创建时间
+    create_time = TimeStampField(auto_now_add=True)
+
+    # 最后更新时间
+    update_time = TimeStampField(auto_now=True)
+
+    # 重构管理器
+    objects = FireHydrantModelManager()
+
+class FaceUDistinguishRecord(models.Model):
+
+    class Meta:
+        verbose_name = "脸你识别记录"
+        verbose_name_plural = "脸你识别记录表"
+        app_label = 'faceU'
+
+    # 分组
+    group = models.ForeignKey('faceU.FaceUGroups', null=True, blank=True, on_delete=models.SET_NULL)
+
+    # 结果
+    result = models.TextField('')
+
+    # 创建时间
+    create_time = TimeStampField(auto_now_add=True)
+
+    # 最后更新时间
+    update_time = TimeStampField(auto_now=True)
+
+    # 重构管理器
+    objects = FireHydrantModelManager()
 
 
 receiver(post_save, sender=FaceUAccount)(delete_model_single_object_cache)
 receiver(post_delete, sender=FaceUAccount)(delete_model_single_object_cache)
+
+receiver(post_save, sender=FaceUFacialMakeup)(delete_model_single_object_cache)
+receiver(post_delete, sender=FaceUFacialMakeup)(delete_model_single_object_cache)
+
+receiver(post_save, sender=FaceUGroups)(delete_model_single_object_cache)
+receiver(post_delete, sender=FaceUGroups)(delete_model_single_object_cache)
+
+receiver(post_save, sender=FaceUDistinguishRecord)(delete_model_single_object_cache)
+receiver(post_delete, sender=FaceUDistinguishRecord)(delete_model_single_object_cache)
