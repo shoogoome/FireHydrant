@@ -59,25 +59,3 @@ class FaceUGroupInfo(FireHydrantView):
         :return:
         """
         ...
-
-class FaceUGroupListMget(FireHydrantView):
-
-    @check_login
-    def get(self, request, aid):
-        """
-        获取分组列表
-        :param request:
-        :param aid:
-        :return:
-        """
-        ...
-
-    @check_login
-    def post(self, request, aid):
-        """
-        批量获取分组信息
-        :param request:
-        :param aid:
-        :return:
-        """
-        ...

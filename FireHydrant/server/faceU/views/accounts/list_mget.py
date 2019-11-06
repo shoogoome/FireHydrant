@@ -10,7 +10,6 @@ from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from server.faceU.models import FaceUAccount
 from common.enum.account.role import AccountRoleEnum
-import requests
 import json
 from common.exceptions.account.info import AccountInfoExcept
 

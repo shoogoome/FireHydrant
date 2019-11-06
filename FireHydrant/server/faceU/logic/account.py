@@ -44,7 +44,8 @@ class FaceUAccountLogic(object):
         """
         if not self.account:
             return {}
-        return model_to_dict(self.account, self.NORMAL_FIELDS)
+        info = model_to_dict(self.account, self.NORMAL_FIELDS)
+        return info
 
 
 

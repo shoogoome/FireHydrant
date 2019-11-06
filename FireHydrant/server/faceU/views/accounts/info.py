@@ -10,7 +10,6 @@ from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from server.faceU.models import FaceUAccount
 from common.enum.account.role import AccountRoleEnum
-import requests
 import json
 from common.exceptions.account.info import AccountInfoExcept
 from ...logic.account import FaceUAccountLogic
@@ -18,15 +17,15 @@ from ...logic.account import FaceUAccountLogic
 
 class FaceUAccountInfoView(FireHydrantView):
 
-    @check_login
-    def get(self, request, aid=''):
+    # @check_login
+    def get(self, request, aid):
         """
         获取用户信息 or 自己信息
         :param request:
         :param aid:
         :return:
         """
-        logic = FaceUAccountLogic(self.auth, self.auth.get_account() if not aid else aid)
+        logic = FaceUAccountLogic(self.auth, aid)
         return SuccessResult(logic.get_account_info())
 
     @check_login
@@ -47,7 +46,15 @@ class FaceUAccountInfoView(FireHydrantView):
         :param aid:
         :return:
         """
-        ...
+        params = ParamsParser(request.JSON)
+        account = self.auth.get_account()
+
+        with params.diff(account):
+
+            account.nickname = params.str('nickname', desc='昵称')
+            account.phone = params.str('phone', desc='电话')
+            account.sex = params.int('sex', desc='性别')
+
 
 class FaceUAccountListMget(FireHydrantView):
 
