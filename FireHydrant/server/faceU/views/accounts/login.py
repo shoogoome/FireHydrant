@@ -37,7 +37,6 @@ class FaceUAccountLogin(FireHydrantView):
                     sex=sex,
                     temp_access_token=openid,
                     role=int(AccountRoleEnum.USER),
-                    permissions='',
                     motto="这个人很懒，什么都没有"
                 )
                 _id = account.id
@@ -47,7 +46,6 @@ class FaceUAccountLogin(FireHydrantView):
                     sex=sex,
                     temp_access_token=openid,
                     role=int(AccountRoleEnum.USER),
-                    permissions='',
                     motto="这个人很懒，什么都没有"
                 )
                 _id = account.id
