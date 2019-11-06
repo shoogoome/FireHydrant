@@ -8,7 +8,7 @@ from common.core.auth.check_login import check_login
 from common.core.http.view import FireHydrantView
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
-from ..models import FaceUAccount
+from server.faceU.models import FaceUAccount
 from common.enum.account.role import AccountRoleEnum
 import requests
 import json
