@@ -56,10 +56,10 @@ class FaceUAccountLogin(FireHydrantView):
         self.auth.set_account(account)
         # 载入登陆信息  客户端模式
         if client_auth_mode:
-            return SuccessResult(data={
+            return SuccessResult({
                 "id": _id,
                 "token": self.auth.create_token()
-            }, association_id=self.auth.get_association_id())
+            })
 
         # pc端模式
         self.auth.set_session()
