@@ -13,6 +13,7 @@ from common.enum.account.role import AccountRoleEnum
 import requests
 import json
 from common.exceptions.account.info import AccountInfoExcept
+from ...logic.account import FaceUAccountLogic
 
 
 class FaceUAccountInfoView(FireHydrantView):
@@ -25,7 +26,8 @@ class FaceUAccountInfoView(FireHydrantView):
         :param aid:
         :return:
         """
-        ...
+        logic = FaceUAccountLogic(self.auth, self.auth.get_account() if not aid else aid)
+        return SuccessResult(logic.get_account_info())
 
     @check_login
     def delete(self, request, aid):
