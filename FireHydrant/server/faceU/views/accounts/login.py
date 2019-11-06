@@ -33,7 +33,6 @@ class FaceUAccountLogin(FireHydrantView):
             sex = params.int('sex', desc='性别')
             try:
                 account = FaceUAccount.objects.create(
-                    realname=nickname,
                     nickname=nickname,
                     sex=sex,
                     temp_access_token=openid,
@@ -44,7 +43,6 @@ class FaceUAccountLogin(FireHydrantView):
                 _id = account.id
             except:
                 account = FaceUAccount.objects.create(
-                    realname='unknown',
                     nickname='unknown',
                     sex=sex,
                     temp_access_token=openid,
