@@ -24,8 +24,7 @@ class FaceUAccountLogin(FireHydrantView):
         """
         params = ParamsParser(request.JSON)
         code = params.str('token', desc='验证ID')
-        # openid, session = self.get_openid(code)
-        openid, session = code, 1
+        openid, session = self.get_openid(code)
         client_auth_mode = self.request.META.get('HTTP_FIRE_AUTH_MODEL') == "client"
 
         accounts = FaceUAccount.objects.filter_cache(temp_access_token=openid)
