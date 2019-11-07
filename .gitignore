@@ -13,3 +13,4 @@ __pycache__
 /backups
 /devops
 /FireHydrant/data
+!/FireHydrant/data/static
