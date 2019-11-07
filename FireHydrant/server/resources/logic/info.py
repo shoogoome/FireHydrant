@@ -1,7 +1,7 @@
 from ..models import ResourcesMeta
 from common.exceptions.resources.info import ResourceInfoExcept
 from common.utils.hash.signatures import cookie_signature
-from .client import LiumaClient
+from common.core.dao.storage.liuma_client import LiumaClient
 import time
 import json
 import base64

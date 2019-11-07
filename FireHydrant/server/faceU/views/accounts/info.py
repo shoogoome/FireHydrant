@@ -17,7 +17,7 @@ from ...logic.account import FaceUAccountLogic
 
 class FaceUAccountInfoView(FireHydrantView):
 
-    # @check_login
+    @check_login
     def get(self, request, aid):
         """
         获取用户信息 or 自己信息
@@ -47,31 +47,13 @@ class FaceUAccountInfoView(FireHydrantView):
         :return:
         """
         params = ParamsParser(request.JSON)
-        account = self.auth.get_account()
+        logic = FaceUAccountLogic(self.auth, aid)
 
+        account = logic.account
         with params.diff(account):
-
             account.nickname = params.str('nickname', desc='昵称')
             account.phone = params.str('phone', desc='电话')
             account.sex = params.int('sex', desc='性别')
 
-
-class FaceUAccountListMget(FireHydrantView):
-
-    @check_login
-    def get(self, request):
-        """
-        获取用户列表
-        :param request:
-        :return:
-        """
-        ...
-
-    @check_login
-    def post(self, request):
-        """
-        批量获取用户信息
-        :param request:
-        :return:
-        """
-        ...
+        account.save()
+        return SuccessResult(id=aid)

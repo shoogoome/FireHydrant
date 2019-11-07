@@ -10,7 +10,7 @@ class FaceUAccountLogic(object):
         'avator', 'motto',
     ]
 
-    def __init__(self, auth, aid):
+    def __init__(self, auth, aid=''):
         """
         INIT
         :param auth:

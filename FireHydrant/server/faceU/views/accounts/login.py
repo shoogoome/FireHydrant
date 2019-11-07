@@ -55,7 +55,6 @@ class FaceUAccountLogin(FireHydrantView):
         # pc端模式
         return SuccessResult(id=_id)
 
-
     def get_openid(self, code):
         """
         获取openid

@@ -1,0 +1,40 @@
+[
+    {
+        "Name": "fire-hydrant-redis-cluster_redis-net",
+        "Id": "r1x055aeyfapx4tp8j5q6vgn5",
+        "Created": "2019-11-07T05:28:08.683758978Z",
+        "Scope": "swarm",
+        "Driver": "overlay",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "10.0.0.0/24",
+                    "Gateway": "10.0.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": true,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {
+            "com.docker.network.driver.overlay.vxlanid_list": "4097"
+        },
+        "Labels": {
+            "com.docker.stack.namespace": "fire-hydrant-redis-cluster"
+        },
+        "Peers": [
+            {
+                "Name": "fa68c7c05d7d",
+                "IP": "192.168.65.3"
+            }
+        ]
+    }
+]
