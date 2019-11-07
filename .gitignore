@@ -12,5 +12,5 @@ __pycache__
 /redis-cluster
 /backups
 /devops
-/FireHydrant/data
+/FireHydrant/data/*
 !/FireHydrant/data/static
