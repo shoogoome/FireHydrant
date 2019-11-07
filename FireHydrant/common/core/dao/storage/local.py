@@ -18,25 +18,26 @@ class FireHydrantLocalStorage(object):
         if model not in STORAGE_MAPPING:
             raise StorageInfoExcept.model_is_not_exists()
         self.model = model
-        self._root = STORAGE_MAPPING(model)
+        self._root = STORAGE_MAPPING[model]
 
-    def save_file(self, path, file):
+    def save_file(self, path, file, open_type='w'):
         """
         保存文件
         :param path:
         :param file:
+        :param open_type:
         :return:
         """
         dirname, filename = os.path.split(path)
         if dirname:
             os.system('mkdir -p {}'.format(os.path.join(self._root, dirname)))
-        with open(os.path.join(path), 'w') as fp:
-            fp.write(file.read())
+        with open(os.path.join(self._root, path), open_type) as fp:
+            fp.write(file)
 
         return "storage://{}@{}".format(self.model, path)
 
     @staticmethod
-    def generate_token(path, expire=COOKIE_EFFECTIVE_TIME, aid=None):
+    def generate_token(path, aid=None, expire=COOKIE_EFFECTIVE_TIME):
         """
         生成下载密钥
         :param aid:

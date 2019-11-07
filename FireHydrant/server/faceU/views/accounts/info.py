@@ -29,6 +29,16 @@ class FaceUAccountInfoView(FireHydrantView):
         return SuccessResult(logic.get_account_info())
 
     @check_login
+    def post(self, request, aid):
+        """
+        上传用户头像
+        :param request:
+        :param aid:
+        :return:
+        """
+        ...
+
+    @check_login
     def delete(self, request, aid):
         """
         删除用户

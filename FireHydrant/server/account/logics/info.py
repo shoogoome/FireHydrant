@@ -3,6 +3,8 @@ from common.exceptions.account.info import AccountInfoExcept
 from common.utils.helper.m_t_d import model_to_dict
 from server.team.models import AccountTeam
 from server.resources.logic.info import ResourceLogic
+from common.utils.helper.durl import DataUrlParser
+from common.core.dao.storage.local import FireHydrantLocalStorage
 
 class AccountLogic(object):
 
@@ -58,10 +60,23 @@ class AccountLogic(object):
         else:
             info['team'] = None
         # 获取头像资源下载token
-        try:
-            logic = ResourceLogic(self.auth, int(info['avator']))
-            info['avator'] = ResourceLogic.get_download_token(logic.meta.hash)
-        except:
-            pass
+        from common.core.dao.storage.local import FireHydrantLocalStorage
+        info['avator'] = FireHydrantLocalStorage.generate_token(info['avator'], self.account.id)
         return info
 
+    @staticmethod
+    def save_account_avator(acount_id, durl):
+        """
+        保存用户头像
+        :param acount_id:
+        :param durl:
+        :return:
+        """
+        parser = DataUrlParser(durl)
+        storage = FireHydrantLocalStorage('account_avator')
+        path = storage.save_file('{}/avator.{}'.format(
+            acount_id,
+            parser.mime
+        ), parser.data, 'wb')
+
+        return path

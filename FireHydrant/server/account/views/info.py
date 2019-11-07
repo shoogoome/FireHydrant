@@ -76,7 +76,7 @@ class AccountInfoView(FireHydrantView):
             account.sex = params.int('sex', desc='性别')
             account.motto = params.str('motto', desc='一句话签名', max_length=MAX_MOTTO_LENGTH)
             account.phone = params.str('phone', desc='联系电话')
-        account.save()
+        # account.save()
 
         if params.has('new_password'):
             new_password = params.str('new_password', desc='新密码', min_length=MIN_PASSWORD_LENGTH,
@@ -86,15 +86,12 @@ class AccountInfoView(FireHydrantView):
             if not signatures.compare_password(old_password, account.password):
                 raise AccountInfoExcept.old_password_error()
             account.password = signatures.build_password_signature(new_password, signatures.gen_salt())
-        account.save()
+        # account.save()
 
         # 头像保存
         if params.has('avator'):
             avator = params.str('avator', desc='头像数据')
-            meta_id = ResourceLogic.decode_token(avator)
-            if meta_id is None:
-                raise AccountInfoExcept.avator_save_fail()
-            account.avator = meta_id
+            account.avator = logic.save_account_avator(account.id, avator)
 
         # 卡权限
         if params.has('role'):
