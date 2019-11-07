@@ -13,6 +13,7 @@ from common.enum.account.role import AccountRoleEnum
 import json
 from common.exceptions.account.info import AccountInfoExcept
 from ...logic.account import FaceUAccountLogic
+from server.account.logics.info import AccountLogic
 
 
 class FaceUAccountInfoView(FireHydrantView):
@@ -27,16 +28,6 @@ class FaceUAccountInfoView(FireHydrantView):
         """
         logic = FaceUAccountLogic(self.auth, aid)
         return SuccessResult(logic.get_account_info())
-
-    @check_login
-    def post(self, request, aid):
-        """
-        上传用户头像
-        :param request:
-        :param aid:
-        :return:
-        """
-        ...
 
     @check_login
     def delete(self, request, aid):
@@ -64,6 +55,10 @@ class FaceUAccountInfoView(FireHydrantView):
             account.nickname = params.str('nickname', desc='昵称')
             account.phone = params.str('phone', desc='电话')
             account.sex = params.int('sex', desc='性别')
+        # 头像保存
+        if params.has('avator'):
+            avator = params.str('avator', desc='头像数据')
+            account.avator = AccountLogic.save_account_avator("facec:{}".format(account.id), avator)
 
         account.save()
         return SuccessResult(id=aid)

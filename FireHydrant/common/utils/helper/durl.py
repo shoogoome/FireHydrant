@@ -22,11 +22,3 @@ class DataUrlParser(object):
         self.data = base64.b64decode(r[0][-1])
         self.mime = r[0][0].split('/')[-1]
 
-
-
-
-
-        # data:image/gif;base64,base64编码的gif图片数据
-
-
-
