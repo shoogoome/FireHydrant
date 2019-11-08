@@ -45,6 +45,8 @@ class FireHydrantLocalStorage(object):
         :param expire:
         :return:
         """
+        if not path:
+            return ""
         payload = {
             "expire_at": int(time.time() + expire),
             "account_id": aid,

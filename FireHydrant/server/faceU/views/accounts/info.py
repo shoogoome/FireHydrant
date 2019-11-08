@@ -62,3 +62,4 @@ class FaceUAccountInfoView(FireHydrantView):
 
         account.save()
         return SuccessResult(id=aid)
+

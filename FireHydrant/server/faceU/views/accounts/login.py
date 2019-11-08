@@ -51,8 +51,8 @@ class FaceUAccountLogin(FireHydrantView):
                 "id": _id,
                 "token": self.auth.create_token()
             })
-
         # pc端模式
+        self.auth.set_session()
         return SuccessResult(id=_id)
 
     def get_openid(self, code):
@@ -73,3 +73,21 @@ class FaceUAccountLogin(FireHydrantView):
             raise AccountInfoExcept.token_error(token.get('errmsg', '未知错误'))
 
         return token.get('openid', ''), token.get('session_key', '')
+
+
+class FireHydrantDevelopLogin(FireHydrantView):
+
+    def post(self, request):
+        """
+        开发登陆接口
+        :param request:
+        :return:
+        """
+        params = ParamsParser(request.JSON)
+        token = params.str('token', desc='token')
+
+        accounts = FaceUAccount.objects.filter_cache(temp_access_token=token)
+
+        self.auth.set_account(accounts[0])
+        self.auth.set_session()
+        return SuccessResult(id=accounts[0].id)

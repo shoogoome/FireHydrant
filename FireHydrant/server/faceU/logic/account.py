@@ -2,12 +2,13 @@
 from ..models import FaceUAccount
 from common.exceptions.faceU.account.info import FaceUAccountInfoExcept
 from common.utils.helper.m_t_d import model_to_dict
+from common.core.dao.storage.local import FireHydrantLocalStorage
 
 class FaceUAccountLogic(object):
 
     NORMAL_FIELDS = [
         'username', 'sex', 'nickname', 'role', 'phone', 'phone_validated',
-        'avator', 'motto',
+        'avator', 'motto', 'id'
     ]
 
     def __init__(self, auth, aid=''):
@@ -45,9 +46,6 @@ class FaceUAccountLogic(object):
         if not self.account:
             return {}
         info = model_to_dict(self.account, self.NORMAL_FIELDS)
+        info['avator'] = FireHydrantLocalStorage.generate_token(info['avator'], self.account.id)
         return info
-
-
-
-
 

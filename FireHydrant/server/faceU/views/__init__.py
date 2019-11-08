@@ -1,7 +1,8 @@
-from server.faceU.views.accounts.login import FaceUAccountLogin
-from server.faceU.views.accounts.info import FaceUAccountInfoView
-
+from .accounts.login import FaceUAccountLogin, FireHydrantDevelopLogin
+from .accounts.info import FaceUAccountInfoView
+from .accounts.list_mget import FaceUAccountListMget
 __all__ = [
     # 账户
-    'FaceUAccountLogin', 'FaceUAccountInfoView',
+    'FaceUAccountLogin', 'FireHydrantDevelopLogin', 'FaceUAccountInfoView',
+    'FaceUAccountListMget',
 ]
