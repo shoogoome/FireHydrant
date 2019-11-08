@@ -46,6 +46,6 @@ class FaceUAccountLogic(object):
         if not self.account:
             return {}
         info = model_to_dict(self.account, self.NORMAL_FIELDS)
-        info['avator'] = FireHydrantLocalStorage.generate_token(info['avator'], self.account.id)
+        info['avator'] = FireHydrantLocalStorage.generate_token(info['avator'], self.auth.get_account().id)
         return info
 

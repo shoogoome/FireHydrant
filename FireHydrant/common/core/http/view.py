@@ -189,4 +189,3 @@ class FireHydrantView(FireHydrantViewBase):
         # 浏览器登陆
         else:
             self.auth = FireHydrantAuthAuthorization(request, self)
-
