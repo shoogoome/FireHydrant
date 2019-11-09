@@ -2,19 +2,19 @@
 # coding: utf-8
 
 
-from django.db import transaction
+import json
 
-from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+import requests
+
+from common.core.http.facec import FireHydrantFacecView
+from common.enum.account.role import AccountRoleEnum
+from common.exceptions.account.info import AccountInfoExcept
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from server.faceU.models import FaceUAccount
-from common.enum.account.role import AccountRoleEnum
-import requests
-import json
-from common.exceptions.account.info import AccountInfoExcept
 
-class FaceUAccountLogin(FireHydrantView):
+
+class FaceUAccountLogin(FireHydrantFacecView):
 
     def post(self, request):
         """
@@ -75,7 +75,7 @@ class FaceUAccountLogin(FireHydrantView):
         return token.get('openid', ''), token.get('session_key', '')
 
 
-class FireHydrantDevelopLogin(FireHydrantView):
+class FireHydrantDevelopLogin(FireHydrantFacecView):
 
     def post(self, request):
         """

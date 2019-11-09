@@ -2,21 +2,15 @@
 # coding: utf-8
 
 
-from django.db import transaction
-
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.facec import FireHydrantFacecView
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
-from server.faceU.models import FaceUAccount
-from common.enum.account.role import AccountRoleEnum
-import json
-from common.exceptions.account.info import AccountInfoExcept
-from ...logic.account import FaceUAccountLogic
 from server.account.logics.info import AccountLogic
+from ...logic.account import FaceUAccountLogic
 
 
-class FaceUAccountInfoView(FireHydrantView):
+class FaceUAccountInfoView(FireHydrantFacecView):
 
     @check_login
     def get(self, request, aid):

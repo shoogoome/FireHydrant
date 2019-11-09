@@ -5,7 +5,7 @@
 from django.db import transaction
 
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.facec import FireHydrantFacecView
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
 from server.faceU.models import FaceUAccount
@@ -15,7 +15,7 @@ import json
 from common.exceptions.account.info import AccountInfoExcept
 
 
-class FaceUDistinguishView(FireHydrantView):
+class FaceUDistinguishView(FireHydrantFacecView):
 
     @check_login
     def post(self, request, aid, gid):

@@ -5,7 +5,7 @@ from django.db import transaction
 
 from common.constants.params import TASK_PUBLIC_WAIT_TIME
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.firehydrant import FireHydrantView
 from common.enum.task.type import TaskTypeEnum
 from common.exceptions.task.classification import TaskClassificationExcept
 from common.exceptions.task.task import TaskInfoExcept

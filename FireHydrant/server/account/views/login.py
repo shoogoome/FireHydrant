@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.firehydrant import FireHydrantView
 from common.utils.helper.params import ParamsParser
 from ..models import Account
 from django.db import transaction

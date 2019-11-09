@@ -3,7 +3,7 @@
 
 
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.facec import FireHydrantFacecView
 from common.utils.helper.pagination import slicer
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
@@ -11,7 +11,7 @@ from server.faceU.models import FaceUAccount
 from ...logic.account import FaceUAccountLogic
 
 
-class FaceUAccountListMget(FireHydrantView):
+class FaceUAccountListMget(FireHydrantFacecView):
 
     @check_login
     def get(self, request):

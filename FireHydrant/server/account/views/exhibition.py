@@ -4,7 +4,7 @@
 from django.db import transaction
 
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.firehydrant import FireHydrantView
 from common.enum.account.role import AccountRoleEnum
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult

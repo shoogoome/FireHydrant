@@ -3,7 +3,7 @@
 
 import os
 from django.http.response import HttpResponse
-from common.core.http.view import FireHydrantView
+from common.core.http.firehydrant import FireHydrantView
 from common.utils.helper.params import ParamsParser
 from common.core.dao.storage.local import FireHydrantLocalStorage
 from common.constants.storages import MIME_TO_EXT_MAPPING, NGINX_RESOURCE_PATH, FIRE_HYDRANT_DATA_ROOT

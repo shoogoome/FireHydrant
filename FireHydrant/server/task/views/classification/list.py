@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # coding: utf-8
 
-from common.core.http.view import FireHydrantView
+from common.core.http.firehydrant import FireHydrantView
 from common.utils.helper.result import SuccessResult
 from ...logics.classification import TaskClassificationLogic
 

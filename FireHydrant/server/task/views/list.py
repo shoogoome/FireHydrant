@@ -4,7 +4,7 @@
 import time
 
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.firehydrant import FireHydrantView
 from common.enum.task.stage import TaskStageEnum
 from common.utils.helper.pagination import slicer
 from common.utils.helper.params import ParamsParser

@@ -5,7 +5,7 @@ from django.db import transaction
 
 from common.constants.length_limitation import *
 from common.core.auth.check_login import check_login
-from common.core.http.view import FireHydrantView
+from common.core.http.firehydrant import FireHydrantView
 from common.exceptions.task.classification import TaskClassificationExcept
 from common.utils.helper.params import ParamsParser
 from common.utils.helper.result import SuccessResult
