@@ -128,7 +128,6 @@ class FaceUGroupManageMany(FireHydrantFacecView):
         :param gid:
         :return:
         """
-        # TODO： 图片名字 code:姓名 格式
         logic = FaceUGroupsLogic(self.auth, gid)
 
         status = {}
