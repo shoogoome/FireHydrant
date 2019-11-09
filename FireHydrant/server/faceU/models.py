@@ -76,7 +76,7 @@ class FaceUAccount(models.Model):
 class FaceUFacialMakeup(models.Model):
 
     class Meta:
-        verbose_name = "脸你脸谱映射"
+        verbose_name = "脸你脸谱"
         verbose_name_plural = "脸你脸谱表"
         app_label = 'faceU'
 
@@ -85,9 +85,6 @@ class FaceUFacialMakeup(models.Model):
 
     # 名称
     name = models.CharField(max_length=125)
-
-    # 用户自定义标识
-    code = models.CharField(max_length=125, null=True, blank=True)
 
     # 身份证
     id_code = models.CharField(max_length=30, null=True, blank=True)
@@ -101,9 +98,13 @@ class FaceUFacialMakeup(models.Model):
     # 最后更新时间
     update_time = TimeStampField(auto_now=True)
 
-
     # 重构管理器
     objects = FireHydrantModelManager()
+
+    def __str__(self):
+        return '[{}] uuid: {}, 姓名: {}, 身份证: {}'.format(
+            self.id, self.face_uuid, self.name, self.id_code
+        )
 
 class FaceUGroups(models.Model):
 
@@ -121,10 +122,37 @@ class FaceUGroups(models.Model):
     # 描述
     description = models.CharField(max_length=255)
 
-    # 成员
-    member = models.ManyToManyField('faceU.FaceUFacialMakeup',
-                                    blank=True,
-                                    related_name='faceugroups_member')
+    # 创建时间
+    create_time = TimeStampField(auto_now_add=True)
+
+    # 最后更新时间
+    update_time = TimeStampField(auto_now=True)
+
+    # 重构管理器
+    objects = FireHydrantModelManager()
+
+    def __str__(self):
+        return '[{}] 归属人: {}, 标题: {}'.format(
+            self.id, self.author.nickname, self.title
+        )
+
+class FaceUFacialMakeupMapping(models.Model):
+    class Meta:
+        verbose_name = "脸你脸谱分组映射"
+        verbose_name_plural = "脸你脸谱分组映射表"
+        app_label = 'faceU'
+
+    # 脸谱uuid
+    face = models.ForeignKey('faceU.FaceUFacialMakeup', null=True, blank=True, on_delete=models.SET_NULL)
+
+    # 分组
+    group = models.ForeignKey('faceU.FaceUGroups', null=True, blank=True, on_delete=models.SET_NULL)
+
+    # 名称
+    name = models.CharField(max_length=125)
+
+    # 用户自定义标识
+    code = models.CharField(max_length=125, null=True, blank=True)
 
     # 创建时间
     create_time = TimeStampField(auto_now_add=True)
@@ -134,6 +162,12 @@ class FaceUGroups(models.Model):
 
     # 重构管理器
     objects = FireHydrantModelManager()
+
+    def __str__(self):
+        return '[{}] 脸: [{}]{}, 分组: [{}]{}, 姓名: {}, 标识: {}'.format(
+            self.id, self.face_id, self.face.name, self.group_id,
+            self.group.title, self.name, self.code
+        )
 
 class FaceUDistinguishRecord(models.Model):
 
@@ -157,6 +191,10 @@ class FaceUDistinguishRecord(models.Model):
     # 重构管理器
     objects = FireHydrantModelManager()
 
+    def __str__(self):
+        return '[{}] 分组: [{}]{}'.format(
+            self.id, self.group_id, self.group.title
+        )
 
 receiver(post_save, sender=FaceUAccount)(delete_model_single_object_cache)
 receiver(post_delete, sender=FaceUAccount)(delete_model_single_object_cache)
@@ -169,3 +207,6 @@ receiver(post_delete, sender=FaceUGroups)(delete_model_single_object_cache)
 
 receiver(post_save, sender=FaceUDistinguishRecord)(delete_model_single_object_cache)
 receiver(post_delete, sender=FaceUDistinguishRecord)(delete_model_single_object_cache)
+
+receiver(post_save, sender=FaceUFacialMakeupMapping)(delete_model_single_object_cache)
+receiver(post_delete, sender=FaceUFacialMakeupMapping)(delete_model_single_object_cache)
