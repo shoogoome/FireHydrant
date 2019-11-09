@@ -105,14 +105,15 @@ class FaceUGroupManageView(FireHydrantFacecView):
         status = {}
         mappings = FaceUFacialMakeupMapping.objects.get_many(ids)
         for mapping in mappings:
+            _id = mapping.id
             try:
                 if mapping.group_id == logic.group.id:
                     mapping.delete()
-                    status[mapping.id] = 1
+                    status[_id] = 1
                 else:
-                    status[mapping.id] = 0
+                    status[_id] = 0
             except:
-                status[mapping.id] = 0
+                status[_id] = 0
 
         return SuccessResult(status=status)
 
@@ -133,15 +134,15 @@ class FaceUGroupManageMany(FireHydrantFacecView):
         status = {}
         files = request.FILES.getlist('faces')
         for file in files:
+            file_name = file.name.split('@')
+            name = ''.join(file_name[1:])
+            code = file_name[0]
             try:
-                file_name = file.name.split('@')
 
-                name = ''.join(file_name[1:])
-                code = file_name[0]
                 face_uuid = FaceUGroupsLogic.save_face(file.read())
                 _ = save_mapping(face_uuid, name, code, logic.group)
-                status[file.name] = 1
+                status[code] = 1
             except:
-                status[file.name] = 0
+                status[code] = 0
 
         return SuccessResult(status=status)

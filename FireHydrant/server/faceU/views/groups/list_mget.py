@@ -25,17 +25,17 @@ class FaceUGroupListMget(FireHydrantFacecView):
         limit = params.int('limit', desc='每页最大渲染数', require=False, default=10)
         page = params.int('page', desc='当前页数', require=False, default=1)
 
-        groups = FaceUGroups.objects.values('id', 'update_time', 'nickname')
+        groups = FaceUGroups.objects.values('id', 'update_time', 'title')
         if params.has('account') and self.auth.get_account().role == int(AccountRoleEnum.ADMIN):
             groups = groups.filter(author_id=params.int('account', desc='用户id'))
         else:
             groups = groups.filter(author=self.auth.get_account())
 
         if params.has('title'):
-            groups = groups.filter(groups__contains=params.str('groups', desc='标题'))
+            groups = groups.filter(title__contains=params.str('title', desc='标题'))
 
         groups_list, pagination = slicer(groups, limit=limit, page=page)()()
-        return SuccessResult(accounts=groups_list, pagination=pagination)
+        return SuccessResult(groups=groups_list, pagination=pagination)
 
     @check_login
     def post(self, request):
@@ -55,7 +55,7 @@ class FaceUGroupListMget(FireHydrantFacecView):
         for group in groups:
             try:
                 logic.group = group
-                if logic.group.author_id != _auth_id or not _admin:
+                if logic.group.author_id != _auth_id and not _admin:
                     continue
                 data.append(logic.get_group_info())
             except:
