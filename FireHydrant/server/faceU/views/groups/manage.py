@@ -137,7 +137,6 @@ class FaceUGroupManageMany(FireHydrantFacecView):
             name = ''.join(file_name[1:])
             code = file_name[0]
             try:
-                # 保存脸谱
                 face_uuid = FaceUGroupsLogic.save_face(file.read())
                 _ = save_mapping(face_uuid, name, code, logic.group)
                 status[code] = 1
