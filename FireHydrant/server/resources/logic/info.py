@@ -5,6 +5,7 @@ from common.core.dao.storage.liuma_client import LiumaClient
 import time
 import json
 import base64
+from common.utils.hash.signatures import generate_token
 
 class ResourceLogic(object):
 
@@ -74,11 +75,8 @@ class ResourceLogic(object):
                 "expire_at": int(time.time() + expire),
                 "meta": self.meta.id
             }
-            payload_str = json.dumps(payload)
-            token = cookie_signature(payload_str)
-            payload_encode = base64.b64encode(payload_str.encode("utf-8")).decode()
 
-            return True, '{}.{}'.format(payload_encode, token)
+            return True, generate_token(payload)
         # 否则删除当前元数据记录
         # else:
         #     self.meta.delete()

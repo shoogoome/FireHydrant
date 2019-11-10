@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option java_package = "io.grpc.examples";
+
+package faceRecognition;
+
+service FaceRecognition {
+
+    // 人脸是否存在
+    rpc is_exists (faceData) returns (faceData) {}
+
+    // 上传脸谱
+    rpc upload_face (faceData) returns (faceData) {}
+
+    // 人脸识别
+    rpc recognition (faceMessage) returns (faceMessage) {}
+}
+
+// 用户认证
+message Auth {
+    string token = 5;
+}
+
+// 脸谱信息
+message faceData {
+
+    // 图片数据
+    bytes image = 1;
+
+    // 图片id
+    string uuid = 2;
+
+    // 认证
+    Auth auth = 6;
+}
+
+// 识别信息
+message faceMessage {
+
+    // 图片数据
+    bytes image = 3;
+
+    // -> 要识别的图片uuid列表；  <- 识别到的uuid列表
+    string face_list = 4;
+
+    // 认证
+    Auth auth = 7;
+}
+
+

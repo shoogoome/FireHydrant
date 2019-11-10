@@ -1,12 +1,13 @@
 import os
 from common.constants.storages import STORAGE_MAPPING
 from common.exceptions.system.storage import StorageInfoExcept
-from common.utils.hash.signatures import session_signature, cookie_signature
+from common.utils.hash.signatures import generate_token, cookie_signature
 import base64
 import time
 import json
 from common.constants.params import *
 import re
+
 
 class FireHydrantLocalStorage(object):
 
@@ -53,11 +54,7 @@ class FireHydrantLocalStorage(object):
             "path": path,
             "public": False if aid else True
         }
-        payload_str = json.dumps(payload)
-        token = cookie_signature(payload_str)
-        payload_encode = base64.b64encode(payload_str.encode("utf-8")).decode()
-
-        return "{}.{}".format(payload_encode, token)
+        return generate_token(payload)
 
     @staticmethod
     def decode_token(token, auth):

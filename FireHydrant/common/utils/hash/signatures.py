@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # coding:utf-8
 
-import uuid
-import time
-import hmac
+import base64
 import hashlib
+import hmac
+import json
+import time
+import uuid
+
 from FireHydrant.settings import HMAC_SALT, ACCOUNT_PASSWORD_SALT
+from common.constants.params import COOKIE_EFFECTIVE_TIME
 
 """
 一个密码生成验证模块
@@ -22,6 +26,7 @@ def session_signature(msg):
     md5.update(str(msg).encode('utf-8'))
     return md5.hexdigest()
 
+
 def cookie_signature(msg):
     """
     cookie
@@ -35,6 +40,8 @@ def cookie_signature(msg):
         hashlib.sha256
     )
     return h.hexdigest()
+
+
 def gen_salt():
     """
     盐生成器
@@ -50,6 +57,7 @@ def gen_salt():
         hashlib.md5
     )
     return h.hexdigest().upper()
+
 
 def password_signature(pwd, salt=ACCOUNT_PASSWORD_SALT):
     """
@@ -69,6 +77,7 @@ def password_signature(pwd, salt=ACCOUNT_PASSWORD_SALT):
     )
     return h.hexdigest()
 
+
 def __parse_password_hmac(pwd):
     """
     解析密文
@@ -83,6 +92,7 @@ def __parse_password_hmac(pwd):
     else:
         return pwd, ACCOUNT_PASSWORD_SALT
 
+
 def compare_password(source, target):
     """
     密文比较
@@ -90,7 +100,7 @@ def compare_password(source, target):
     :param target: 目标密文
     :return:
     """
-    target_pwd, salt= __parse_password_hmac(target)
+    target_pwd, salt = __parse_password_hmac(target)
     signed = password_signature(source, salt)
 
     return signed == target_pwd
@@ -107,3 +117,20 @@ def build_password_signature(pwd, salt):
         password_signature(pwd, salt),
         salt,
     )
+
+
+def generate_token(payload, expire=COOKIE_EFFECTIVE_TIME):
+    """
+    生成下载密钥
+    :param payload:
+    :param expire:
+    :return:
+    """
+    if not payload:
+        return ""
+
+    payload_str = json.dumps(payload)
+    token = cookie_signature(payload_str)
+    payload_encode = base64.b64encode(payload_str.encode("utf-8")).decode()
+
+    return "{}.{}".format(payload_encode, token)
