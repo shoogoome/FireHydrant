@@ -5,7 +5,7 @@ from common.utils.hash.signatures import session_signature
 from common.utils.helper.durl import DataUrlParser
 from common.utils.helper.m_t_d import model_to_dict
 from ..models import FaceUGroups, FaceUFacialMakeupMapping
-
+from common.grpc.facec_grpc_client import FireHydrantFacecRecognitionClient
 
 class FaceUGroupsLogic(object):
     NORMAL_FIELDS = [
@@ -85,9 +85,13 @@ class FaceUGroupsLogic(object):
         else:
             face_image = face
 
-        # TODO: 判断人是否存在， 存在则获取uuid并return uuid
-        face_uuid = session_signature(str(uuid.uuid1()))
+        client = FireHydrantFacecRecognitionClient()
+        # 存在则直接return
+        face_uuid = client.is_exists(face_image)
+        if face_uuid:
+            return face_uuid
 
-        # TODO: 上传人脸识别服务，并reutrn uuid
+        face_uuid = session_signature(str(uuid.uuid1()))
+        client.upload_face(face_image, face_uuid)
 
         return face_uuid
