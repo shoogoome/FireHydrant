@@ -27,7 +27,6 @@ class FaceUAccountLogin(FireHydrantFacecView):
             status=self.auth.is_login()
         )
 
-
     def post(self, request):
         """
         登陆
