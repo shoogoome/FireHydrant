@@ -24,6 +24,5 @@ class FaceUAccountLogout(FireHydrantFacecView):
         """
         self.auth.set_account(None)
         self.auth.set_session()
-        self.auth.set_cookie()
 
         return SuccessResult(status="ok")
