@@ -16,6 +16,18 @@ from server.faceU.models import FaceUAccount
 
 class FaceUAccountLogin(FireHydrantFacecView):
 
+    def get(self, request):
+        """
+        检查登陆
+        :param request:
+        :return:
+        """
+        return SuccessResult(
+            id=self.auth.get_account().id if self.auth.is_login() else None,
+            status=self.auth.is_login()
+        )
+
+
     def post(self, request):
         """
         登陆
