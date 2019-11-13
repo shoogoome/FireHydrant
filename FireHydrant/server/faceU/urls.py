@@ -10,7 +10,6 @@ account_urlpatterns = [
     path('/_mget', FaceUAccountListMget.as_view(method=['POST'])),
 ]
 
-
 group_urlpatterns = [
     path('', FaceUGroupInfo.as_view(method=['POST'])),
     path('/list', FaceUGroupListMget.as_view(method=['GET'])),
@@ -21,8 +20,13 @@ group_urlpatterns = [
     path('/<int:gid>/manage/<int:mid>', FaceUGroupManageView.as_view(method=['PUT']))
 ]
 
+distinguish_urlpatterns = [
+    path('/image', FaceUDistinguishView.as_view(method=['POST'])),
+]
+
 
 urlpatterns = [
     path('/accounts', include(account_urlpatterns)),
     path('/groups', include(group_urlpatterns)),
+    path('/distinguish', include(distinguish_urlpatterns)),
 ]

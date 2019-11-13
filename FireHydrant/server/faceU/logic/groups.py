@@ -74,26 +74,6 @@ class FaceUGroupsLogic(object):
                 pass
         return data
 
-    def get_group_members_face_uuid(self):
-        """
-        获取分组成员脸谱uuid
-        :return:
-        """
-        if not self.group:
-            return ""
-
-        with connection.cursor() as cursor:
-            cursor.execute(f"""
-                SELECT makeup.face_uuid 
-                FROM faceU_faceufacialmakeupmapping AS mapping 
-                JOIN faceU_faceufacialmakeup AS makeup 
-                ON mapping.face_id = makeup.id
-                WHERE mapping.group_id = {self.group.id}
-            """)
-
-            row = cursor.fetchall()
-        return '@'.join(row)
-
     @staticmethod
     def save_face(face):
         """
