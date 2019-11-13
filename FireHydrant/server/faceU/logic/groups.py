@@ -6,6 +6,7 @@ from common.utils.helper.durl import DataUrlParser
 from common.utils.helper.m_t_d import model_to_dict
 from ..models import FaceUGroups, FaceUFacialMakeupMapping
 from common.grpc.facec_grpc_client import FireHydrantFacecRecognitionClient
+from django.db import connection
 
 class FaceUGroupsLogic(object):
     NORMAL_FIELDS = [
@@ -72,6 +73,26 @@ class FaceUGroupsLogic(object):
             except:
                 pass
         return data
+
+    def get_group_members_face_uuid(self):
+        """
+        获取分组成员脸谱uuid
+        :return:
+        """
+        if not self.group:
+            return ""
+
+        with connection.cursor() as cursor:
+            cursor.execute(f"""
+                SELECT makeup.face_uuid 
+                FROM faceU_faceufacialmakeupmapping AS mapping 
+                JOIN faceU_faceufacialmakeup AS makeup 
+                ON mapping.face_id = makeup.id
+                WHERE mapping.group_id = {self.group.id}
+            """)
+
+            row = cursor.fetchall()
+        return '@'.join(row)
 
     @staticmethod
     def save_face(face):

@@ -13,18 +13,21 @@ from common.enum.account.role import AccountRoleEnum
 import requests
 import json
 from common.exceptions.account.info import AccountInfoExcept
-
+from ...logic.groups import FaceUGroupsLogic
+from common.grpc.facec_grpc_client import FireHydrantFacecRecognitionClient
 
 class FaceUDistinguishView(FireHydrantFacecView):
 
     @check_login
-    def post(self, request, aid, gid):
+    def post(self, request, gid):
         """
         上传图片识别存在
         :param request:
-        :param aid:
         :param gid:
         :return:
         """
-        ...
+        logic = FaceUGroupsLogic(self.auth, gid)
+
+        client = FireHydrantFacecRecognitionClient()
+        client.recognition()
 
