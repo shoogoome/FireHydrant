@@ -176,6 +176,9 @@ class FaceUDistinguishRecord(models.Model):
         verbose_name_plural = "脸你识别记录表"
         app_label = 'faceU'
 
+    # 归属人
+    author = models.ForeignKey('faceU.FaceUAccount', null=True, blank=True, on_delete=models.SET_NULL)
+
     # 分组
     group = models.ForeignKey('faceU.FaceUGroups', null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -192,8 +195,9 @@ class FaceUDistinguishRecord(models.Model):
     objects = FireHydrantModelManager()
 
     def __str__(self):
-        return '[{}] 分组: [{}]{}'.format(
-            self.id, self.group_id, self.group.title
+        return '[{}] 归属: [{}] {}, 分组: [{}]{}'.format(
+            self.id, self.author_id, self.author.nickname,
+            self.group_id, self.group.title if self.group_id else ''
         )
 
 receiver(post_save, sender=FaceUAccount)(delete_model_single_object_cache)
