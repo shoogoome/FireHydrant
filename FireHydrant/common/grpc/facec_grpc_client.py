@@ -2,7 +2,7 @@ import grpc
 from .model import faceRecognition_pb2, faceRecognition_pb2_grpc
 from common.utils.hash.signatures import generate_token
 import time
-
+from common.exceptions.grpc.info import FireHydrantFaceUGrpcExcept
 
 def auth_token():
     payload = {
@@ -17,8 +17,8 @@ class FireHydrantFacecRecognitionClient(object):
         """
         人脸识别grpc客户端
         """
-        self.ip = "localhost"
-        self.port = "50051"
+        self.ip = "172.31.139.156"
+        self.port = "8001"
         self.conn = "{}:{}".format(self.ip, self.port)
 
     def is_exists(self, face_image):
@@ -27,14 +27,17 @@ class FireHydrantFacecRecognitionClient(object):
         :param face_image:
         :return:
         """
-        auth = faceRecognition_pb2.Auth(token=auth_token)
-        request = faceRecognition_pb2.faceData(image=face_image, auth=auth)
+        try:
+            auth = faceRecognition_pb2.Auth(token=auth_token())
+            request = faceRecognition_pb2.faceData(image=face_image, auth=auth)
 
-        with grpc.insecure_channel(self.conn) as channel:
-            stub = faceRecognition_pb2_grpc.FaceRecognitionStub(channel)
-            response = stub.is_exists(request)
+            with grpc.insecure_channel(self.conn) as channel:
+                stub = faceRecognition_pb2_grpc.FaceRecognitionStub(channel)
+                response = stub.is_exists(request)
 
-            return response.uuid
+                return response.uuid
+        except:
+            raise FireHydrantFaceUGrpcExcept.server_except()
 
     def upload_face(self, face_image, uuid):
         """
@@ -43,15 +46,18 @@ class FireHydrantFacecRecognitionClient(object):
         :param uuid:
         :return:
         """
-        auth = faceRecognition_pb2.Auth(token=auth_token)
-        request = faceRecognition_pb2.faceData(
-            image=face_image, uuid=uuid, auth=auth)
+        try:
+            auth = faceRecognition_pb2.Auth(token=auth_token())
+            request = faceRecognition_pb2.faceData(
+                image=face_image, uuid=uuid, auth=auth)
 
-        with grpc.insecure_channel(self.conn) as channel:
-            stub = faceRecognition_pb2_grpc.FaceRecognitionStub(channel)
-            response = stub.upload_face(request)
+            with grpc.insecure_channel(self.conn) as channel:
+                stub = faceRecognition_pb2_grpc.FaceRecognitionStub(channel)
+                response = stub.upload_face(request)
 
-            return response.uuid
+                return response.uuid
+        except:
+            raise FireHydrantFaceUGrpcExcept.server_except()
 
     def recognition(self, image, face_list):
         """
@@ -60,19 +66,16 @@ class FireHydrantFacecRecognitionClient(object):
         :param face_list:
         :return:
         """
-        auth = faceRecognition_pb2.Auth(token=auth_token)
-        request = faceRecognition_pb2.faceMessage(
-            image=image, face_list=face_list, auth=auth)
+        try:
+            auth = faceRecognition_pb2.Auth(token=auth_token())
+            request = faceRecognition_pb2.faceMessage(
+                image=image, face_list=face_list, auth=auth)
 
-        with grpc.insecure_channel(self.conn) as channel:
-            stub = faceRecognition_pb2_grpc.FaceRecognitionStub(channel)
-            response = stub.recognition(request)
+            with grpc.insecure_channel(self.conn) as channel:
+                stub = faceRecognition_pb2_grpc.FaceRecognitionStub(channel)
+                response = stub.recognition(request)
 
-            return response.face_list
-
-
-if __name__ == '__main__':
-
-    a = FireHydrantFacecRecognitionClient()
-    print(a.is_exists("123".encode('utf-8')))
+                return response.face_list, response.image
+        except:
+            raise FireHydrantFaceUGrpcExcept.server_except()
 
