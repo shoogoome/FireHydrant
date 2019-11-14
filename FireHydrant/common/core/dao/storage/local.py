@@ -30,8 +30,7 @@ class FireHydrantLocalStorage(object):
         :return:
         """
         dirname, filename = os.path.split(path)
-        if dirname:
-            os.system('mkdir -p {}'.format(os.path.join(self._root, dirname)))
+        os.system('mkdir -p {}'.format(os.path.join(self._root, dirname)))
         with open(os.path.join(self._root, path), open_type) as fp:
             fp.write(file)
 
