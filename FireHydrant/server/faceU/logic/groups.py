@@ -1,7 +1,7 @@
 import uuid
 
 from common.exceptions.faceU.group.info import FaceUGroupInfoExcept
-from common.utils.hash.signatures import session_signature
+from common.utils.hash.signatures import gen_salt
 from common.utils.helper.durl import DataUrlParser
 from common.utils.helper.m_t_d import model_to_dict
 from ..models import FaceUGroups, FaceUFacialMakeupMapping
@@ -74,6 +74,7 @@ class FaceUGroupsLogic(object):
                 pass
         return data
 
+
     @staticmethod
     def save_face(face):
         """
@@ -92,7 +93,7 @@ class FaceUGroupsLogic(object):
         if face_uuid:
             return face_uuid
 
-        face_uuid = session_signature(str(uuid.uuid1()))
+        face_uuid = gen_salt()
         client.upload_face(face_image, face_uuid)
 
         return face_uuid
