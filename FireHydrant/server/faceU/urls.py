@@ -24,9 +24,14 @@ distinguish_urlpatterns = [
     path('/image', FaceUDistinguishView.as_view(method=['POST'])),
 ]
 
+record_urlpatterns = [
+    path('/<int:rid>', FaceURecordInfoView.as_view(method=['GET'])),
+]
+
 
 urlpatterns = [
     path('/accounts', include(account_urlpatterns)),
     path('/groups', include(group_urlpatterns)),
     path('/distinguish', include(distinguish_urlpatterns)),
+    path('/record', include(record_urlpatterns)),
 ]
