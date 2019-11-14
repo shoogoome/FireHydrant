@@ -1,9 +1,9 @@
-from server.faceU.models import FaceUGroups
 from django.db import connection
+
 
 class FaceUDistinguishLogic(object):
 
-    def __init__(self, auth, group=''):
+    def __init__(self, auth, group=0):
         """
         人脸识别逻辑
         :param auth:
@@ -11,7 +11,7 @@ class FaceUDistinguishLogic(object):
         """
         self.auth = auth
         self._group = group
-        self._overall_situation = True if group else False
+        self._overall_situation = True if not group else False
 
     def to_face_uuid(self):
         """
@@ -24,11 +24,11 @@ class FaceUDistinguishLogic(object):
                 FROM faceU_faceufacialmakeupmapping AS mapping 
                 JOIN faceU_faceufacialmakeup AS makeup 
                 ON mapping.face_id = makeup.id
-                WHERE 1={1 if self._overall_situation else 0} or mapping.group_id = {self._group.id}
+                WHERE 1={1 if self._overall_situation else 0} or mapping.group_id = {self._group}
             """)
 
             row = cursor.fetchall()
-        return '@'.join(row)
+        return '@'.join([rw[0] for rw in row])
 
     def from_face_uuid(self, face_uuid):
         """
@@ -43,8 +43,8 @@ class FaceUDistinguishLogic(object):
                 FROM faceU_faceufacialmakeupmapping AS mapping 
                 JOIN faceU_faceufacialmakeup AS makeup 
                 ON mapping.face_id = makeup.id
-                WHERE (1={1 if self._overall_situation else 0} or mapping.group_id = {self._group.id})
-                AND makeup.face_uuid in {face_uuid}
+                WHERE (1={1 if self._overall_situation else 0} or mapping.group_id = {self._group})
+                AND makeup.face_uuid in ({"'" + "','".join(face_uuid) + "'"})
             """)
 
             row = cursor.fetchall()
@@ -53,5 +53,3 @@ class FaceUDistinguishLogic(object):
             'name': rw[1],
             'code': rw[2],
         } for rw in row]
-
-
