@@ -3,6 +3,7 @@ from .model import faceRecognition_pb2, faceRecognition_pb2_grpc
 from common.utils.hash.signatures import generate_token
 import time
 from common.exceptions.grpc.info import FireHydrantFaceUGrpcExcept
+import logging
 
 def auth_token():
     payload = {
@@ -36,7 +37,8 @@ class FireHydrantFacecRecognitionClient(object):
                 response = stub.is_exists(request)
 
                 return response.uuid
-        except:
+        except Exception as ex:
+            logging.error(ex)
             raise FireHydrantFaceUGrpcExcept.server_except()
 
     def upload_face(self, face_image, uuid):
@@ -56,7 +58,8 @@ class FireHydrantFacecRecognitionClient(object):
                 response = stub.upload_face(request)
 
                 return response.uuid
-        except:
+        except Exception as ex:
+            logging.error(ex)
             raise FireHydrantFaceUGrpcExcept.server_except()
 
     def recognition(self, image, face_list):
@@ -76,6 +79,7 @@ class FireHydrantFacecRecognitionClient(object):
                 response = stub.recognition(request)
 
                 return response.face_list, response.image
-        except:
+        except Exception as ex:
+            logging.error(ex)
             raise FireHydrantFaceUGrpcExcept.server_except()
 

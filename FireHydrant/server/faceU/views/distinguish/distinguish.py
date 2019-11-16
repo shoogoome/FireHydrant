@@ -60,4 +60,3 @@ class FaceUDistinguishView(FireHydrantFacecView):
 
         return SuccessResult(id=record.id)
 
-

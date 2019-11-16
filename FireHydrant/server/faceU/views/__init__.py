@@ -7,6 +7,7 @@ from .groups.list_mget import FaceUGroupListMget
 from .groups.manage import FaceUGroupManageView, FaceUGroupManageMany
 from .distinguish.distinguish import FaceUDistinguishView
 from .record.info import FaceURecordInfoView
+from .record.list_mget import FaceURecordListMgetView
 __all__ = [
     # 账户
     'FaceUAccountLogin', 'FireHydrantDevelopLogin', 'FaceUAccountInfoView',
@@ -16,5 +17,5 @@ __all__ = [
     # 识别
     'FaceUDistinguishView',
     # 记录
-    'FaceURecordInfoView',
+    'FaceURecordInfoView', 'FaceURecordListMgetView'
 ]

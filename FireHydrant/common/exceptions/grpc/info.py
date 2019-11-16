@@ -6,7 +6,7 @@ class FireHydrantFaceUGrpcExcept(FireHydrantExceptBase):
 
     @classmethod
     def server_except(cls):
-        return cls("人脸识别服务端异常")
+        return cls("服务端异常")
 
 
 

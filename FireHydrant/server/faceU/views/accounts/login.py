@@ -24,7 +24,7 @@ class FaceUAccountLogin(FireHydrantFacecView):
         """
         return SuccessResult(
             id=self.auth.get_account().id if self.auth.is_login() else None,
-            status=self.auth.is_login()
+            status=self.auth.is_login(),
         )
 
     def post(self, request):

@@ -29,3 +29,4 @@ class FaceURecordInfoView(FireHydrantFacecView):
 
         return SuccessResult(logic.get_record_info())
 
+
