@@ -70,6 +70,7 @@ class FireHydrantFacecRecognitionClient(object):
         :return:
         """
         try:
+            # re
             auth = faceRecognition_pb2.Auth(token=auth_token())
             request = faceRecognition_pb2.faceMessage(
                 image=image, face_list=face_list, auth=auth)
