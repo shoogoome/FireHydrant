@@ -87,13 +87,13 @@ class FaceUGroupsLogic(object):
         else:
             face_image = face
 
-        client = FireHydrantFacecRecognitionClient()
-        # 存在则直接return
-        face_uuid = client.is_exists(face_image)
-        if face_uuid:
-            return face_uuid
+        # client = FireHydrantFacecRecognitionClient()
+        # # 存在则直接return
+        # face_uuid = client.is_exists(face_image)
+        # if face_uuid:
+        #     return face_uuid
 
         face_uuid = gen_salt()
-        client.upload_face(face_image, face_uuid)
+        # client.upload_face(face_image, face_uuid)
 
         return face_uuid
