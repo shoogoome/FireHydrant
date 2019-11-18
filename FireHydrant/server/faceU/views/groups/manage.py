@@ -134,7 +134,7 @@ class FaceUGroupManageMany(FireHydrantFacecView):
         files = request.FILES.getlist('faces')
         for file in files:
             file_name = file.name.split('@')
-            name = ''.join(file_name[1:])
+            name = ''.join(''.join(file_name[1:]).split('.')[:-1])
             code = file_name[0]
             try:
                 face_uuid = FaceUGroupsLogic.save_face(file.read())
