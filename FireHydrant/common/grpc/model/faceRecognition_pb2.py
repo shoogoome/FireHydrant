@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='faceRecognition',
   syntax='proto3',
   serialized_options=_b('\n\020io.grpc.examples'),
-  serialized_pb=_b('\n\x15\x66\x61\x63\x65Recognition.proto\x12\x0f\x66\x61\x63\x65Recognition\"\x15\n\x04\x41uth\x12\r\n\x05token\x18\x05 \x01(\t\"L\n\x08\x66\x61\x63\x65\x44\x61ta\x12\r\n\x05image\x18\x01 \x01(\x0c\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12#\n\x04\x61uth\x18\x06 \x01(\x0b\x32\x15.faceRecognition.Auth\"T\n\x0b\x66\x61\x63\x65Message\x12\r\n\x05image\x18\x03 \x01(\x0c\x12\x11\n\tface_list\x18\x04 \x01(\t\x12#\n\x04\x61uth\x18\x07 \x01(\x0b\x32\x15.faceRecognition.Auth2\xea\x01\n\x0f\x46\x61\x63\x65Recognition\x12\x43\n\tis_exists\x12\x19.faceRecognition.faceData\x1a\x19.faceRecognition.faceData\"\x00\x12\x45\n\x0bupload_face\x12\x19.faceRecognition.faceData\x1a\x19.faceRecognition.faceData\"\x00\x12K\n\x0brecognition\x12\x1c.faceRecognition.faceMessage\x1a\x1c.faceRecognition.faceMessage\"\x00\x42\x12\n\x10io.grpc.examplesb\x06proto3')
+  serialized_pb=_b('\n\x15\x66\x61\x63\x65Recognition.proto\x12\x0f\x66\x61\x63\x65Recognition\"\x15\n\x04\x41uth\x12\r\n\x05token\x18\x05 \x01(\t\"L\n\x08\x66\x61\x63\x65\x44\x61ta\x12\r\n\x05image\x18\x01 \x01(\x0c\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12#\n\x04\x61uth\x18\x06 \x01(\x0b\x32\x15.faceRecognition.Auth\"T\n\x0b\x66\x61\x63\x65Message\x12\r\n\x05image\x18\x03 \x01(\x0c\x12\x11\n\tface_list\x18\x04 \x01(\t\x12#\n\x04\x61uth\x18\x07 \x01(\x0b\x32\x15.faceRecognition.Auth2\xef\x01\n\x0f\x46\x61\x63\x65Recognition\x12H\n\x0eupdate_library\x12\x19.faceRecognition.faceData\x1a\x19.faceRecognition.faceData\"\x00\x12\x45\n\x0bupload_face\x12\x19.faceRecognition.faceData\x1a\x19.faceRecognition.faceData\"\x00\x12K\n\x0brecognition\x12\x1c.faceRecognition.faceMessage\x1a\x1c.faceRecognition.faceMessage\"\x00\x42\x12\n\x10io.grpc.examplesb\x06proto3')
 )
 
 
@@ -184,11 +184,11 @@ _FACERECOGNITION = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   serialized_start=230,
-  serialized_end=464,
+  serialized_end=469,
   methods=[
   _descriptor.MethodDescriptor(
-    name='is_exists',
-    full_name='faceRecognition.FaceRecognition.is_exists',
+    name='update_library',
+    full_name='faceRecognition.FaceRecognition.update_library',
     index=0,
     containing_service=None,
     input_type=_FACEDATA,

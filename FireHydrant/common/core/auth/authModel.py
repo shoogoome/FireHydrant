@@ -1,10 +1,5 @@
 from server.account.models import Account
-from common.constants.params import *
-from common.utils.hash.signatures import session_signature, cookie_signature
-import base64
-from .redis_cookie import RedisSessionFactory
-import time
-import json
+
 
 class Authorization(object):
 
@@ -108,4 +103,3 @@ class FireHydrantAuthorization(Authorization):
                 return True
 
         return False
-

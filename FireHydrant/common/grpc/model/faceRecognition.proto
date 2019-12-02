@@ -7,7 +7,7 @@ package faceRecognition;
 service FaceRecognition {
 
     // 人脸是否存在
-    rpc is_exists (faceData) returns (faceData) {}
+    rpc update_library (faceData) returns (faceData) {}
 
     // 上传脸谱
     rpc upload_face (faceData) returns (faceData) {}

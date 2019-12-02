@@ -22,19 +22,18 @@ class FireHydrantFacecRecognitionClient(object):
         self.port = "8001"
         self.conn = "{}:{}".format(self.ip, self.port)
 
-    def is_exists(self, face_image):
+    def update_library(self):
         """
-        查询人脸是否存在
-        :param face_image:
+        更新脸谱
         :return:
         """
         try:
             auth = faceRecognition_pb2.Auth(token=auth_token())
-            request = faceRecognition_pb2.faceData(image=face_image, auth=auth)
+            request = faceRecognition_pb2.faceData(auth=auth)
 
             with grpc.insecure_channel(self.conn) as channel:
                 stub = faceRecognition_pb2_grpc.FaceRecognitionStub(channel)
-                response = stub.is_exists(request)
+                response = stub.update_library(request)
 
                 return response.uuid
         except Exception as ex:

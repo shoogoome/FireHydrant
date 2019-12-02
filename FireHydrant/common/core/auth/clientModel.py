@@ -1,16 +1,15 @@
-from .authModel import FireHydrantAuthorization
 import base64
 import hashlib
 import json
 import time
 
+from server.faceU.models import FaceUAccount
 from .authModel import FireHydrantAuthorization
 from ..dao.redis import RedisClusterFactory
 from ...constants import params
 
 
 class FireHydrantClientAuthorization(FireHydrantAuthorization):
-
     """
     客户端授权
     """
@@ -76,3 +75,27 @@ class FireHydrantClientAuthorization(FireHydrantAuthorization):
         self.__redis.set(token_key, msg)
 
         return token
+
+    @staticmethod
+    def fetch_account_by_id(aid):
+        """
+        id查询账户model
+        :param aid:
+        :return:
+        """
+        return FaceUAccount.objects.get_once(pk=aid)
+
+    def set_login_status(self, account_id):
+        """
+        挂起用户信息
+        :param account_id:
+        :return:
+        """
+        if account_id is not None:
+            account = FireHydrantClientAuthorization.fetch_account_by_id(account_id)
+            if account is not None:
+                self._is_login = True
+                self._account = account
+                return True
+
+        return False
