@@ -10,7 +10,7 @@ class AccountLogic(object):
 
     NORMAL_FIELD = [
         'username', 'sex', 'nickname', 'role', 'phone', 'motto', 'create_time',
-        'update_time', 'avator',
+        'update_time', 'avator', 'id',
     ]
 
     def __init__(self, auth, aid=''):

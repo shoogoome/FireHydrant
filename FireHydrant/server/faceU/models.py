@@ -183,7 +183,7 @@ class FaceUDistinguishRecord(models.Model):
     group = models.ForeignKey('faceU.FaceUGroups', null=True, blank=True, on_delete=models.SET_NULL)
 
     # 结果
-    result = models.TextField('')
+    result = models.TextField(default='')
 
     # 创建时间
     create_time = TimeStampField(auto_now_add=True)
