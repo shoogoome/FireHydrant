@@ -29,7 +29,7 @@ class AccountInfoView(FireHydrantView):
         return SuccessResult(logic.get_account_info())
 
     @check_login
-    def post(self, request):
+    def post(self, request, aid=''):
         """
         批量获取账户信息
         :param request:
