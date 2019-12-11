@@ -58,6 +58,7 @@ class PracticeStudentInfoView(FireHydrantView):
         studentuser = logic.studentuser
         with params.diff(studentuser):
             studentuser.realname = params.str('realname', desc='真实名称')
+            studentuser.code = params.str('code', desc="学号")
 
         studentuser.save()
         return SuccessResult(id=stid)
