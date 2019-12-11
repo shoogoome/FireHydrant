@@ -64,4 +64,4 @@ class PracticeArrangementListMgetView(FireHydrantView):
             arrangements = arrangements.filter(name__contains=params.str('name', desc='名称'))
 
         arrangements_list, pagination = slicer(arrangements, limit=limit, page=page)()()
-        return SuccessResult(attendances=arrangements_list, pagination=pagination)
+        return SuccessResult(arrangements=arrangements_list, pagination=pagination)
