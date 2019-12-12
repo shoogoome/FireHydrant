@@ -57,12 +57,13 @@ class ClassroomLogic(SchoolLogic):
             return []
 
         user = PracticeClassroomUser.objects.select_related(
-            'account__account', 'practice__practicearrangement', 'practice__practiceclassroom'
+            'account__account', 'practice__practicearrangement', 'practice__practiceclassroom', 'practice__practicecourse'
         ).filter(
             classroom=self.classroom
         ).values(
             'author', 'author__nickname', 'arrangement', 'arrangement__name',
             'classroom', 'classroom__name', 'create_time', 'update_time', 'id'
+            'arrangement__course__id', 'arrangement__course__name'
         )
 
         data = []
@@ -73,7 +74,11 @@ class ClassroomLogic(SchoolLogic):
             }
             i['arrangement'] = {
                 'id': i['arrangement'],
-                'name': i['arrangement__name']
+                'name': i['arrangement__name'],
+                'course': {
+                    'id': i['arrangement__course__id'],
+                    'name': i['arrangement__course__name']
+                }
             }
             i['classroom'] = {
                 'id': i['classroom'],
