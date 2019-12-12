@@ -2,7 +2,7 @@ from ..models import PracticeClassroom
 from .school import SchoolLogic
 from common.exceptions.practice.classroom.info import PracticeClassroomInfoExcept
 from common.utils.helper.m_t_d import model_to_dict
-from ..models import PracticeClassroomUser
+from ..models import PracticeClassroomUser, PracticeArrangement
 
 class ClassroomLogic(SchoolLogic):
 
@@ -63,7 +63,6 @@ class ClassroomLogic(SchoolLogic):
         ).values(
             'author', 'author__nickname', 'arrangement', 'arrangement__name',
             'classroom', 'classroom__name', 'create_time', 'update_time', 'id'
-            'arrangement__course__id', 'arrangement__course__name'
         )
 
         data = []
@@ -72,6 +71,7 @@ class ClassroomLogic(SchoolLogic):
                 'id': i['author'],
                 'nickname': i['author__nickname']
             }
+            arrangement = PracticeArrangement.objects.filter(id=i['arrangement']).values("course", "course__name")
             i['arrangement'] = {
                 'id': i['arrangement'],
                 'name': i['arrangement__name'],
@@ -80,6 +80,11 @@ class ClassroomLogic(SchoolLogic):
                     'name': i['arrangement__course__name']
                 }
             }
+            if len(arrangement) > 0:
+                i['arrangement']['course'] = {
+                    'id': arrangement[0]['course'],
+                    'name': arrangement[0]['course__name']
+                }
             i['classroom'] = {
                 'id': i['classroom'],
                 'name': i['classroom__name']
