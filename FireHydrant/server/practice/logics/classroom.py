@@ -75,10 +75,6 @@ class ClassroomLogic(SchoolLogic):
             i['arrangement'] = {
                 'id': i['arrangement'],
                 'name': i['arrangement__name'],
-                'course': {
-                    'id': i['arrangement__course__id'],
-                    'name': i['arrangement__course__name']
-                }
             }
             if len(arrangement) > 0:
                 i['arrangement']['course'] = {
