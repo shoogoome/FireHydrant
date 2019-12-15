@@ -41,20 +41,19 @@ class PracticeAttendanceInfoView(FireHydrantView):
         status = {}
         students_info = {student.code: student.id for student in students}
         for info in data:
-            try:
-                with transaction.atomic():
-                    PracticeAttendance.objects.create(
-                        school_id=sid,
-                        course_id=cid,
-                        arrangement_id=aid,
-                        student_id=students_info.get(info.get('code', ''), -1),
-                        leaver=info.get('leaver', 0),
-                        absent=info.get('absent', 0),
-                        late=info.get('late', 0)
-                    )
-                status[info.get('code', '')] = True
-            except:
-                status[info.get('code', '')] = False
+            # try:
+            PracticeAttendance.objects.create(
+                school_id=sid,
+                course_id=cid,
+                arrangement_id=aid,
+                student_id=students_info.get(info.get('code', ''), -1),
+                leaver=info.get('leaver', 0),
+                absent=info.get('absent', 0),
+                late=info.get('late', 0)
+            )
+            status[info.get('code', '')] = True
+            # except:
+            #     status[info.get('code', '')] = False
         return SuccessResult(status)
 
     @check_login
