@@ -52,7 +52,7 @@ class PracticeStudentToCourseInfoView(FireHydrantView):
         for da in data:
             try:
                 code = da.get('code', '')
-                params_data[code] = da
+                params_data[str(code)] = da
                 codes.append(code)
             except:
                 pass
