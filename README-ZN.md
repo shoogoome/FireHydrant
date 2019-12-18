@@ -1,7 +1,7 @@
-# FireHydrant 管理平台
+# FireHydrant 消防栓后端工程文件
 
 ## 简介
-管理平台
+一款任务中心平台的后台服务
 
 ## 技术选型
 环境: Kubernetes v1.10.11  
@@ -40,6 +40,13 @@
 ├── gunicorn_server.py  gunicorn启动文件  
 ├── manage.py  
 ├── server              业务文件夹  
+│   ├── __init__.py  
+│   ├── __pycache__  
+│   ├── account         账户模块  
+│   ├── pay             支付模块  
+│   ├── ranking         排行模块  
+│   ├── task            任务模块  
+│   └── team            组队模块  
 └── templates  
 
 ## PS
